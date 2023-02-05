@@ -10,7 +10,10 @@ export default {
     },
     components: {
         CardComponent,
-    }
+    },
+    methods: {
+        
+    },
 }
 </script>
 
@@ -33,10 +36,12 @@ export default {
             assumenda. Cum similique corporis reprehenderit voluptatem deserunt doloremque perferendis molestiae quos
             nobis dolorem, ut quasi, quidem vel ea, voluptatibus corrupti nihil explicabo molestias voluptatum iste quia
             obcaecati? Illo maxime provident inventore dolor neque.</p>
-            <CardComponent/>
+            <CardComponent v-for="element in store.images" :link="element.img[store.immagineAttiva] "/>
     </div>
 </template>
 
 <style lang="scss">
 @use './assets/scss/general.scss';
+
+
 </style>
