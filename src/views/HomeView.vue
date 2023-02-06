@@ -1,15 +1,18 @@
 <script>
+import JumbotronComponent from '../components/JumbotronComponent.vue';
 import ShowcaseComponent from '../components/ShowcaseComponent.vue';
 
 export default {
     name: 'HomeView',
     components: {
-        ShowcaseComponent
+        JumbotronComponent,
+        ShowcaseComponent,
     }
 }
 </script>
 
 <template>
+    <JumbotronComponent />
     <ShowcaseComponent />
 </template>
 
