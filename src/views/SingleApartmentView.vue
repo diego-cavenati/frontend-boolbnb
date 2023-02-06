@@ -2,7 +2,7 @@
 // axios import
 import axios from 'axios';
 // store import
-import { store } from './store';
+import { store } from '../store.js';
 
 export default {
     name: 'SingleApartmentView',
@@ -22,5 +22,5 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-@use './assets/scss/general.scss';
+@use '../assets/scss/general.scss';
 </style>
