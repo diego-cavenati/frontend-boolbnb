@@ -1,4 +1,6 @@
 <script>
+import SearchbarComponent from './SearchbarComponent.vue';
+
 export default {
     name: 'JumbotronComponent',
     data() {
@@ -6,7 +8,7 @@ export default {
         }
     },
     components: {
-
+        SearchbarComponent
     }
 }
 </script>
@@ -19,8 +21,7 @@ export default {
                     <h1>Lorem ipsum is simply dummy</h1>
                     <h2>Lorem ipsum dolor sit amet.</h2>
 
-                    <!-- Component SearchBar segnaposto -->
-                    <div class="searchBar"></div>
+                    <SearchbarComponent />
                 </div>
             </div>
         </div>
@@ -47,15 +48,6 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-}
-
-//placeholder
-.searchBar {
-    width: 1332.42px;
-    height: 134.39px;
-    background: #FFFFFF;
-    box-shadow: 0px 4px 8px 4px rgba(0, 0, 0, 0.05);
-    border-radius: 67.1953px;
 }
 
 h1 {

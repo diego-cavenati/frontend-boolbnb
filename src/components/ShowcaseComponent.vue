@@ -34,7 +34,6 @@ export default {
             <div class="row">
                 <!-- Single card -->
                 <CardComponent v-for="element in store.images" :link="element.img[0]" />
-                <!-- :link="element.img[store.immagineAttiva] da tenere per il card component-->
             </div>
         </div>
     </div>
