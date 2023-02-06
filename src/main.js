@@ -1,6 +1,12 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 
+
+// Import router
+import { router } from './router';
+
+
+
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { fas } from '@fortawesome/free-solid-svg-icons'
@@ -15,4 +21,5 @@ dom.watch();
 // Import all of Bootstrap's JS
 import * as bootstrap from 'bootstrap'
 
-createApp(App).mount('#app')
+// use router
+createApp(App).use(router).mount('#app');
