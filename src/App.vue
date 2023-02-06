@@ -1,5 +1,7 @@
 <script>
 import { store } from './store';
+import CardComponent from './components/CardComponent.vue';
+
 export default {
     name: 'App',
     data() {
@@ -8,20 +10,17 @@ export default {
         }
     },
     components: {
+        CardComponent
     }
 }
 </script>
 
 <template>
-    <div class="container text-center">
-        <h1>Test</h1>
-        <button class="btn btn-primary">test</button>
-        <div>{{ store.test }}</div>
-    </div>
+    <router-view></router-view>
+    <CardComponent v-for="element in store.images" :link="element.img[0] "/>
+        <!-- :link="element.img[store.immagineAttiva] da tenere per il card component-->
 </template>
 
-<style lang="scss">
-@use './styles/general.scss';
-
-
+<style lang="scss" scoped>
+@use './assets/scss/general.scss';
 </style>
