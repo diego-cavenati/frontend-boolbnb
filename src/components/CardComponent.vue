@@ -28,6 +28,7 @@ export default {
                 store.immagineAttiva = 0
             }
         },
+
         */
         /*
         PrevImg: function () {
@@ -49,7 +50,7 @@ export default {
 
 <template>
     <h1>Funziono</h1>
-    <div class="card" style="width: 18rem;"> <!--Fix style-->
+    <div class="card" style="width: 18rem;"> <!-- TODO Fix style-->
         <div v-if="store.immagineAttiva > 0" @click="PrevImg()">
             <i class="fa-solid fa-circle-chevron-left arrow_left"></i>
         </div>
