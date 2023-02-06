@@ -17,7 +17,8 @@ export default {
         //classe: String,
     },
     methods: {
-        NextImg: function () {
+        /* 
+        NextImg: function () { //TODO fix. cambiare il ciclo 
             for (let index = 0; index < store.images.length; index++) {
                 const element = store.images[index];
             }
@@ -27,7 +28,8 @@ export default {
                 store.immagineAttiva = 0
             }
         },
-        
+        */
+        /*
         PrevImg: function () {
             for (let index = 0; index < store.images.length; index++) {
                 const element = store.images[index];
@@ -38,7 +40,7 @@ export default {
                 store.immagineAttiva--
             }
         }
-        
+        */
     },
     mounted() {
     }
@@ -47,7 +49,7 @@ export default {
 
 <template>
     <h1>Funziono</h1>
-    <div class="card" style="width: 18rem;">
+    <div class="card" style="width: 18rem;"> <!--Fix style-->
         <div v-if="store.immagineAttiva > 0" @click="PrevImg()">
             <i class="fa-solid fa-circle-chevron-left arrow_left"></i>
         </div>

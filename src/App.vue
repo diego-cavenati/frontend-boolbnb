@@ -36,7 +36,9 @@ export default {
             assumenda. Cum similique corporis reprehenderit voluptatem deserunt doloremque perferendis molestiae quos
             nobis dolorem, ut quasi, quidem vel ea, voluptatibus corrupti nihil explicabo molestias voluptatum iste quia
             obcaecati? Illo maxime provident inventore dolor neque.</p>
-            <CardComponent v-for="element in store.images" :link="element.img[store.immagineAttiva] "/>
+            <CardComponent v-for="element in store.images" :link="element.img[0] "/>
+            <!-- :link="element.img[store.immagineAttiva] da tenere per il card component-->
+
     </div>
 </template>
 
