@@ -25,6 +25,7 @@ export default {
                 store.immagineAttiva = 0
             }
         },
+
         */
         /*
         PrevImg: function () {
@@ -45,6 +46,7 @@ export default {
 </script>
 
 <template>
+
     <div class="col-4">
         <div class="card border-0">
 
@@ -70,6 +72,7 @@ export default {
                     <div>⭐️</div>
                     <div><span class="price">1552 €</span> /notte</div>
                 </div>
+
             </div>
         </div>
     </div>
