@@ -73,6 +73,7 @@ export default {
             </div>
         </div>
     </div>
+    <!-- :link="element.img[store.immagineAttiva] da tenere per il card component-->
 </template>
 
 <style lang="scss">
