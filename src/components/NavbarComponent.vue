@@ -14,15 +14,15 @@ export default {
 }
 </script>
 <template>
-    <!--Modificare le classi "ps-5, pe-5 se si vuole cambiare il padding sinistra e destra"-->
-    <nav class="ps-5 pe-5 d-flex justify-content-between align-items-center">
+    <!--Modificare le classi "ps-5, pe-5 se si vuole cambiare il padding sinistra e destra e pt-3 per il padding-top"-->
+    <nav class="ps-5 pe-5 pt-3 d-flex justify-content-between align-items-center">
         <div class="hide">
             LOGO
             <!--TODO Aggiungere logo-->
         </div>
         <div class="d-flex align-items-center hide">
-            <!--sotto i 744 px lo span sparisce -->
-            <span>Passa alla modalità host</span>
+            <!--sotto i 744 px lo span host sparisce -->
+            <span class="p-2 host ">Passa alla modalità host</span>
             <button type="button" class="btn " data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fa-solid fa-bars"></i>
                 A.M. <!--TODO Lettere test, aggiungere ipotetica immagine user-->
@@ -110,6 +110,15 @@ export default {
 @media screen and (max-width: 744px) {
     .hide {
         visibility: hidden;
+    }
+}
+
+// TODO verifica hover e style
+.host{
+    &:hover{
+        background-color: lightgrey;
+        border-radius: 30px;
+        box-shadow: 0 0 10px black;
     }
 }
 </style>
