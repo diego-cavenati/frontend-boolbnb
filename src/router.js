@@ -21,7 +21,7 @@ const router = createRouter({
             component: AdvancedSearchView
         },
         {
-            path: '/blog/:slug',
+            path: '/blog', // /:slug
             name: 'single-apartment',
             component: SingleApartmentView
         },

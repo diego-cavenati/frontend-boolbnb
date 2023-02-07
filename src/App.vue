@@ -20,11 +20,10 @@ export default {
 
 <template>
 
+    <NavbarComponent />
     <router-view></router-view>
 
-    <NavbarComponent/>
-    <CardComponent v-for="element in store.images" :link="element.img[0] "/>
-        <!-- :link="element.img[store.immagineAttiva] da tenere per il card component-->
+
 
 </template>
 
