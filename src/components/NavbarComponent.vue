@@ -14,18 +14,23 @@ export default {
 }
 </script>
 <template>
-    <!--Modificare le classi "ps-5, pe-5 se si vuole cambiare il padding sinistra e destra e pt-3 per il padding-top"-->
+
     <nav class="ps-5 pe-5 pt-3 d-flex justify-content-between align-items-center">
         <div class="hide">
-            LOGO
-            <!--TODO Aggiungere logo-->
+            <!-- TODO add link home -->
+            <img src="../assets/svg/boolbnb-color.svg" alt="">
         </div>
         <div class="d-flex align-items-center hide">
-            <!--sotto i 744 px lo span host sparisce -->
-            <span class="p-2 host ">Passa alla modalità host</span>
-            <button type="button" class="btn " data-bs-toggle="dropdown" aria-expanded="false">
+
+            <span class="host">Passa alla modalità host</span>
+
+            <button type="button" class="profile_btn btn d-flex flex-row" data-bs-toggle="dropdown"
+                aria-expanded="false">
                 <i class="fa-solid fa-bars"></i>
-                A.M. <!--TODO Lettere test, aggiungere ipotetica immagine user-->
+                <div class="profile_img">
+                    <!-- TODO add letter usere -->
+                    <span>AM</span>
+                </div>
             </button>
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="#">Messaggi</a></li>
@@ -41,31 +46,32 @@ export default {
             </ul>
         </div>
     </nav>
-    <div class="fixed-bottom d-flex justify-content-center nav_bot">
-        <div class="d-flex rounded p-2 mb-3 gap-5 icons">
-            <div>
-                <div class="d-flex justify-content-center">
-                    <button type="button" class="icons" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
-                </div>
-                <div>
-                    Esplora
-                </div>
+
+    <!-- Nav bottom -->
+    <div class="nav_bottom">
+        <div class="container icons">
+
+            <div class="nav_icon">
+                <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <span>Esplora</span>
+                </button>
             </div>
-            <div>
-                <div class="d-flex justify-content-center">
-                    <button type="button" class="icons" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa-regular fa-heart"></i>
-                    </button>
-                </div>
-                Preferiti
+
+            <div class="nav_icon">
+                <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-regular fa-heart"></i>
+                    <span>Preferiti</span>
+                </button>
             </div>
+
             <div>
-                <div class="d-flex justify-content-center dropup">
-                    <button type="button" class="icons" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="nav_icon dropup">
+                    <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa-solid fa-user"></i>
+                        <span>Accedi</span>
                     </button>
+
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#">Messaggi</a></li>
                         <li><a class="dropdown-item" href="#">Preferiti</a></li>
@@ -79,8 +85,9 @@ export default {
                         <li><a class="dropdown-item" href="#">Esci</a></li>
                     </ul>
                 </div>
-                <div>Accedi</div>
+
             </div>
+
         </div>
     </div>
 </template>
@@ -89,20 +96,90 @@ export default {
 @use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
 
+// Top navbar
+.profile_btn {
+    padding: 0.4rem;
+    padding-left: 0.8rem;
+    border-color: $bb-light;
+    border-radius: 2rem;
+
+    svg {
+        font-size: 1rem;
+        color: gray;
+    }
+}
+
+.profile_img {
+    color: $bb-lighter;
+    font-family: $bb-font-primary;
+    font-weight: 500;
+    font-size: 1rem;
+    background: linear-gradient(180deg, #45BAE1 0%, #51D48E 100%);
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 0.5rem;
+}
+
+// bottom navbar
+.nav_bottom {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1030;
+    width: 100%;
+    box-shadow: 0px 10px 20px rgba(166, 229, 255, 0.2);
+
+}
 
 .icons {
-    background-color: #45BAE1;
-    // TODO fix color
-    box-shadow: 0 0 10px  #45BAE1;
-    // TODO box shadow momentaneo 
+    padding: 1rem 2rem;
+    background: linear-gradient(90deg, $bb-primary 0%, $bb-secondary 100%);
+    display: flex;
+    justify-content: space-around;
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+}
+
+
+button {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: $bb-lighter;
+    background: none;
+    font-size: 1.5rem;
+
+    // text-shadow: 2px 2px 3px #333;
+    span {
+        font-size: 1.1rem;
+        font-family: $bb-secondary;
+        font-weight: 400;
+        padding-top: 0.3rem;
+    }
+}
+
+nav {
+    padding-bottom: 0.7rem;
+
+    img {
+        width: 130px;
+    }
 }
 
 .border_top {
     border-top: 1px solid black;
 }
 
+
+// MEDIA QUERY
 @media screen and (min-width: 744px) {
-    .nav_bot {
+    .nav_bottom {
         visibility: hidden;
     }
 }
@@ -111,14 +188,20 @@ export default {
     .hide {
         visibility: hidden;
     }
+
+    .nav_bottom {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
 }
 
-// TODO verifica hover e style
-.host{
-    &:hover{
-        background-color: lightgrey;
-        border-radius: 30px;
-        box-shadow: 0 0 10px black;
+// EFFECTS
+.host {
+    padding-right: 1.5rem;
+    color: gray;
+
+    &:hover {
+        color: $bb-primary;
     }
 }
 </style>
