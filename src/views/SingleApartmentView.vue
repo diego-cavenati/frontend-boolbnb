@@ -3,11 +3,17 @@
 import axios from 'axios';
 // store import
 import { store } from '../store.js';
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
 export default {
     name: 'SingleApartmentView',
+    components: {
+        Datepicker
+    },
     data() {
         return {
+            date: null,
             store
         }
     },
@@ -37,14 +43,14 @@ export default {
             </span>
         </div>
     </div>
-    <div class="container-fluid ps-5 pe-5 "> <!--Sezione immagini-->
+    <div class="container ps-5 pe-5 "> <!--Sezione immagini-->
         <!--TODO creare classi css apposite per ogni col per gestire e sovrascrivere il padding dato da bootstrap-->
         <div class="row">
-            <div class="col-6">
+            <div class="col-7">
                 <img class="main_img"
                     src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg?im_w=1200" alt="">
             </div>
-            <div class="col-6">
+            <div class="col-5">
                 <div class="row">
                     <div class="col-6">
                         <img src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg?im_w=1200"
@@ -69,9 +75,12 @@ export default {
         </div>
     </div>
     <!--ps-5, pe-5, pt-5 da togliere se si vuole modificare il padding left, right e top-->
-    <div class="container-fluid ps-5 pe-5 pt-5">
+    <div class="container ps-5 pe-5 pt-5">
+        <div>{{ date }}</div>
+
         <div class="row">
-            <div class="col-6">
+            <div class="col-7">
+                <Datepicker v-model="date" range />
                 <p>
                     Splendida villa con piscina a sfioro, situata nella campagna di Panzano in Chianti, a metà strada
                     tra Firenze e Siena. Può ospitare fino a 12 persone, ha 6 camere da letto e 5 bagni.
@@ -82,8 +91,25 @@ export default {
                     Circondata da un giardino con prato, fiori, ulivi e limone, la villa dispone di un ampio patio con
                     vista panoramica, barbecue e parcheggio privato.
                 </p>
+                <hr>
+                <div class="Services">
+                    <div class="what_find fw-semibold">Cosa troverai</div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-6">
+                                PROVA PROVA Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, ad.
+                            </div>
+                            <div class="col-6">
+                                PROVA PROVA
+                            </div>
+                            <div class="col">
+                                PROVA PROVA
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-6">
+            <div class="col-5">
                 <div class="d-flex justify-content-between">
                     <div>
                         800€ notte
@@ -123,7 +149,7 @@ export default {
                             check-out
                             <div>11/2/2023</div>
                         </div>
-                        <div class="col" >
+                        <div class="col">
                             Ospiti
                             <div>1 ospite</div>
                         </div>
@@ -162,5 +188,9 @@ img {
 
 .border_bot {
     border-radius: 0 0 15px 0;
+}
+
+.what_find {
+    font-size: 22px;
 }
 </style>
