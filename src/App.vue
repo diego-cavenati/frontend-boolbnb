@@ -22,7 +22,7 @@ export default {
 
     <NavbarComponent />
     <router-view></router-view>
-
+    
 
 
 </template>

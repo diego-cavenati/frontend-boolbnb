@@ -43,31 +43,31 @@ export default {
             </span>
         </div>
     </div>
-    <div class="container ps-5 pe-5 "> <!--Sezione immagini-->
+    <div class="container"> <!--Sezione immagini-->
         <!--TODO creare classi css apposite per ogni col per gestire e sovrascrivere il padding dato da bootstrap-->
         <div class="row">
-            <div class="col-7">
-                <img class="main_img"
-                    src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg?im_w=1200" alt="">
+            <div class="col-6 prova2">
+                <img class="main_img "
+                    src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
             </div>
-            <div class="col-5">
+            <div class="col-6">
                 <div class="row">
-                    <div class="col-6">
-                        <img src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg?im_w=1200"
+                    <div class="col-6 ">
+                        <img src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg"
                             alt="">
                     </div>
-                    <div class="col-6">
+                    <div class="col-6 ">
                         <img class="border_top"
-                            src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg?im_w=1200"
+                            src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg"
                             alt="">
                     </div>
-                    <div class="col-6 pt-3"> <!--TODO sistemare in perfect pixel -->
-                        <img src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg?im_w=1200"
+                    <div class="col-6 pt-3 "> <!--TODO sistemare in perfect pixel -->
+                        <img class="test1" src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg"
                             alt="">
                     </div>
-                    <div class="col-6 pt-3"> <!--TODO sistemare in perfect pixel -->
+                    <div class="col-6 pt-3 "> <!--TODO sistemare in perfect pixel -->
                         <img class="border_bot"
-                            src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg?im_w=1200"
+                            src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg"
                             alt="">
                     </div>
                 </div>
@@ -75,9 +75,8 @@ export default {
         </div>
     </div>
     <!--ps-5, pe-5, pt-5 da togliere se si vuole modificare il padding left, right e top-->
-    <div class="container ps-5 pe-5 pt-5">
+    <div class="container pt-5"> <!-- Sezione descrizione, servizi e check in-->
         <div>{{ date }}</div>
-
         <div class="row">
             <div class="col-7">
                 <Datepicker v-model="date" range />
@@ -96,14 +95,9 @@ export default {
                     <div class="what_find fw-semibold">Cosa troverai</div>
                     <div class="container">
                         <div class="row">
-                            <div class="col-6">
-                                PROVA PROVA Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, ad.
-                            </div>
-                            <div class="col-6">
-                                PROVA PROVA
-                            </div>
-                            <div class="col">
-                                PROVA PROVA
+                            <div v-for="service in store.services" class="col-6 p-0">
+                                <span class="pe-1"><i :class=service.img ></i></span>
+                                <span>{{ service.text }}</span>
                             </div>
                         </div>
                     </div>
@@ -161,6 +155,10 @@ export default {
                 </div>
             </div>
         </div>
+        <hr>
+    </div>
+    <div class="text-center"> <!-- Sezione momentanea mappa -->
+        <img src="https://media.wired.com/photos/59269cd37034dc5f91bec0f1/191:100/w_1280,c_limit/GoogleMapTA.jpg" alt="">
     </div>
 
 </template>
@@ -171,7 +169,8 @@ export default {
 
 img {
     max-width: 100%;
-    object-fit: cover;
+    
+    //object-fit: cover;
 }
 
 .main_img {
@@ -193,4 +192,7 @@ img {
 .what_find {
     font-size: 22px;
 }
+
+
+
 </style>

@@ -6,6 +6,10 @@ import {
 import axios from 'axios';
 
 
+
+
+
+
 export const store = reactive({
     test: 'store.js funziona',
     immagineAttiva: 0,
@@ -36,5 +40,47 @@ export const store = reactive({
         //     ]
         // },
     ],
+    services: [
+        {
+            img : 'fa-solid fa-hippo',
+            text : 'Cucina'
+        },
+        {
+            img : 'fa-solid fa-hippo',
+            text : 'Wi-fi'
+        },
+        {
+            img : 'fa-solid fa-hippo',
+            text : 'Piscina'
+        },
+        {
+            img : 'fa-solid fa-hippo',
+            text : 'TV'
+        },
+        {
+            img : 'fa-solid fa-hippo',
+            text : 'vasca da bagno'
+        },
+        {
+            img : 'fa-solid fa-hippo',
+            text : 'Allarme antincendio'
+        },
+        {
+            img : 'fa-solid fa-hippo',
+            text : 'Parchegigo gratuito della proprietà'
+        },
+        {
+            img : 'fa-solid fa-hippo',
+            text : 'Vasca idromassaggio privata'
+        },
+        {
+            img : 'fa-solid fa-hippo',
+            text : 'Lavatrice'
+        },
+        {
+            img : 'fa-solid fa-hippo',
+            text : 'Rivelatore di monossido di carbonio'
+        },
+    ]
 
 })
