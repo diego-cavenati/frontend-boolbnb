@@ -1,6 +1,8 @@
 <script>
 import { store } from './store';
 import CardComponent from './components/CardComponent.vue';
+import NavbarComponent from './components/NavbarComponent.vue';
+import FooterComponent from './components/FooterComponent.vue';
 
 export default {
     name: 'App',
@@ -10,15 +12,20 @@ export default {
         }
     },
     components: {
-        CardComponent
+        CardComponent,
+        NavbarComponent,
+        FooterComponent
     }
 }
 </script>
 
 <template>
+
+    <NavbarComponent />
     <router-view></router-view>
-    <CardComponent v-for="element in store.images" :link="element.img[0] "/>
-        <!-- :link="element.img[store.immagineAttiva] da tenere per il card component-->
+
+    <FooterComponent />
+
 </template>
 
 <style lang="scss" scoped>

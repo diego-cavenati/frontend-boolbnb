@@ -18,5 +18,11 @@ dom.watch();
 // Import all of Bootstrap's JS
 import * as bootstrap from 'bootstrap'
 
+// datapicker
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
+
+
+
 // use router
 createApp(App).use(router).mount('#app');
