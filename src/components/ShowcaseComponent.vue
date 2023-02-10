@@ -13,6 +13,9 @@ export default {
     components: {
         CardComponent,
     },
+    mounted(){
+        console.log('FIAOXCADESDASD');
+    }
 
 
 }
@@ -36,7 +39,7 @@ export default {
 
             <div class="row">
                 <!-- Single card -->
-                <CardComponent v-for="element in store.images" :link="element.img[0]" />
+                <CardComponent/>
             </div>
         </div>
     </div>

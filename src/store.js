@@ -8,9 +8,9 @@ import axios from 'axios';
 export const store = reactive({
     // Call API
     error: null,
-    apartments: 1,
+    apartments: [],
     loading: true,
-    base_api_url: 'http://127.0.0.1:8000/',
+    base_api_url: 'http://127.0.0.1:8000/api/apartments',
     max: 100,
 
     immagineAttiva: 0,
@@ -91,6 +91,7 @@ export const store = reactive({
             .then(response => {
                 this.apartments = response.results.data;
                 // this.apartments = response.data.
+                console.log('FUNZIONO');
                 this.loading = false;
             })
             .catch(error => {
