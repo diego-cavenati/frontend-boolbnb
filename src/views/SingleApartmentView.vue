@@ -46,29 +46,26 @@ export default {
     <div class="container"> <!--Sezione immagini-->
         <!--TODO creare classi css apposite per ogni col per gestire e sovrascrivere il padding dato da bootstrap-->
         <div class="row">
-            <div class="col-6 prova2">
+            <div class="col-7 prova2">
                 <img class="main_img "
                     src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
             </div>
-            <div class="col-6">
+            <div class="col-5">
                 <div class="row">
                     <div class="col-6 ">
-                        <img src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg"
-                            alt="">
+                        <img src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
                     </div>
                     <div class="col-6 ">
                         <img class="border_top"
-                            src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg"
-                            alt="">
+                            src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
                     </div>
                     <div class="col-6 pt-3 "> <!--TODO sistemare in perfect pixel -->
-                        <img class="test1" src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg"
-                            alt="">
+                        <img class="test1"
+                            src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
                     </div>
                     <div class="col-6 pt-3 "> <!--TODO sistemare in perfect pixel -->
                         <img class="border_bot"
-                            src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg"
-                            alt="">
+                            src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
                     </div>
                 </div>
             </div>
@@ -79,7 +76,11 @@ export default {
         <div>{{ date }}</div>
         <div class="row">
             <div class="col-7">
-                <Datepicker v-model="date" range />
+                <div class="group_services2">
+                    <div class=" group_services text-center px-5">
+                        prova
+                    </div>
+                </div>
                 <p>
                     Splendida villa con piscina a sfioro, situata nella campagna di Panzano in Chianti, a metà strada
                     tra Firenze e Siena. Può ospitare fino a 12 persone, ha 6 camere da letto e 5 bagni.
@@ -96,7 +97,7 @@ export default {
                     <div class="container">
                         <div class="row">
                             <div v-for="service in store.services" class="col-6 p-0">
-                                <span class="pe-1"><i :class=service.img ></i></span>
+                                <span class="pe-1"><i :class=service.img></i></span>
                                 <span>{{ service.text }}</span>
                             </div>
                         </div>
@@ -133,9 +134,10 @@ export default {
                     </div>
                 </div>
                 <div class="container border rounded p-0">
+                    <Datepicker v-model="date" range />
                     <div class="row">
                         <!--TODO aggiungere padding personalizzato se vogliamo tenere questo tipo di struttura-->
-                        <div class="col p-0">
+                        <div class="col ">
                             check-in
                             <div>4/2/2023</div>
                         </div>
@@ -148,17 +150,55 @@ export default {
                             <div>1 ospite</div>
                         </div>
                     </div>
-                    <div class="border-top">
+                    <div class="border-top"> <!--TODO decidere grandezza dell'input-->
                         <div>Message</div>
                         <input type="text" placeholder="Scrivi qui">
                     </div>
+                </div>
+
+                <div class="text-center custom_button">
+                    Invia prenotazione
                 </div>
             </div>
         </div>
         <hr>
     </div>
     <div class="text-center"> <!-- Sezione momentanea mappa -->
-        <img src="https://media.wired.com/photos/59269cd37034dc5f91bec0f1/191:100/w_1280,c_limit/GoogleMapTA.jpg" alt="">
+        <img src="https://media.wired.com/photos/59269cd37034dc5f91bec0f1/191:100/w_1280,c_limit/GoogleMapTA.jpg"
+            alt="">
+    </div>
+    <div> <!--Host and aircover-->
+        <div class="container pt-5">
+            <div class="col">
+                <div class="d-flex">
+                    <div class="align-self-center px-2 ">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <div>
+                        <div class="host_name fw-semibold">
+                            Edoardo C
+                        </div>
+                        <div class="registration_date">
+                            Membro da : novembre 2014
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <div class="align-self-center px-2">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <div>
+                        Identità verificata
+                    </div>
+                </div>
+                <div>
+                    Lingue: English, Italiano
+                </div>
+            </div>
+            <div class="col">
+
+            </div>
+        </div>
     </div>
 
 </template>
@@ -193,6 +233,32 @@ img {
     font-size: 22px;
 }
 
+.host_name {
+    font-size: 22px;
+    font-style: $bb-font-secondary;
+}
 
+.registration_date {
+    color: #717171;
+    font-size: 14px;
+}
 
+.custom_button{
+    background-color: rebeccapurple;
+    padding: 1rem;
+    margin-top: 2rem;
+    border-radius: 20px;
+}
+
+.group_services{
+    background-color: blue;
+    border-radius: 20px;
+    max-width: 70%;
+    margin: auto;
+    padding: 1rem;
+}
+.group_services2{
+    margin-top: -5rem;
+    padding-bottom: 2rem;
+}
 </style>
