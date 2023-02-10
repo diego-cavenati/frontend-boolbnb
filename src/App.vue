@@ -1,8 +1,8 @@
 <script>
-
 import { store } from './store';
 import CardComponent from './components/CardComponent.vue';
 import NavbarComponent from './components/NavbarComponent.vue';
+import FooterComponent from './components/FooterComponent.vue';
 
 export default {
     name: 'App',
@@ -13,7 +13,8 @@ export default {
     },
     components: {
         CardComponent,
-        NavbarComponent
+        NavbarComponent,
+        FooterComponent
     }
 }
 </script>
@@ -22,8 +23,8 @@ export default {
 
     <NavbarComponent />
     <router-view></router-view>
-    
 
+    <FooterComponent />
 
 </template>
 
