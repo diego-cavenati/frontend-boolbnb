@@ -7,11 +7,11 @@ import axios from 'axios';
 
 export const store = reactive({
     // Call API
-    error: null,
-    apartments: [],
-    loading: true,
-    base_api_url: 'http://127.0.0.1:8000/api/apartments',
-    max: 100,
+    // error: null,
+    // apartments: [],
+    // loading: true,
+    // base_api_url: 'http://127.0.0.1:8000/api/apartments',
+    // max: 100,
 
     immagineAttiva: 0,
     images: [
@@ -85,21 +85,21 @@ export const store = reactive({
     ],
 
     // Call API apartments all
-    getApartments(url) {
-        axios
-            .get(url)
-            .then(response => {
-                this.apartments = response.results.data;
-                // this.apartments = response.data.
-                console.log('FUNZIONO');
-                this.loading = false;
-            })
-            .catch(error => {
-                console.error(error)
-                this.error = error.message;
-                this.loading = false;
-            })
-    },
+    // getApartments(url) {
+    //     axios
+    //         .get(url)
+    //         .then(response => {
+    //             this.apartments = response.results.data;
+    //             // this.apartments = response.data.
+    //             console.log('FUNZIONO');
+    //             this.loading = false;
+    //         })
+    //         .catch(error => {
+    //             console.error(error)
+    //             this.error = error.message;
+    //             this.loading = false;
+    //         })
+    // },
     // getImagePath(path) {
     //     if (path) {
     //         return this.base_api_url + '/storage/' + path;

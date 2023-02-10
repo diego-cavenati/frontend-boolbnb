@@ -5,19 +5,32 @@ import CardComponent from './CardComponent.vue';
 
 export default {
     name: 'ShowcaseComponent',
-    data() {
-        return {
-            store,
-        }
-    },
     components: {
         CardComponent,
     },
-    mounted(){
-        console.log('FIAOXCADESDASD');
-    }
-
-
+    data() {
+        return {
+            store,
+            apartments: []
+        }
+    },
+    created() {
+        axios.get('http://127.0.0.1:8000/api/apartments')
+            .then(response => {
+                console.log('FUNZIONO');
+                console.log(response.data.results.data);
+                this.apartments = response.data.results.data;
+                // this.apartments = response.data.
+                this.loading = false;
+            })
+            .catch(error => {
+                console.error(error)
+                this.error = error.message;
+                this.loading = false;
+            })
+    },
+    mounted() {
+    },
 }
 </script>
 
@@ -39,7 +52,8 @@ export default {
 
             <div class="row">
                 <!-- Single card -->
-                <CardComponent/>
+                <CardComponent v-for="apartment in apartments" :key="apartment.id" :apartment="apartment" />
+
             </div>
         </div>
     </div>

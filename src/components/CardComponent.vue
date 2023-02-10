@@ -15,10 +15,7 @@ export default {
             max: 100,
         }
     },
-    props: {
-        link: String,
-        //classe: String,
-    },
+    props: ['apartment'],
     methods: {
         /* 
         NextImg: function () { //TODO fix. cambiare il ciclo 
@@ -46,35 +43,29 @@ export default {
         }
         */
     },
-    created() {
-        axios.get('http://127.0.0.1:8000/api/apartments')
-            .then(response => {
-                console.log('FUNZIONO');
-                console.log(response.data.results.data);
-                this.apartments = response.data.results.data;
-                // this.apartments = response.data.
-                this.loading = false;
-            })
-            .catch(error => {
-                console.error(error)
-                this.error = error.message;
-                this.loading = false;
-            })
-    },
+    // created() {
+    //     axios.get('http://127.0.0.1:8000/api/apartments')
+    //         .then(response => {
+    //             console.log('FUNZIONO');
+    //             console.log(response.data.results.data);
+    //             this.apartments = response.data.results.data;
+    //             // this.apartments = response.data.
+    //             this.loading = false;
+    //         })
+    //         .catch(error => {
+    //             console.error(error)
+    //             this.error = error.message;
+    //             this.loading = false;
+    //         })
+    // },
     mounted() {
-        console.log('FIAOXCADESDASD');
-        //this.getApartments(this.base_api_url)
-        console.log(store.getApartments());
-        //store.getApartments(store.base_api_url + '/api/apartments');
-        console.log(store.apartments);
-        console.log(store.error);
     }
 }
 </script>
 
 <template>
 
-    <div v-for="apartment in apartments" class="col-4">
+    <div class="col-4">
         <div class="card border-0">
 
             <div class="card_img">
@@ -90,16 +81,16 @@ export default {
 
             </div>
 
-            <div  class="card-body text-start">
+            <div class="card-body text-start">
                 <!-- <div class="summary">Appartmaneto - {{ apartment.address }}</div> -->
                 <h5>{{ apartment.title }}</h5>
 
                 <div class="info">Ospiti {{ apartment.guests }} - Stanze {{ apartment.total_rooms }} - Letti {{
                     apartment.beds
-                }} - Bagni {{ apartment.baths }} - Mq {{apartments.mq }}</div>
+                }} - Bagni {{ apartment.baths }} - Mq {{ apartments.mq }}</div>
 
                 <div class="d-flex justify-content-end">
-                    <!-- <div>⭐️</div> -->
+                    <!-- <div>⭐️</div> TODO add reviews-->
                     <div><span class="price">{{ apartment.price }} €</span> /notte</div>
                 </div>
 
