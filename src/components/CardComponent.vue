@@ -8,11 +8,11 @@ export default {
     data() {
         return {
             store,
-            error: null,
+            // error: null,
             apartments: [],
-            loading: true,
-            base_api_url: 'http://127.0.0.1:8000/api/apartments',
-            max: 100,
+            // loading: true,
+            // base_api_url: 'http://127.0.0.1:8000/api/apartments?page=2',
+            // max: 100,
         }
     },
     props: ['apartment'],
