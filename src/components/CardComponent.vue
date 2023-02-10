@@ -39,8 +39,12 @@ export default {
             }
         }
         */
+
     },
     mounted() {
+        store.getApartments(store.base_api_url + '/api/apartments');
+        console.log(store.apartments);
+        console.log(store.error);
     }
 }
 </script>
@@ -52,25 +56,28 @@ export default {
 
             <div class="card_img">
                 <!-- carousel -->
-                <div v-if="store.immagineAttiva > 0" @click="PrevImg()">
+                <!-- <div v-if="store.immagineAttiva > 0" @click="PrevImg()">
                     <i class="fa-solid fa-circle-chevron-left arrow_left"></i>
                 </div>
                 <div v-if="store.immagineAttiva != store.images.length - 1" @click="NextImg()">
                     <i class="fa-solid fa-circle-chevron-right arrow_right"></i>
-                </div>
+                </div> -->
                 <!-- img thumb -->
-                <img :src="link" :class="classe" alt="">
+                <img src="{{ apartment.media }}" :class="classe" alt="">
+
             </div>
 
             <div class="card-body text-start">
-                <div class="summary">Appartmaneto - Treviso, Italia</div>
-                <h5>Casa vacanze "La Corte di Giada"</h5>
+                <!-- <div class="summary">Appartmaneto - {{ apartment.address }}</div> -->
+                <h5>{{ apartment.title }}</h5>
 
-                <div class="info">3 letti</div>
+                <div class="info">Ospiti {{ apartment.guests }} - Stanze {{ apartment.total_rooms }} - Letti {{
+                    apartment.beds
+                }} - Bagni {{ apartment.baths }} - Mq {{ apartment.mq }}</div>
 
-                <div class="d-flex justify-content-between">
-                    <div>⭐️</div>
-                    <div><span class="price">1552 €</span> /notte</div>
+                <div class="d-flex justify-content-end">
+                    <!-- <div>⭐️</div> -->
+                    <div><span class="price">{{ apartment.price }} €</span> /notte</div>
                 </div>
 
             </div>

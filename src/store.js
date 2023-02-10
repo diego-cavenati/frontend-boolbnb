@@ -5,13 +5,14 @@ import {
 // import axios per fare call api
 import axios from 'axios';
 
-
-
-
-
-
 export const store = reactive({
-    test: 'store.js funziona',
+    // Call API
+    error: null,
+    apartments: 1,
+    loading: true,
+    base_api_url: 'http://127.0.0.1:8000/',
+    max: 100,
+
     immagineAttiva: 0,
     images: [
         {
@@ -42,45 +43,85 @@ export const store = reactive({
     ],
     services: [
         {
-            img : 'fa-solid fa-hippo',
-            text : 'Cucina'
+            img: 'fa-solid fa-hippo',
+            text: 'Cucina'
         },
         {
-            img : 'fa-solid fa-hippo',
-            text : 'Wi-fi'
+            img: 'fa-solid fa-hippo',
+            text: 'Wi-fi'
         },
         {
-            img : 'fa-solid fa-hippo',
-            text : 'Piscina'
+            img: 'fa-solid fa-hippo',
+            text: 'Piscina'
         },
         {
-            img : 'fa-solid fa-hippo',
-            text : 'TV'
+            img: 'fa-solid fa-hippo',
+            text: 'TV'
         },
         {
-            img : 'fa-solid fa-hippo',
-            text : 'vasca da bagno'
+            img: 'fa-solid fa-hippo',
+            text: 'vasca da bagno'
         },
         {
-            img : 'fa-solid fa-hippo',
-            text : 'Allarme antincendio'
+            img: 'fa-solid fa-hippo',
+            text: 'Allarme antincendio'
         },
         {
-            img : 'fa-solid fa-hippo',
-            text : 'Parchegigo gratuito della proprietà'
+            img: 'fa-solid fa-hippo',
+            text: 'Parchegigo gratuito della proprietà'
         },
         {
-            img : 'fa-solid fa-hippo',
-            text : 'Vasca idromassaggio privata'
+            img: 'fa-solid fa-hippo',
+            text: 'Vasca idromassaggio privata'
         },
         {
-            img : 'fa-solid fa-hippo',
-            text : 'Lavatrice'
+            img: 'fa-solid fa-hippo',
+            text: 'Lavatrice'
         },
         {
-            img : 'fa-solid fa-hippo',
-            text : 'Rivelatore di monossido di carbonio'
+            img: 'fa-solid fa-hippo',
+            text: 'Rivelatore di monossido di carbonio'
         },
-    ]
+    ],
+
+    // Call API apartments all
+    getApartments(url) {
+        axios
+            .get(url)
+            .then(response => {
+                this.apartments = response.results.data;
+                // this.apartments = response.data.
+                this.loading = false;
+            })
+            .catch(error => {
+                console.error(error)
+                this.error = error.message;
+                this.loading = false;
+            })
+    },
+    // getImagePath(path) {
+    //     if (path) {
+    //         return this.base_api_url + '/storage/' + path;
+    //     }
+    // },
+    /**
+     * 
+     * @param {string} text the project body
+     */
+    trimBody(text) {
+        if (text.length > this.max) {
+            return text.slice(0, this.max) + '...'
+        }
+        return text
+    },
+    prevPage(url) {
+        console.log(url)
+        this.getApartments(url)
+    },
+    nextPage(url) {
+        console.log(url)
+        this.getApartments(url)
+    }
+
 
 })
