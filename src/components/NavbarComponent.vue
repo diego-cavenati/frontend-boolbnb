@@ -17,8 +17,9 @@ export default {
 
     <nav class="ps-5 pe-5 pt-3 d-flex justify-content-between align-items-center">
         <div class="hide">
-            <!-- TODO add link home -->
-            <img src="../assets/svg/boolbnb-color.svg" alt="">
+            <router-link :to="{ name: 'home' }">
+                <img src="../assets/svg/boolbnb-color.svg" alt="">
+            </router-link>
         </div>
         <div class="d-flex align-items-center hide">
 
