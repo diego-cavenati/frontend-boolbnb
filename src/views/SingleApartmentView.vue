@@ -14,11 +14,30 @@ export default {
     data() {
         return {
             date: null,
+            apartment: '',
+            loading: true,
             store
         }
     },
     mounted() {
         // TODO: call API will go here
+
+        const url = 'http://127.0.0.1:8000/api/apartments/' + this.$route.params.slug;
+        console.log(this.$route.params.slug);
+        axios.get(url)
+            .then(response => {
+                if (response.data.success) {
+                    this.apartment = response.data.results;
+                    console.log(this.apartment);
+                    console.log(response.data.results);
+                    this.loading = false
+                } else {
+                    this.$router.push({ name: 'not-found' })
+                }
+            }).catch(error => {
+                console.log(error)
+            })
+
     }
 }
 </script>
@@ -26,7 +45,7 @@ export default {
     <!--TODO cambiare ps-5 e pe-5 se si vuole cambiare il padding sinistra e destra-->
     <div class="ps-5 pe-5 d-flex justify-content-between"> <!--Sezione titolo, luogo etc-->
         <div>
-            <h3>Villa Poggio Greve - Villa con piscina nel Chianti</h3>
+            <h3>{{ apartment.title }}</h3>
             <div>
                 Greve in Chianti, Toscana, Italia
                 <span>
@@ -47,8 +66,7 @@ export default {
         <!--TODO creare classi css apposite per ogni col per gestire e sovrascrivere il padding dato da bootstrap-->
         <div class="row">
             <div class="col-7 prova2">
-                <img class="main_img "
-                    src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
+                <img class="main_img " :src="apartment.media" alt="">
             </div>
             <div class="col-5">
                 <div class="row">
@@ -82,14 +100,7 @@ export default {
                     </div>
                 </div>
                 <p>
-                    Splendida villa con piscina a sfioro, situata nella campagna di Panzano in Chianti, a metà strada
-                    tra Firenze e Siena. Può ospitare fino a 12 persone, ha 6 camere da letto e 5 bagni.
-                    Villa Poggio Greve si trova nella campagna di Panzano in Chianti e si raggiunge attraversando un
-                    tranquilla strada asfaltata.
-                    La proprietà è situata in cima a una collina, in posizione panoramica ad un'altitudine di 450 m, e
-                    gode di un panorama mozzafiato sui vigneti e oliveti del Chianti Classico.
-                    Circondata da un giardino con prato, fiori, ulivi e limone, la villa dispone di un ampio patio con
-                    vista panoramica, barbecue e parcheggio privato.
+                    {{ apartment.description }}
                 </p>
                 <hr>
                 <div class="Services">
@@ -107,13 +118,13 @@ export default {
             <div class="col-5">
                 <div class="d-flex justify-content-between">
                     <div>
-                        800€ notte
+                        {{ apartment.price }}€ notte
                     </div>
                     <div>
                         <h4>7 notti a Greve in chianti</h4>
                         <div>4 feb 2023 - 11 feb 2023</div>
                         <div class="d-flex justify-content-between">
-                            800€ x 7 notti
+                            {{ apartment.price }}€ x 7 notti
                             <div>
                                 5.600€
                             </div>
@@ -209,7 +220,7 @@ export default {
 
 img {
     max-width: 100%;
-    
+
     //object-fit: cover;
 }
 
@@ -243,21 +254,22 @@ img {
     font-size: 14px;
 }
 
-.custom_button{
+.custom_button {
     background-color: rebeccapurple;
     padding: 1rem;
     margin-top: 2rem;
     border-radius: 20px;
 }
 
-.group_services{
+.group_services {
     background-color: blue;
     border-radius: 20px;
     max-width: 70%;
     margin: auto;
     padding: 1rem;
 }
-.group_services2{
+
+.group_services2 {
     margin-top: -5rem;
     padding-bottom: 2rem;
 }

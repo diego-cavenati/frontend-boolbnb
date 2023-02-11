@@ -1,18 +1,21 @@
 <script>
 import App from '../App.vue';
 import { store } from '../store';
+import axios from 'axios';
 
 export default {
     name: 'CardComponent',
     data() {
         return {
             store,
+            // error: null,
+            apartments: [],
+            // loading: true,
+            // base_api_url: 'http://127.0.0.1:8000/api/apartments?page=2',
+            // max: 100,
         }
     },
-    props: {
-        link: String,
-        //classe: String,
-    },
+    props: ['apartment'],
     methods: {
         /* 
         NextImg: function () { //TODO fix. cambiare il ciclo 
@@ -40,6 +43,21 @@ export default {
         }
         */
     },
+    // created() {
+    //     axios.get('http://127.0.0.1:8000/api/apartments')
+    //         .then(response => {
+    //             console.log('FUNZIONO');
+    //             console.log(response.data.results.data);
+    //             this.apartments = response.data.results.data;
+    //             // this.apartments = response.data.
+    //             this.loading = false;
+    //         })
+    //         .catch(error => {
+    //             console.error(error)
+    //             this.error = error.message;
+    //             this.loading = false;
+    //         })
+    // },
     mounted() {
     }
 }
@@ -48,33 +66,40 @@ export default {
 <template>
 
     <div class="col-4">
-        <div class="card border-0">
+        <router-link :to="{ name: 'single-apartment', params: { slug: apartment.slug } }">
 
-            <div class="card_img">
-                <!-- carousel -->
-                <div v-if="store.immagineAttiva > 0" @click="PrevImg()">
+
+            <div class="card border-0">
+
+                <div class="card_img">
+                    <!-- carousel -->
+                    <!-- <div v-if="store.immagineAttiva > 0" @click="PrevImg()">
                     <i class="fa-solid fa-circle-chevron-left arrow_left"></i>
                 </div>
                 <div v-if="store.immagineAttiva != store.images.length - 1" @click="NextImg()">
                     <i class="fa-solid fa-circle-chevron-right arrow_right"></i>
-                </div>
-                <!-- img thumb -->
-                <img :src="link" :class="classe" alt="">
-            </div>
+                </div> -->
+                    <!-- img thumb -->
+                    <img :src="apartment.media" :class="classe" alt="">
 
-            <div class="card-body text-start">
-                <div class="summary">Appartmaneto - Treviso, Italia</div>
-                <h5>Casa vacanze "La Corte di Giada"</h5>
-
-                <div class="info">3 letti</div>
-
-                <div class="d-flex justify-content-between">
-                    <div>⭐️</div>
-                    <div><span class="price">1552 €</span> /notte</div>
                 </div>
 
+                <div class="card-body text-start">
+                    <!-- <div class="summary">Appartmaneto - {{ apartment.address }}</div> -->
+                    <h5>{{ apartment.title }}</h5>
+
+                    <div class="info">Ospiti {{ apartment.guests }} - Stanze {{ apartment.total_rooms }} - Letti {{
+                        apartment.beds
+                    }} - Bagni {{ apartment.baths }} - Mq {{ apartments.mq }}</div>
+
+                    <div class="d-flex justify-content-end">
+                        <!-- <div>⭐️</div> TODO add reviews-->
+                        <div><span class="price">{{ apartment.price }} €</span> /notte</div>
+                    </div>
+
+                </div>
             </div>
-        </div>
+        </router-link>
     </div>
     <!-- :link="element.img[store.immagineAttiva] da tenere per il card component-->
 </template>
