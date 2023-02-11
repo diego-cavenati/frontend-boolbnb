@@ -46,8 +46,8 @@ export default {
             const response = await axios.get(url);
             if (response.data.success) {
                 apartment = response.data.results;
-                latitude = response.data.results.latitude;
-                longitude = response.data.results.longitude;
+                longitude = response.data.results.latitude;
+                latitude = response.data.results.longitude;
                 // state.loading = false
                 addMarker(map);
             } else {
