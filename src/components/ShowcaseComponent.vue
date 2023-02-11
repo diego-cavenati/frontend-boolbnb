@@ -54,24 +54,31 @@ export default {
                     });
             }
         },
+
         goToPage(pageNumber) {
             this.currentPage = pageNumber;
+            console.log(this.currentPage);
+            this.callApi();
+        },
+
+        callApi() {
+            axios.get(`http://127.0.0.1:8000/api/apartments?page=${this.currentPage}`)
+                .then(response => {
+                    this.apartments = response.data.results.data;
+                    this.pages = response.data.results.last_page;
+                    console.log(response.data.results.last_page);
+                    this.loading = false;
+                })
+                .catch(error => {
+                    console.error(error)
+                    this.error = error.message;
+                    this.loading = false;
+                })
         }
 
     },
     created() {
-        axios.get(`http://127.0.0.1:8000/api/apartments?page=${this.currentPage}`)
-            .then(response => {
-                this.apartments = response.data.results.data;
-                this.pages = response.data.results.last_page;
-                console.log(response.data.results.last_page);
-                this.loading = false;
-            })
-            .catch(error => {
-                console.error(error)
-                this.error = error.message;
-                this.loading = false;
-            })
+        this.callApi()
     },
     mounted() {
     },
