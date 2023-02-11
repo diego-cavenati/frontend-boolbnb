@@ -6,88 +6,68 @@ import axios from 'axios';
 import { store } from '../store.js';
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
-//tomtom
-// import { createClient, Services, MapView } from '@tomtom-international/web-sdk-maps';
-import { onMounted, ref } from 'vue'
-// import { createClient, Services, MapView } from '@tomtom-international/web-sdk-maps/dist/es6/services/Services';
-import { useRoute } from "vue-router";
 
 export default {
     name: 'SingleApartmentView',
-    setup() {
-
-        let apartment = ref('');
-        let latitude = ref('');
-        let longitude = ref('');
-
-
-        // const state = reactive({
-        //     message: 'Ciao, sono un messaggio reattivo!',
-        //     latitude: '',
-        //     longitude: '',
-        //     apartment: '',
-        //     loading: '',
-        // })
-
-        const mapRef = ref(null);
-        const route = useRoute();
-
-        onMounted(async () => {
-            const tt = window.tt;
-            var map = tt.map({
-                key: 'h0FDAudCcFnS8TK5dT1mvgXYkqCGc1CW',
-                container: mapRef.value,
-                style: 'tomtom://vector/1/basic-main',
-            });
-            map.addControl(new tt.FullscreenControl());
-            map.addControl(new tt.NavigationControl());
-
-            const url = 'http://127.0.0.1:8000/api/apartments/' + route.params.slug;
-            const response = await axios.get(url);
-            if (response.data.success) {
-                apartment = response.data.results;
-                longitude = response.data.results.latitude;
-                latitude = response.data.results.longitude;
-                // state.loading = false
-                addMarker(map);
-            } else {
-                // this.$router.push({ name: 'not-found' }); //
-            }
-        });
-
-        function addMarker(map) {
-            const tt = window.tt;
-            var location = [latitude, longitude];
-            var popupOffset = 25;
-
-            var marker = new tt.Marker().setLngLat(location).addTo(map);
-            var popup = new tt.Popup({ offset: popupOffset }).setHTML("Your address!");
-            marker.setPopup(popup).togglePopup();
-        }
-
-        return {
-            mapRef,
-            // latitude: state.latitude,
-            longitude,
-            latitude,
-            apartment,
-            // message: state.message,
-        };
-
-    },
     components: {
         Datepicker,
     },
     data() {
         return {
             date: null,
+            apartment: null,
+            latitude: null,
+            longitude: null,
             loading: true,
             store,
-            //totom
             client: null,
             map: null,
         }
     },
+    methods: {
+        addMarker(map) {
+            const tt = window.tt;
+            var location = [this.longitude, this.latitude];
+            var popupOffset = 25;
+
+            var marker = new tt.Marker().setLngLat(location).addTo(map);
+            var popup = new tt.Popup({ offset: popupOffset }).setHTML("Your address!");
+            marker.setPopup(popup).togglePopup();
+        },
+        getMap() {
+            const tt = window.tt;
+            var map = tt.map({
+                key: 'h0FDAudCcFnS8TK5dT1mvgXYkqCGc1CW',
+                container: this.$refs.mapRef,
+                style: 'tomtom://vector/1/basic-main',
+            });
+            map.addControl(new tt.FullscreenControl());
+            map.addControl(new tt.NavigationControl());
+
+            const url = 'http://127.0.0.1:8000/api/apartments/' + this.$route.params.slug;
+            console.log(url);
+            axios.get(url)
+                .then(resp => {
+                    if (resp.data.success) {
+                        this.apartment = resp.data.results;
+                        this.latitude = resp.data.results.latitude;
+                        this.longitude = resp.data.results.longitude;
+                        this.loading = false
+                        this.addMarker(map)
+                    } else {
+                        // this.$router.push({ name: 'not-found' }); //
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        }
+    },
+    mounted() {
+        //console.log(this.$refs.mapRef)
+        this.getMap()
+
+    }
 }
 </script>
 <template>
@@ -95,7 +75,7 @@ export default {
     <div class="ps-5 pe-5 d-flex justify-content-between"> <!--Sezione titolo, luogo etc-->
         <div>
 
-            <h3>{{ apartment.title }}</h3>
+            <h3 v-if="!loading">{{ apartment.title }}</h3>
             <div>
                 Greve in Chianti, Toscana, Italia
                 <span>
