@@ -5,31 +5,57 @@ export default {
     name: 'SearchbarComponent',
     data() {
         return {
-            searchTerm: "",
-            checkin: "",
-            checkout: "",
-            persons: "",
+            address: '',
+            guests: 0,
+            checkIn: '',
+            checkOut: '',
             results: []
         }
     },
     components: {
     },
     methods: {
-        search() {
-            axios
-                .get(`https://api.example.com/search?term=${this.searchTerm}&checkin=${this.checkin}&checkout=${this.checkout}&persons=${this.persons}`)
-                .then(response => {
-                    this.results = response.data;
-                })
-                .catch(error => console.error(error));
+        async search() {
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/api/apartments', {
+                    params: {
+                        address: this.address,
+                        guests: this.guests,
+                        checkIn: this.checkIn,
+                        checkOut: this.checkOut
+                    }
+                });
+                this.results = response.data.results.data;
+                console.log(this.results);
+            } catch (error) {
+                console.error(error);
+            }
         }
     }
 }
 </script>
 
 <template>
+    <div>
+        <form @submit.prevent="search">
+            <input type="text" v-model="address" placeholder="Indirizzo">
+            <input type="number" v-model="guests" placeholder="Ospiti">
+            <input type="date" v-model="checkIn" placeholder="Check-in">
+            <input type="date" v-model="checkOut" placeholder="Check-out">
+            <button type="submit">Cerca</button>
+        </form>
 
+        <ul v-if="results.length">
+            <li v-for="result in results">
+                {{ result.name }} - {{ result.address }}
+            </li>
+        </ul>
+        <p v-else>Nessun risultato trovato</p>
+    </div>
+
+    <!-- 
     <div class="searchBar">
+
         <div class="container_search">
             <div class="input">
                 <i class="fa-regular fa-map"></i>
@@ -52,10 +78,10 @@ export default {
             <i class="fa-solid fa-magnifying-glass"></i>
         </button>
 
-        <div v-for="result in results">
-            {{ result.name }}
-        </div>
-    </div>
+    </div> -->
+    <!-- <div v-for="result in results">
+        {{ result.name }}
+    </div> -->
 
 </template>
 

@@ -1,50 +1,100 @@
 <script>
+import { reactive } from 'vue'
 // axios import
 import axios from 'axios';
 // store import
 import { store } from '../store.js';
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
+//tomtom
+// import { createClient, Services, MapView } from '@tomtom-international/web-sdk-maps';
+import { onMounted, ref } from 'vue'
+// import { createClient, Services, MapView } from '@tomtom-international/web-sdk-maps/dist/es6/services/Services';
+import { useRoute } from "vue-router";
 
 export default {
     name: 'SingleApartmentView',
+    setup() {
+
+        let apartment = ref('');
+        let latitude = ref('');
+        let longitude = ref('');
+
+
+        // const state = reactive({
+        //     message: 'Ciao, sono un messaggio reattivo!',
+        //     latitude: '',
+        //     longitude: '',
+        //     apartment: '',
+        //     loading: '',
+        // })
+
+        const mapRef = ref(null);
+        const route = useRoute();
+
+        onMounted(async () => {
+            const tt = window.tt;
+            var map = tt.map({
+                key: 'h0FDAudCcFnS8TK5dT1mvgXYkqCGc1CW',
+                container: mapRef.value,
+                style: 'tomtom://vector/1/basic-main',
+            });
+            map.addControl(new tt.FullscreenControl());
+            map.addControl(new tt.NavigationControl());
+
+            const url = 'http://127.0.0.1:8000/api/apartments/' + route.params.slug;
+            const response = await axios.get(url);
+            if (response.data.success) {
+                apartment = response.data.results;
+                latitude = response.data.results.latitude;
+                longitude = response.data.results.longitude;
+                // state.loading = false
+                addMarker(map);
+            } else {
+                // this.$router.push({ name: 'not-found' }); //
+            }
+        });
+
+        function addMarker(map) {
+            const tt = window.tt;
+            var location = [latitude, longitude];
+            var popupOffset = 25;
+
+            var marker = new tt.Marker().setLngLat(location).addTo(map);
+            var popup = new tt.Popup({ offset: popupOffset }).setHTML("Your address!");
+            marker.setPopup(popup).togglePopup();
+        }
+
+        return {
+            mapRef,
+            // latitude: state.latitude,
+            longitude,
+            latitude,
+            apartment,
+            // message: state.message,
+        };
+
+    },
     components: {
-        Datepicker
+        Datepicker,
     },
     data() {
         return {
             date: null,
-            apartment: '',
             loading: true,
-            store
+            store,
+            //totom
+            client: null,
+            map: null,
         }
     },
-    mounted() {
-        // TODO: call API will go here
-
-        const url = 'http://127.0.0.1:8000/api/apartments/' + this.$route.params.slug;
-        console.log(this.$route.params.slug);
-        axios.get(url)
-            .then(response => {
-                if (response.data.success) {
-                    this.apartment = response.data.results;
-                    console.log(this.apartment);
-                    console.log(response.data.results);
-                    this.loading = false
-                } else {
-                    this.$router.push({ name: 'not-found' })
-                }
-            }).catch(error => {
-                console.log(error)
-            })
-
-    }
 }
 </script>
 <template>
     <!--TODO cambiare ps-5 e pe-5 se si vuole cambiare il padding sinistra e destra-->
     <div class="ps-5 pe-5 d-flex justify-content-between"> <!--Sezione titolo, luogo etc-->
         <div>
+
             <h3>{{ apartment.title }}</h3>
             <div>
                 Greve in Chianti, Toscana, Italia
@@ -66,7 +116,7 @@ export default {
         <!--TODO creare classi css apposite per ogni col per gestire e sovrascrivere il padding dato da bootstrap-->
         <div class="row">
             <div class="col-7 prova2">
-                <img class="main_img " :src="apartment.media" alt="">
+                <!-- <img class="main_img " :src="apartment.media" alt=""> -->
             </div>
             <div class="col-5">
                 <div class="row">
@@ -100,10 +150,10 @@ export default {
                     </div>
                 </div>
                 <p>
-                    {{ apartment.description }}
+                    <!-- {{ apartment.description }} -->
                 </p>
                 <hr>
-                <div class="Services">
+                <!-- <div class="Services">
                     <div class="what_find fw-semibold">Cosa troverai</div>
                     <div class="container">
                         <div class="row">
@@ -113,18 +163,18 @@ export default {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
             <div class="col-5">
                 <div class="d-flex justify-content-between">
                     <div>
-                        {{ apartment.price }}€ notte
+                        <!-- {{ apartment.price }}€ notte -->
                     </div>
                     <div>
                         <h4>7 notti a Greve in chianti</h4>
                         <div>4 feb 2023 - 11 feb 2023</div>
                         <div class="d-flex justify-content-between">
-                            {{ apartment.price }}€ x 7 notti
+                            <!-- {{ apartment.price }}€ x 7 notti -->
                             <div>
                                 5.600€
                             </div>
@@ -174,10 +224,13 @@ export default {
         </div>
         <hr>
     </div>
-    <div class="text-center"> <!-- Sezione momentanea mappa -->
-        <img src="https://media.wired.com/photos/59269cd37034dc5f91bec0f1/191:100/w_1280,c_limit/GoogleMapTA.jpg"
-            alt="">
-    </div>
+
+    <!-- Sezione momentanea mappa -->
+    <!-- <MapView /> -->
+    <!-- <div id="map-container" style="width: 100%; height: 100%;"></div> -->
+    <div id='map' ref="mapRef"></div>
+
+
     <div> <!--Host and aircover-->
         <div class="container pt-5">
             <div class="col">
@@ -217,6 +270,11 @@ export default {
 <style lang="scss" scoped>
 @use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
+
+#map {
+    height: 50vh;
+    width: 50vw;
+}
 
 img {
     max-width: 100%;
