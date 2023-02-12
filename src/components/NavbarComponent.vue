@@ -29,12 +29,14 @@ export default {
                 aria-expanded="false">
                 <i class="fa-solid fa-bars"></i>
                 <div class="profile_img">
-                    <!-- TODO add letter usere -->
-                    <span>AM</span>
+                    <!-- TODO add letter user -->
+                    <span><i class="fa-solid fa-user"></i></span>
                 </div>
             </button>
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Messaggi</a></li>
+                <li><a class="dropdown-item" href="http://127.0.0.1:8000/">Accedi</a></li>
+                <li><a class="dropdown-item" href="http://127.0.0.1:8000/register">Registrati</a></li>
+                <!-- <li><a class="dropdown-item" href="#">Messaggi</a></li>
                 <li><a class="dropdown-item" href="#">Preferiti</a></li>
                 <li>
                     <hr class="dropdown-divider">
@@ -43,7 +45,7 @@ export default {
                 <li>
                     <hr class="dropdown-divider">
                 </li>
-                <li><a class="dropdown-item" href="#">Esci</a></li>
+                <li><a class="dropdown-item" href="#">Esci</a></li> -->
             </ul>
         </div>
     </nav>
@@ -52,20 +54,31 @@ export default {
     <div class="nav_bottom">
         <div class="container icons">
 
+
+            <div class="nav_icon">
+                <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-user"></i>
+                    <span><a href="http://127.0.0.1:8000/">Accedi</a></span>
+                </button>
+            </div>
+
             <div class="nav_icon">
                 <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <span>Esplora</span>
+                    <span>Cerca</span>
                 </button>
             </div>
 
             <div class="nav_icon">
                 <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fa-regular fa-heart"></i>
-                    <span>Preferiti</span>
+                    <i class="fa-solid fa-pen"></i>
+                    <span><a href="http://127.0.0.1:8000/register">Registrati</a></span>
                 </button>
             </div>
 
+
+
+            <!--
             <div>
                 <div class="nav_icon dropup">
                     <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -87,7 +100,7 @@ export default {
                     </ul>
                 </div>
 
-            </div>
+            </div> -->
 
         </div>
     </div>
@@ -123,6 +136,11 @@ export default {
     justify-content: center;
     align-items: center;
     margin-left: 0.5rem;
+
+    svg {
+        color: $bb-lighter;
+
+    }
 }
 
 // bottom navbar

@@ -17,12 +17,12 @@ export default {
     methods: {
         async search() {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/apartments', {
+                const response = await axios.get('http://127.0.0.1:8000/api/apartments/search', {
                     params: {
                         address: this.address,
-                        guests: this.guests,
-                        checkIn: this.checkIn,
-                        checkOut: this.checkOut
+                        // guests: this.guests,
+                        // checkIn: this.checkIn,
+                        // checkOut: this.checkOut
                     }
                 });
                 this.results = response.data.results.data;
