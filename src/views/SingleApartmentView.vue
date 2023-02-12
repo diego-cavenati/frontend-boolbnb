@@ -21,51 +21,50 @@ export default {
             loading: true,
             store,
             client: null,
-            map: null,
         }
     },
     methods: {
-        addMarker(map) {
+        addMarker() {
             const tt = window.tt;
             var location = [this.longitude, this.latitude];
             var popupOffset = 25;
 
-            var marker = new tt.Marker().setLngLat(location).addTo(map);
+            var marker = new tt.Marker().setLngLat(location).addTo(this.map);
             var popup = new tt.Popup({ offset: popupOffset }).setHTML("Your address!");
             marker.setPopup(popup).togglePopup();
         },
         getMap() {
             const tt = window.tt;
-            var map = tt.map({
+            this.map = tt.map({
                 key: 'h0FDAudCcFnS8TK5dT1mvgXYkqCGc1CW',
                 container: this.$refs.mapRef,
                 style: 'tomtom://vector/1/basic-main',
+                center: [this.longitude, this.latitude],
+                zoom: 7,
             });
-            map.addControl(new tt.FullscreenControl());
-            map.addControl(new tt.NavigationControl());
-
-            const url = 'http://127.0.0.1:8000/api/apartments/' + this.$route.params.slug;
-            console.log(url);
-            axios.get(url)
-                .then(resp => {
-                    if (resp.data.success) {
-                        this.apartment = resp.data.results;
-                        this.latitude = resp.data.results.latitude;
-                        this.longitude = resp.data.results.longitude;
-                        this.loading = false
-                        this.addMarker(map)
-                    } else {
-                        // this.$router.push({ name: 'not-found' }); //
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                })
+            this.map.addControl(new tt.FullscreenControl());
+            this.map.addControl(new tt.NavigationControl());
         }
     },
     mounted() {
-        //console.log(this.$refs.mapRef)
-        this.getMap()
+        const url = 'http://127.0.0.1:8000/api/apartments/' + this.$route.params.slug;
+        console.log(url);
+        axios.get(url)
+            .then(resp => {
+                if (resp.data.success) {
+                    this.apartment = resp.data.results;
+                    this.latitude = resp.data.results.latitude;
+                    this.longitude = resp.data.results.longitude;
+                    this.loading = false;
+                    this.getMap();
+                    this.addMarker();
+                } else {
+                    // this.$router.push({ name: 'not-found' }); //
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            });
     }
 }
 </script>
@@ -126,12 +125,26 @@ export default {
         <div>{{ date }}</div>
         <div class="row">
             <div class="col-7">
+
                 <div class="details">
-                    <div class="guest"><i class="fa-solid fa-user"></i> {{ apartment.guests }}</div>
-                    <div class="total_rooms"><i class="fa-solid fa-house"></i> {{ apartment.total_rooms }}</div>
-                    <div class="beds"><i class="fa-solid fa-bed"></i> {{ apartment.beds }}</div>
-                    <div class="baths"><i class="fa-solid fa-toilet"></i> {{ apartment.baths }}</div>
+                    <div class="guest">
+                        <i class="fa-solid fa-user"></i>
+                        <span>{{ apartment.guests }}</span>
+                    </div>
+                    <div class="total_rooms">
+                        <i class="fa-solid fa-house"></i>
+                        <span>{{ apartment.total_rooms }}</span>
+                    </div>
+                    <div class="beds">
+                        <i class="fa-solid fa-bed"></i>
+                        <span>{{ apartment.beds }}</span>
+                    </div>
+                    <div class="baths">
+                        <i class="fa-solid fa-toilet"></i>
+                        <span>{{ apartment.baths }}</span>
+                    </div>
                 </div>
+
                 <p>
                     {{ apartment.description }}
                 </p>
@@ -207,9 +220,16 @@ export default {
         </div>
         <hr>
     </div>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <!-- Mappa -->
+                <div id='map' ref="mapRef"></div>
+            </div>
+        </div>
+    </div>
 
-    <!-- Mappa -->
-    <div id='map' ref="mapRef"></div>
+
 
 
     <!-- <div>  -->
@@ -254,8 +274,8 @@ export default {
 @use '../assets/scss/partials/variables.scss' as *;
 
 #map {
-    height: 50vh;
-    width: 50vw;
+    height: 40vh;
+    width: 100%;
 }
 
 img {
@@ -307,11 +327,28 @@ img {
 }
 
 .details {
-    background-color: blue;
+    display: flex;
+    justify-content: center;
+    background-color: $bb-primary;
     border-radius: 20px;
-    max-width: 70%;
+    width: 80%;
     margin: auto;
-    padding: 1rem;
+    padding: 2.5rem;
+    color: $bb-lighter;
+    font-size: 1.2rem;
+    margin-top: -7rem;
+    margin-bottom: 3rem;
+
+    div {
+        padding: 0 1rem;
+        display: flex;
+        align-items: center;
+
+        span {
+            padding-left: 0.5rem;
+            font-size: 1.3rem;
+        }
+    }
 }
 
 .services {
