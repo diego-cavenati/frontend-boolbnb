@@ -1,14 +1,20 @@
 <script>
+import { store } from '../store';
 export default {
     name: 'AdvancedSearchView',
+    data (){
+        return {
+            store,
+        }
+    }
 }
 </script>
 
 <template>
     <!-- <CardComponent v-for="apartment in apartments" :key="apartment.id" :apartment="apartment" /> -->
     <ul>
-        <li v-for="result in results" :key="result.poi.name">
-            {{ result.poi.name }} - {{ result.address.freeformAddress }}
+        <li v-for="result in store.results.results">
+            {{ result.address }}
         </li>
     </ul>
 </template>

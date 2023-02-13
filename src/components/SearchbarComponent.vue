@@ -21,6 +21,7 @@ export default {
                 });
                 store.results = response.data.results;
                 console.log(store.results);
+                console.log(response);
             } catch (error) {
                 console.error(error);
             }
