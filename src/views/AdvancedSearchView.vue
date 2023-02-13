@@ -13,8 +13,8 @@ export default {
 <template>
     <!-- <CardComponent v-for="apartment in apartments" :key="apartment.id" :apartment="apartment" /> -->
     <ul>
-        <li v-for="result in store.results.results">
-            {{ result.address }}
+        <li v-for="result in store.results">
+            {{ result.address.freeformAddress }}
         </li>
     </ul>
 </template>

@@ -19,7 +19,7 @@ export default {
                         address: store.address,
                     }
                 });
-                store.results = response.data.results;
+                store.results = response.data.results.results;
                 console.log(store.results);
                 console.log(response);
             } catch (error) {
