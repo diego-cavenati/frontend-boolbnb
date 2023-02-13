@@ -65,7 +65,7 @@ export default {
 
 <template>
 
-    <div class="col-4">
+    <div class="col-6">
         <router-link :to="{ name: 'single-apartment', params: { slug: apartment.slug } }">
 
 

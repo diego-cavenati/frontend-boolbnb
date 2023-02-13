@@ -1,4 +1,5 @@
 <script>
+import { reactive } from 'vue'
 // axios import
 import axios from 'axios';
 // store import
@@ -9,14 +10,17 @@ import '@vuepic/vue-datepicker/dist/main.css'
 export default {
     name: 'SingleApartmentView',
     components: {
-        Datepicker
+        Datepicker,
     },
     data() {
         return {
             date: null,
-            apartment: '',
+            apartment: null,
+            latitude: null,
+            longitude: null,
             loading: true,
             store,
+
             name: '',
             surname: '',
             email: '',
@@ -28,7 +32,28 @@ export default {
         }
     },
     methods: {
-        sendForm() {
+        addMarker() {
+            const tt = window.tt;
+            var location = [this.longitude, this.latitude];
+            var popupOffset = 25;
+
+            var marker = new tt.Marker().setLngLat(location).addTo(this.map);
+            var popup = new tt.Popup({ offset: popupOffset }).setHTML("Your address!");
+            marker.setPopup(popup).togglePopup();
+        },
+        getMap() {
+            const tt = window.tt;
+            this.map = tt.map({
+                key: 'h0FDAudCcFnS8TK5dT1mvgXYkqCGc1CW',
+                container: this.$refs.mapRef,
+                style: '../assets/style-map/boolbnb-map.json',
+                center: [this.longitude, this.latitude],
+                zoom: 7,
+            });
+            this.map.addControl(new tt.FullscreenControl());
+            this.map.addControl(new tt.NavigationControl());
+        },
+         sendForm() {
             this.loading_form = true
             const data = {
                 name: this.name,
@@ -53,60 +78,65 @@ export default {
                     }
                     this.loading_form = false
                 })
-        }
+
+        },
     },
     mounted() {
-        // TODO: call API will go here
-
         const url = 'http://127.0.0.1:8000/api/apartments/' + this.$route.params.slug;
-        console.log(this.$route.params.slug);
+        console.log(url);
         axios.get(url)
-            .then(response => {
-                if (response.data.success) {
-                    this.apartment = response.data.results;
-                    console.log(this.apartment);
-                    console.log(response.data.results);
-                    this.loading = false
-                    console.log(this.apartment.id);
+            .then(resp => {
+                if (resp.data.success) {
+                    this.apartment = resp.data.results;
+                    this.latitude = resp.data.results.latitude;
+                    this.longitude = resp.data.results.longitude;
+                    this.loading = false;
                     this.apartment_id = this.apartment.id
+                    this.getMap();
+                    this.addMarker();
+                    
                 } else {
-                    this.$router.push({ name: 'not-found' })
+                    // this.$router.push({ name: 'not-found' }); //
                 }
-            }).catch(error => {
-                console.log(error)
             })
-
+            .catch(err => {
+                console.log(err);
+            });
     }
 }
 </script>
 <template>
     <!--TODO cambiare ps-5 e pe-5 se si vuole cambiare il padding sinistra e destra-->
-    <div class="ps-5 pe-5 d-flex justify-content-between"> <!--Sezione titolo, luogo etc-->
+    <div class="container" v-if="!loading"> <!--Sezione titolo, luogo etc-->
         <div>
             <h3>{{ apartment.title }}</h3>
-            <div>
-                Greve in Chianti, Toscana, Italia
-                <span>
+            <div class="address">
+                {{ apartment.address }}
+                <!-- Turn on for favorites -->
+                <!-- <span>
                     &hearts; Salva
-                </span>
+                </span> -->
             </div>
         </div>
-        <div>
+        <!-- turn on in case off name  -->
+        <!-- <div>
             <span>
                 Icona
             </span>
             <span>
                 Host: Edoardo C.
             </span>
-        </div>
+        </div> -->
     </div>
-    <div class="container"> <!--Sezione immagini-->
+    <div class="container" v-if="!loading"> <!--Sezione immagini-->
         <!--TODO creare classi css apposite per ogni col per gestire e sovrascrivere il padding dato da bootstrap-->
         <div class="row">
-            <div class="col-7 prova2">
-                <img class="main_img " :src="apartment.media" alt="">
+            <div class="col-12 prova2">
+                <div class="cover_img">
+                    <img class="main_img" :src="apartment.media" alt="">
+                </div>
             </div>
-            <div class="col-5">
+            <!-- <div class="col-5">
                 <div class="row">
                     <div class="col-6 ">
                         <img src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
@@ -115,33 +145,48 @@ export default {
                         <img class="border_top"
                             src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
                     </div>
-                    <div class="col-6 pt-3 "> <!--TODO sistemare in perfect pixel -->
+                    <div class="col-6 pt-3 "> 
                         <img class="test1"
                             src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
                     </div>
-                    <div class="col-6 pt-3 "> <!--TODO sistemare in perfect pixel -->
-                        <img class="border_bot"
+                    <div class="col-6 pt-3 ">  -->
+            <!-- <img class="border_bot"
                             src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
     <!--ps-5, pe-5, pt-5 da togliere se si vuole modificare il padding left, right e top-->
-    <div class="container pt-5"> <!-- Sezione descrizione, servizi e check in-->
+    <div class="container pt-5" v-if="!loading"> <!-- Sezione descrizione, servizi e check in-->
         <div>{{ date }}</div>
         <div class="row">
             <div class="col-7">
-                <div class="group_services2">
-                    <div class=" group_services text-center px-5">
-                        prova
+
+                <div class="details">
+                    <div class="guest">
+                        <i class="fa-solid fa-user"></i>
+                        <span>{{ apartment.guests }}</span>
+                    </div>
+                    <div class="total_rooms">
+                        <i class="fa-solid fa-house"></i>
+                        <span>{{ apartment.total_rooms }}</span>
+                    </div>
+                    <div class="beds">
+                        <i class="fa-solid fa-bed"></i>
+                        <span>{{ apartment.beds }}</span>
+                    </div>
+                    <div class="baths">
+                        <i class="fa-solid fa-toilet"></i>
+                        <span>{{ apartment.baths }}</span>
                     </div>
                 </div>
+
                 <p>
                     {{ apartment.description }}
                 </p>
                 <hr>
-                <div class="Services">
+                <!-- <div class="Services">
                     <div class="what_find fw-semibold">Cosa troverai</div>
                     <div class="container">
                         <div class="row">
@@ -151,7 +196,7 @@ export default {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
             <div class="col-5">
                 <div class="d-flex justify-content-between">
@@ -162,7 +207,7 @@ export default {
                         <h4>7 notti a Greve in chianti</h4>
                         <div>4 feb 2023 - 11 feb 2023</div>
                         <div class="d-flex justify-content-between">
-                            {{ apartment.price }}€ x 7 notti
+                            <!-- {{ apartment.price }}€ x 7 notti -->
                             <div>
                                 5.600€
                             </div>
@@ -252,12 +297,21 @@ export default {
         </div>
         <hr>
     </div>
-    <div class="text-center"> <!-- Sezione momentanea mappa -->
-        <img src="https://media.wired.com/photos/59269cd37034dc5f91bec0f1/191:100/w_1280,c_limit/GoogleMapTA.jpg"
-            alt="">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <!-- Mappa -->
+                <div id='map' ref="mapRef"></div>
+            </div>
+        </div>
     </div>
-    <div> <!--Host and aircover-->
-        <div class="container pt-5">
+
+
+
+
+    <!-- <div>  -->
+    <!--Host and aircover-->
+    <!-- <div class="container pt-5">
             <div class="col">
                 <div class="d-flex">
                     <div class="align-self-center px-2 ">
@@ -288,7 +342,7 @@ export default {
 
             </div>
         </div>
-    </div>
+    </div> -->
 
 </template>
 
@@ -296,18 +350,28 @@ export default {
 @use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
 
+#map {
+    height: 40vh;
+    width: 100%;
+}
+
 img {
     max-width: 100%;
-
-    //object-fit: cover;
 }
 
-.main_img {
-    border-radius: 30px 0 0 30px;
+.cover_img {
+    width: 100%;
+
+    img {
+        object-fit: cover;
+        border-radius: 2rem;
+        width: 100%;
+        height: 35rem;
+    }
 }
 
-.provaz {
-    padding: 0px;
+.address {
+    padding-bottom: 1rem;
 }
 
 .border_top {
@@ -339,15 +403,32 @@ img {
     border-radius: 20px;
 }
 
-.group_services {
-    background-color: blue;
+.details {
+    display: flex;
+    justify-content: center;
+    background-color: $bb-primary;
     border-radius: 20px;
-    max-width: 70%;
+    width: 80%;
     margin: auto;
-    padding: 1rem;
+    padding: 2.5rem;
+    color: $bb-lighter;
+    font-size: 1.2rem;
+    margin-top: -7rem;
+    margin-bottom: 3rem;
+
+    div {
+        padding: 0 1rem;
+        display: flex;
+        align-items: center;
+
+        span {
+            padding-left: 0.5rem;
+            font-size: 1.3rem;
+        }
+    }
 }
 
-.group_services2 {
+.services {
     margin-top: -5rem;
     padding-bottom: 2rem;
 }
