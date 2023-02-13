@@ -1,6 +1,7 @@
 <script>
 import { store } from '../store';
 import axios from 'axios';
+import CardComponent from '../components/CardComponent.vue';
 
 export default {
     name: 'AdvancedSearchView',
@@ -16,6 +17,9 @@ export default {
             client: null,
             apartments: [],
         }
+    },
+    components: {
+        CardComponent
     },
     methods: {
         addMarker() {
@@ -48,6 +52,8 @@ export default {
                     this.pages = response.data.results.last_page;
                     console.log(this.apartments);
                     this.loading = false;
+                    this.getMap();
+                    this.addMarker();
                 })
                 .catch(error => {
                     console.error(error)
@@ -78,6 +84,7 @@ export default {
     },
     created() {
         this.callApi()
+
     },
 }
 </script>
@@ -87,11 +94,13 @@ export default {
     <div class="container-fluid">
         <div class="row">
             <div class="col-6">
-                <!-- <div class="container">
-                    <div class="row"> -->
-                <CardComponent v-for="apartment in apartments" :key="apartment.id" :apartment="apartment" />
-                <!-- </div>
-                </div> -->
+                <div class="container">
+                    <div class="row">
+
+                        <CardComponent v-for="apartment in apartments" :key="apartment.id" :apartment="apartment" />
+
+                    </div>
+                </div>
                 <ul>
                     <li v-for="result in store.results">
                         {{ result.address }}
@@ -111,7 +120,7 @@ export default {
 
 
 #map {
-    height: 40vh;
+    height: 80vh;
     width: 100%;
 }
 </style>
