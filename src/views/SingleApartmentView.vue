@@ -20,7 +20,15 @@ export default {
             longitude: null,
             loading: true,
             store,
-            client: null,
+
+            name: '',
+            surname: '',
+            email: '',
+            body: '',
+            apartment_id: '',
+            errors: {},
+            loading_form: false,
+            success: false,
         }
     },
     methods: {
@@ -44,7 +52,34 @@ export default {
             });
             this.map.addControl(new tt.FullscreenControl());
             this.map.addControl(new tt.NavigationControl());
-        }
+        },
+         sendForm() {
+            this.loading_form = true
+            const data = {
+                name: this.name,
+                surname: this.surname,
+                email: this.email,
+                body: this.body,
+                apartment_id: this.apartment_id,
+            }
+            const urlMessage = 'http://127.0.0.1:8000/api/messages'
+            axios.post(urlMessage, data)
+                .then(resp => {
+                    console.log(resp);
+                    this.success = resp.data.success
+                    if (this.success) {
+                        this.name = ''
+                        this.surname = ''
+                        this.email = ''
+                        this.body = ''
+                        this.errors = {}
+                    } else {
+                        this.errors = resp.data.errors;
+                    }
+                    this.loading_form = false
+                })
+
+        },
     },
     mounted() {
         const url = 'http://127.0.0.1:8000/api/apartments/' + this.$route.params.slug;
@@ -56,8 +91,10 @@ export default {
                     this.latitude = resp.data.results.latitude;
                     this.longitude = resp.data.results.longitude;
                     this.loading = false;
+                    this.apartment_id = this.apartment.id
                     this.getMap();
                     this.addMarker();
+                    
                 } else {
                     // this.$router.push({ name: 'not-found' }); //
                 }
@@ -207,15 +244,55 @@ export default {
                             <div>1 ospite</div>
                         </div>
                     </div>
-                    <div class="border-top"> <!--TODO decidere grandezza dell'input-->
-                        <div>Message</div>
-                        <input type="text" placeholder="Scrivi qui">
-                    </div>
+                    <form @submit.prevent="sendForm()">
+                        <div class="border-top"> <!--TODO decidere grandezza dell'input-->
+                            <div class="mb-3 d-flex align-items-center gap-3 p-2 ">
+                                <label for="" class="form-label">Nome*</label>
+                                <input type="text" name="name" id="name"
+                                    class="form-control border-0 border-bottom w-50 rounded-0" placeholder=""
+                                    aria-describedby="helpId" required v-model="name">
+
+                                <div class="alert alert-danger" role="alert" v-for="error in errors.name">
+                                    {{ error }}
+                                </div>
+                            </div>
+                            <div class="mb-3 d-flex align-items-center gap-3 p-2">
+                                <label for="" class="form-label">Cognome*</label>
+                                <input type="text" name="surname" id="surname"
+                                    class="form-control border-0 border-bottom w-50 rounded-0" placeholder=""
+                                    aria-describedby="helpId" required v-model="surname">
+
+                                <div class="alert alert-danger" role="alert" v-for="error in errors.surname">
+                                    {{ error }}
+                                </div>
+                            </div>
+                            <div class="mb-3 d-flex align-items-center gap-3 p-2 ">
+                                <label for="" class="form-label">Email*</label>
+                                <input type="email" name="email" id="email"
+                                    class="form-control border-0 border-bottom w-50 rounded-0" placeholder=""
+                                    aria-describedby="helpId" required v-model="email">
+
+                                <div class="alert alert-danger" role="alert" v-for="error in errors.email">
+                                    {{ error }}
+                                </div>
+                            </div>
+                            <div class="mb-3 d-flex align-items-center gap-3 p-2 ">
+                                <label for="" class="form-label">Messagio*</label>
+                                <input type="text" name="body" id="body"
+                                    class="form-control border-0 border-bottom w-50 rounded-0" placeholder=""
+                                    aria-describedby="helpId" required v-model="body">
+
+                                <div class="alert alert-danger" role="alert" v-for="error in errors.body">
+                                    {{ error }}
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="custom_button" :disabled="loading_form">
+                            {{ loading_form? 'Sending...': 'Invia prenotazione' }}
+                        </button>
+                    </form>
                 </div>
 
-                <div class="text-center custom_button">
-                    Invia prenotazione
-                </div>
             </div>
         </div>
         <hr>
