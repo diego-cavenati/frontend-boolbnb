@@ -1,15 +1,25 @@
 <script>
 import App from '../App.vue';
 import { store } from '../store';
-// TODO usare hiding elements di bootstrap per gestire la nav che compare sotto 
+import SearchbarComponent from './SearchbarComponent.vue';
+
 export default {
     name: 'NavbarComponent',
     data() {
         return {
-            store
+            store,
+            showInNavbar: false,
         }
     },
+    components: {
+        SearchbarComponent
+    },
     methods: {
+    },
+    computed: {
+        hideInHome() {
+            return this.$route.path === '/';
+        }
     }
 }
 </script>
@@ -21,9 +31,10 @@ export default {
                 <img src="../assets/svg/boolbnb-color.svg" alt="">
             </router-link>
         </div>
+        <SearchbarComponent v-if="!hideInHome" />
         <div class="d-flex align-items-center hide">
 
-            <span class="host">Passa alla modalità host</span>
+            <!-- <span class="host">Passa alla modalità host</span> -->
 
             <button type="button" class="profile_btn btn d-flex flex-row" data-bs-toggle="dropdown"
                 aria-expanded="false">

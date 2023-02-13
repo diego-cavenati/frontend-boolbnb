@@ -20,9 +20,6 @@ export default {
                 const response = await axios.get('http://127.0.0.1:8000/api/search', {
                     params: {
                         address: this.address,
-                        // guests: this.guests,
-                        // checkIn: this.checkIn,
-                        // checkOut: this.checkOut
                     }
                 });
                 this.results = response.data.results.results;
@@ -31,57 +28,46 @@ export default {
                 console.error(error);
             }
         }
-    }
+    },
+    computed: {
+        elementId() {
+            if (this.$route.name === 'home') {
+                return 'large_element';
+            } else {
+                return 'small_element';
+            }
+        },
+    },
 }
 </script>
 
 <template>
-    <div>
+
+    <div :id="elementId">
         <form @submit.prevent="search">
-            <input type="text" v-model="address" placeholder="Indirizzo">
-            <input type="number" v-model="guests" placeholder="Ospiti">
-            <input type="date" v-model="checkIn" placeholder="Check-in">
-            <input type="date" v-model="checkOut" placeholder="Check-out">
-            <button type="submit">Cerca</button>
+            <div class="container_search">
+                <div class="input">
+                    <i class="fa-regular fa-map"></i>
+                    <input type="text" v-model="address" placeholder="Dove vuoi andare?">
+                </div>
+                <div class="input">
+                    <div class="line"></div>
+                    <i class="fa-regular fa-calendar"></i>
+                    <input type="text" v-model="checkin" placeholder="Check-in">
+                    <input type="text" v-model="checkout" placeholder="Check-out">
+                </div>
+                <div class="input">
+                    <div class="line"></div>
+                    <i class="fa-regular fa-user"></i>
+                    <input type="text" v-model="persons" placeholder="Quanti siete?">
+                </div>
+            </div>
+
+            <button type="submit" class="searchButton" @click="search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
         </form>
-
-        <ul v-if="results.length">
-            <li v-for="result in results">
-                {{ result.name }} - {{ result.address }}
-            </li>
-        </ul>
-        <p v-else>Nessun risultato trovato</p>
     </div>
-
-    <!-- 
-    <div class="searchBar">
-
-        <div class="container_search">
-            <div class="input">
-                <i class="fa-regular fa-map"></i>
-                <input type="text" v-model="searchTerm" placeholder="Dove vuoi andare?">
-            </div>
-            <div class="input">
-                <div class="line"></div>
-                <i class="fa-regular fa-calendar"></i>
-                <input type="text" v-model="checkin" placeholder="Check-in">
-                <input type="text" v-model="checkout" placeholder="Check-out">
-            </div>
-            <div class="input">
-                <div class="line"></div>
-                <i class="fa-regular fa-user"></i>
-                <input type="text" v-model="persons" placeholder="Quanti siete?">
-            </div>
-        </div>
-
-        <button class="searchButton" @click="search">
-            <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
-
-    </div> -->
-    <!-- <div v-for="result in results">
-        {{ result.name }}
-    </div> -->
 
 </template>
 
@@ -89,8 +75,8 @@ export default {
 @use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
 
+#large_element {
 
-.searchBar {
     background: #FFFFFF;
     box-shadow: 0px 4px 8px 4px rgba(0, 0, 0, 0.05);
     border-radius: 4rem;
@@ -101,44 +87,107 @@ export default {
     align-items: center;
     padding-left: 1rem;
 
+    form {
+        display: flex;
+    }
+
+
+    .input {
+        width: calc(100%/3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        svg {
+            color: black;
+            padding-right: 0.5rem;
+        }
+
+        input {
+            width: 70%;
+        }
+
+    }
+
+    .line {
+        width: 0.2rem;
+        height: 4rem;
+        color: $bb-background;
+    }
+
+    .searchButton {
+        background-color: $bb-primary;
+        padding: 1.5rem 5rem 1.5rem 5rem;
+        border-radius: 4rem;
+        font-size: 2.5rem;
+
+        svg {
+            color: $bb-lighter;
+        }
+    }
+
+    .container_search {
+        display: flex;
+        align-items: center;
+    }
 }
 
-.input {
-    width: calc(100%/3);
+
+#small_element {
+
+
+    background: #FFFFFF;
+    box-shadow: 0px 4px 8px 4px rgba(0, 0, 0, 0.05);
+    border-radius: 2rem;
+    font-size: 1rem;
+    font-family: $bb-font-secondary;
+    color: $bb-text-gray;
     display: flex;
     align-items: center;
-    justify-content: center;
+    padding-left: 0.5rem;
 
-    svg {
-        color: black;
-        padding-right: 0.5rem;
+    form {
+        display: flex;
     }
 
-    input {
-        width: 70%;
+
+    .input {
+        width: calc(100%/3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        svg {
+            color: black;
+            padding-right: 0.5rem;
+        }
+
+        input {
+            width: 50%;
+        }
+
     }
 
-}
-
-.line {
-    width: 0.2rem;
-    height: 4rem;
-    color: $bb-background;
-}
-
-.searchButton {
-    background-color: $bb-primary;
-    padding: 1.5rem 5rem 1.5rem 5rem;
-    border-radius: 4rem;
-    font-size: 2.5rem;
-
-    svg {
-        color: $bb-lighter;
+    .line {
+        width: 0.2rem;
+        height: 2rem;
+        color: $bb-background;
     }
-}
 
-.container_search {
-    display: flex;
-    align-items: center;
+    .searchButton {
+        background-color: $bb-primary;
+        padding: 1.5rem 5rem 1.5rem 5rem;
+        border-radius: 4rem;
+        font-size: 2rem;
+
+        svg {
+            color: $bb-lighter;
+        }
+    }
+
+    .container_search {
+        display: flex;
+        align-items: center;
+    }
 }
 </style>
