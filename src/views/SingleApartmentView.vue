@@ -38,7 +38,7 @@ export default {
             this.map = tt.map({
                 key: 'h0FDAudCcFnS8TK5dT1mvgXYkqCGc1CW',
                 container: this.$refs.mapRef,
-                style: 'tomtom://vector/1/basic-main',
+                style: '../assets/style-map/boolbnb-map.json',
                 center: [this.longitude, this.latitude],
                 zoom: 7,
             });
