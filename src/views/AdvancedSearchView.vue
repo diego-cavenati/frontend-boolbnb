@@ -24,7 +24,7 @@ export default {
     methods: {
         addMarker() {
             const tt = window.tt;
-            var location = [2.323653, 48.873261];
+            var location = [2.323653, 48.873261]; //ciclare per risultati per aggiungere marker
             // var location = [this.longitude, this.latitude];
             var popupOffset = 25;
 
@@ -37,7 +37,7 @@ export default {
             this.map = tt.map({
                 key: 'h0FDAudCcFnS8TK5dT1mvgXYkqCGc1CW',
                 container: this.$refs.mapRef,
-                style: 'tomtom://vector/1/basic-main',
+                style: 'tomtom://vector/1/basic-light',
                 center: [2.323653, 48.873261],
                 // center: [this.longitude, this.latitude],
                 zoom: 7,
@@ -45,22 +45,22 @@ export default {
             this.map.addControl(new tt.FullscreenControl());
             this.map.addControl(new tt.NavigationControl());
         },
-        callApi() {
-            axios.get(`http://127.0.0.1:8000/api/apartments?page=${this.currentPage}`)
-                .then(response => {
-                    this.apartments = response.data.results.data;
-                    this.pages = response.data.results.last_page;
-                    console.log(this.apartments);
-                    this.loading = false;
-                    this.getMap();
-                    this.addMarker();
-                })
-                .catch(error => {
-                    console.error(error)
-                    this.error = error.message;
-                    this.loading = false;
-                })
-        }
+        // callApi() {
+        //     axios.get(`http://127.0.0.1:8000/api/apartments?page=${this.currentPage}`)
+        //         .then(response => {
+        //             this.apartments = response.data.results.data;
+        //             this.pages = response.data.results.last_page;
+        //             console.log(this.apartments);
+        //             this.loading = false;
+        //             this.getMap();
+        //             this.addMarker();
+        //         })
+        //         .catch(error => {
+        //             console.error(error)
+        //             this.error = error.message;
+        //             this.loading = false;
+        //         })
+        // }
     },
     mounted() {
         // const url = 'http://127.0.0.1:8000/api/apartments/';
@@ -81,9 +81,12 @@ export default {
         //     .catch(err => {
         //         console.log(err);
         //     });
+        this.getMap();
+        this.addMarker();
     },
     created() {
-        this.callApi()
+        // this.callApi()
+
 
     },
 }
@@ -97,15 +100,15 @@ export default {
                 <div class="container">
                     <div class="row">
 
-                        <CardComponent v-for="apartment in apartments" :key="apartment.id" :apartment="apartment" />
+                        <CardComponent v-for="apartment in store.results" :key="apartment.id" :apartment="apartment" />
 
                     </div>
                 </div>
-                <ul>
+                <!-- <ul>
                     <li v-for="result in store.results">
                         {{ result.address }}
                     </li>
-                </ul>
+                </ul> -->
             </div>
             <div class="col-6">
                 <div id='map' ref="mapRef"></div>

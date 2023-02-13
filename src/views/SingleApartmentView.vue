@@ -46,14 +46,14 @@ export default {
             this.map = tt.map({
                 key: 'h0FDAudCcFnS8TK5dT1mvgXYkqCGc1CW',
                 container: this.$refs.mapRef,
-                style: '../assets/style-map/boolbnb-map.json',
+                style: 'tomtom://vector/1/basic-light',
                 center: [this.longitude, this.latitude],
                 zoom: 7,
             });
             this.map.addControl(new tt.FullscreenControl());
             this.map.addControl(new tt.NavigationControl());
         },
-         sendForm() {
+        sendForm() {
             this.loading_form = true
             const data = {
                 name: this.name,
@@ -94,7 +94,7 @@ export default {
                     this.apartment_id = this.apartment.id
                     this.getMap();
                     this.addMarker();
-                    
+
                 } else {
                     // this.$router.push({ name: 'not-found' }); //
                 }

@@ -8,64 +8,29 @@ export default {
     data() {
         return {
             store,
-            // error: null,
             apartments: [],
-            // loading: true,
-            // base_api_url: 'http://127.0.0.1:8000/api/apartments?page=2',
-            // max: 100,
         }
     },
     props: ['apartment'],
     methods: {
-        /* 
-        NextImg: function () { //TODO fix. cambiare il ciclo 
-            for (let index = 0; index < store.images.length; index++) {
-                const element = store.images[index];
-            }
-            if (store.immagineAttiva < store.images.length -1) {
-                store.immagineAttiva++
+    },
+    mounted() {
+    },
+    computed: {
+        elementClass() {
+            if (this.$route.name === 'home') {
+                return 'col-4';
             } else {
-                store.immagineAttiva = 0
+                return 'col-6';
             }
         },
-
-        */
-        /*
-        PrevImg: function () {
-            for (let index = 0; index < store.images.length; index++) {
-                const element = store.images[index];
-            }
-            if (store.immagineAttiva === 0) {
-                store.immagineAttiva = element.img.length -1
-            } else {
-                store.immagineAttiva--
-            }
-        }
-        */
     },
-    // created() {
-    //     axios.get('http://127.0.0.1:8000/api/apartments')
-    //         .then(response => {
-    //             console.log('FUNZIONO');
-    //             console.log(response.data.results.data);
-    //             this.apartments = response.data.results.data;
-    //             // this.apartments = response.data.
-    //             this.loading = false;
-    //         })
-    //         .catch(error => {
-    //             console.error(error)
-    //             this.error = error.message;
-    //             this.loading = false;
-    //         })
-    // },
-    mounted() {
-    }
 }
 </script>
 
 <template>
 
-    <div class="col-6">
+    <div :class="elementClass">
         <router-link :to="{ name: 'single-apartment', params: { slug: apartment.slug } }">
 
 
