@@ -1,15 +1,12 @@
 <script>
 import axios from 'axios';
+import { store } from '../store';
 
 export default {
     name: 'SearchbarComponent',
     data() {
         return {
-            address: '',
-            guests: 0,
-            checkIn: '',
-            checkOut: '',
-            results: []
+            store,
         }
     },
     components: {
@@ -19,11 +16,11 @@ export default {
             try {
                 const response = await axios.get('http://127.0.0.1:8000/api/search', {
                     params: {
-                        address: this.address,
+                        address: store.address,
                     }
                 });
-                this.results = response;
-                console.log(this.results);
+                store.results = response.data.results;
+                console.log(store.results);
             } catch (error) {
                 console.error(error);
             }
@@ -48,24 +45,26 @@ export default {
             <div class="container_search">
                 <div class="input">
                     <i class="fa-regular fa-map"></i>
-                    <input type="text" v-model="address" placeholder="Dove vuoi andare?">
+                    <input type="text" v-model="store.address" placeholder="Dove vuoi andare?">
                 </div>
                 <div class="input">
                     <div class="line"></div>
                     <i class="fa-regular fa-calendar"></i>
-                    <input type="text" v-model="checkin" placeholder="Check-in">
-                    <input type="text" v-model="checkout" placeholder="Check-out">
+                    <input type="text" v-model="store.check_in" placeholder="Check-in">
+                    <input type="text" v-model="store.check_out" placeholder="Check-out">
                 </div>
                 <div class="input">
                     <div class="line"></div>
                     <i class="fa-regular fa-user"></i>
-                    <input type="text" v-model="persons" placeholder="Quanti siete?">
+                    <input type="text" v-model="store.guests" placeholder="Quanti siete?">
                 </div>
             </div>
 
-            <button type="submit" class="searchButton" @click="search">
-                <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
+            <router-link :to="{ name: 'search' }">
+                <button type="submit" class="searchButton" @click="search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </router-link>
         </form>
     </div>
 
