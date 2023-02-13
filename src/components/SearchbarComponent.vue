@@ -19,7 +19,8 @@ export default {
                         address: store.address,
                     }
                 });
-                store.results = response.data.results.results;
+                store.results = response.data.results;
+                console.log(store.address);
                 console.log(store.results);
                 console.log(response);
             } catch (error) {

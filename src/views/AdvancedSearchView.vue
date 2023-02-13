@@ -14,7 +14,7 @@ export default {
     <!-- <CardComponent v-for="apartment in apartments" :key="apartment.id" :apartment="apartment" /> -->
     <ul>
         <li v-for="result in store.results">
-            {{ result.address.freeformAddress }}
+            {{ result.address }}
         </li>
     </ul>
 </template>
