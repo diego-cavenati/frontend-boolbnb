@@ -22,7 +22,7 @@ export default {
                         address: this.address,
                     }
                 });
-                this.results = response.data.results.results;
+                this.results = response;
                 console.log(this.results);
             } catch (error) {
                 console.error(error);
