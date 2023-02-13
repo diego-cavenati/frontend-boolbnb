@@ -206,24 +206,40 @@ export default {
                                 <input type="text" name="name" id="name"
                                     class="form-control border-0 border-bottom w-50 rounded-0" placeholder=""
                                     aria-describedby="helpId" required v-model="name">
+
+                                <div class="alert alert-danger" role="alert" v-for="error in errors.name">
+                                    {{ error }}
+                                </div>
                             </div>
                             <div class="mb-3 d-flex align-items-center gap-3 p-2">
                                 <label for="" class="form-label">Cognome*</label>
                                 <input type="text" name="surname" id="surname"
                                     class="form-control border-0 border-bottom w-50 rounded-0" placeholder=""
                                     aria-describedby="helpId" required v-model="surname">
+
+                                <div class="alert alert-danger" role="alert" v-for="error in errors.surname">
+                                    {{ error }}
+                                </div>
                             </div>
                             <div class="mb-3 d-flex align-items-center gap-3 p-2 ">
                                 <label for="" class="form-label">Email*</label>
                                 <input type="email" name="email" id="email"
                                     class="form-control border-0 border-bottom w-50 rounded-0" placeholder=""
                                     aria-describedby="helpId" required v-model="email">
+
+                                <div class="alert alert-danger" role="alert" v-for="error in errors.email">
+                                    {{ error }}
+                                </div>
                             </div>
                             <div class="mb-3 d-flex align-items-center gap-3 p-2 ">
                                 <label for="" class="form-label">Messagio*</label>
                                 <input type="text" name="body" id="body"
                                     class="form-control border-0 border-bottom w-50 rounded-0" placeholder=""
                                     aria-describedby="helpId" required v-model="body">
+
+                                <div class="alert alert-danger" role="alert" v-for="error in errors.body">
+                                    {{ error }}
+                                </div>
                             </div>
                         </div>
                         <button type="submit" class="custom_button" :disabled="loading_form">
