@@ -41,13 +41,20 @@ export default {
     methods: {
         async search() {
             try {
+                //http://127.0.0.1:8000/api/search?address=roma
                 const response = await axios.get('http://127.0.0.1:8000/api/search', {
                     params: {
                         address: store.address,
                     }
                 });
                 store.results = response.data.results;
+
+                console.log(store.address);
+                console.log(store.results);
+                console.log(response);
+                console.log(store.results[0].latitude);
                 store.price = response.data.results.price;
+
             } catch (error) {
                 console.error(error);
             }
