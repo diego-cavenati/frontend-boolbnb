@@ -5,7 +5,9 @@ import axios from 'axios';
 // store import
 import { store } from '../store.js';
 import Datepicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css'
+import '@vuepic/vue-datepicker/dist/main.css';
+import moment from 'moment';
+import { watch } from 'vue';
 
 export default {
     name: 'SingleApartmentView',
@@ -20,7 +22,6 @@ export default {
             longitude: null,
             loading: true,
             store,
-
             name: '',
             surname: '',
             email: '',
@@ -29,6 +30,10 @@ export default {
             errors: {},
             loading_form: false,
             success: false,
+            nights: '',
+            price_nights: '',
+            total_price: '',
+            price_per_night: '',
         }
     },
     methods: {
@@ -44,7 +49,7 @@ export default {
         getMap() {
             const tt = window.tt;
             this.map = tt.map({
-                key: 'h0FDAudCcFnS8TK5dT1mvgXYkqCGc1CW',
+                key: 'FiLLCEGWt31cQ9ECIWAD6zYjczzeC6zn',
                 container: this.$refs.mapRef,
                 style: 'tomtom://vector/1/basic-light',
                 center: [this.longitude, this.latitude],
@@ -78,7 +83,26 @@ export default {
                     }
                     this.loading_form = false
                 })
+        },
+        calc_price() {
+            const start = moment(this.store.check_in, 'DD/MM');
+            const end = moment(this.store.check_out, 'DD/MM');
+            this.nights = end.diff(start, 'days') - 1;
 
+            this.price_per_night = this.store.price;
+            this.price_nights = this.price_per_night * this.nights;
+            this.total_price = this.price_nights + 100;
+            this.price_per_night = this.price_nights / this.nights;
+
+
+            // this.price_nights = this.store.price * this.nights;
+            // this.total_price = this.price_nights + 100;
+            console.log(this.store.check_in);
+            console.log(this.store.check_out);
+            console.log(this.store.price);
+            console.log(this.nights);
+            console.log(this.price_nights);
+            console.log(this.total_price);
         },
     },
     mounted() {
@@ -94,7 +118,6 @@ export default {
                     this.apartment_id = this.apartment.id
                     this.getMap();
                     this.addMarker();
-
                 } else {
                     // this.$router.push({ name: 'not-found' }); //
                 }
@@ -102,12 +125,16 @@ export default {
             .catch(err => {
                 console.log(err);
             });
+    },
+    created() {
+        watch(() => this.store.datePicker, this.calc_price);
     }
 }
+
 </script>
 <template>
-    <!--TODO cambiare ps-5 e pe-5 se si vuole cambiare il padding sinistra e destra-->
-    <div class="container" v-if="!loading"> <!--Sezione titolo, luogo etc-->
+
+    <div class="container" v-if="!loading">
         <div>
             <h3>{{ apartment.title }}</h3>
             <div class="address">
@@ -186,30 +213,32 @@ export default {
                     {{ apartment.description }}
                 </p>
                 <hr>
-                <!-- <div class="Services">
+                <div class="Services">
                     <div class="what_find fw-semibold">Cosa troverai</div>
                     <div class="container">
                         <div class="row">
-                            <div v-for="service in store.services" class="col-6 p-0">
-                                <span class="pe-1"><i :class=service.img></i></span>
+                            <div v-for="service in apartment.services" class="col-6 p-0">
+                                <!-- <span class="pe-1"><i :class=service.img></i></span> -->
                                 <span>{{ service.text }}</span>
                             </div>
                         </div>
                     </div>
-                </div> -->
+                </div>
             </div>
             <div class="col-5">
                 <div class="d-flex justify-content-between">
                     <div>
                         {{ apartment.price }}€ notte
                     </div>
+                    <!-- v-if="this.nights" -->
                     <div>
-                        <h4>7 notti a Greve in chianti</h4>
-                        <div>4 feb 2023 - 11 feb 2023</div>
+                        <h4>{{ this.nights }} notti in {{ apartment.address }}</h4>
+                        <div> {{ store.check_in }} - {{ store.check_out }}
+                        </div>
                         <div class="d-flex justify-content-between">
-                            <!-- {{ apartment.price }}€ x 7 notti -->
+                            {{ apartment.price }}€ x {{ this.nights }} notti
                             <div>
-                                5.600€
+                                {{ this.price_nights }}
                             </div>
                         </div>
                         <div class="d-flex justify-content-between">
@@ -222,22 +251,22 @@ export default {
                         <div class="d-flex justify-content-between">
                             Totale
                             <div>
-                                5.700€
+                                {{ this.total_price }}€
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="container border rounded p-0">
-                    <Datepicker v-model="date" range />
+                    <!-- <Datepicker v-model="date" range /> -->
                     <div class="row">
                         <!--TODO aggiungere padding personalizzato se vogliamo tenere questo tipo di struttura-->
                         <div class="col ">
                             check-in
-                            <div>4/2/2023</div>
+                            <div>{{ store.check_in }}</div>
                         </div>
                         <div class="col">
                             check-out
-                            <div>11/2/2023</div>
+                            <div>{{ store.check_out }}</div>
                         </div>
                         <div class="col">
                             Ospiti
@@ -352,7 +381,12 @@ export default {
 
 #map {
     height: 40vh;
+    min-height: 400px;
     width: 100%;
+}
+
+h3 {
+    padding-top: 1rem;
 }
 
 img {
