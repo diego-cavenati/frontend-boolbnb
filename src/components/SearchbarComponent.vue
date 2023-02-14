@@ -48,7 +48,7 @@ export default {
                     }
                 });
                 store.results = response.data.results;
-
+                console.log(store.address);
                 console.log(store.address);
                 console.log(store.results);
                 console.log(response);
@@ -103,25 +103,27 @@ export default {
         watch(() => this.store.datePicker, this.convertDates);
     },
     mounted() {
-        const searchBoxWrapper = document.getElementById('searchBox');
-        const options = {
-            searchOptions: {
-                key: "FiLLCEGWt31cQ9ECIWAD6zYjczzeC6zn",
-                language: "it-IT",
-                limit: 5,
-            },
-            autocompleteOptions: {
-                key: "FiLLCEGWt31cQ9ECIWAD6zYjczzeC6zn",
-                language: "it-IT",
-            },
+        // const searchBoxWrapper = document.getElementById('searchBox');
+        // const options = {
+        //     searchOptions: {
+        //         key: "FiLLCEGWt31cQ9ECIWAD6zYjczzeC6zn",
+        //         language: "it-IT",
+        //         limit: 5,
+        //     },
+        //     autocompleteOptions: {
+        //         key: "FiLLCEGWt31cQ9ECIWAD6zYjczzeC6zn",
+        //         language: "it-IT",
+        //     },
 
-        }
-        const ttSearchBox = new tt.plugins.SearchBox(tt.services, options)
-        const searchBoxHTML = ttSearchBox.getSearchBoxHTML()
-        searchBoxWrapper.append(searchBoxHTML);
-        const searchBoxInput = document.querySelector('.tt-search-box-input');
-        searchBoxInput.setAttribute('v-model', this.searchTerm);
-        console.log(searchBoxHTML);
+        // }
+        // const ttSearchBox = new tt.plugins.SearchBox(tt.services, options)
+        // const searchBoxHTML = ttSearchBox.getSearchBoxHTML()
+        // searchBoxWrapper.append(searchBoxHTML);
+        // const searchBoxInput = document.querySelector('.tt-search-box-input');
+        // searchBoxInput.addEventListener('input', function () {
+        //     this.store.address = searchBoxInput.value
+        // })
+        // console.log(searchBoxHTML);
     }
 }
 
@@ -134,8 +136,8 @@ export default {
             <div class="container_search">
                 <div class="input" required>
                     <!-- <i class="fa-regular fa-map"></i> -->
-                    <div id="searchBox"></div>
-                    <!-- <input type="text" v-model="searchTerm" placeholder="Dove vuoi andare?"> -->
+                    <!-- <div id="searchBox"></div> -->
+                    <input type="text" v-model="store.address" placeholder="Dove vuoi andare?">
                 </div>
                 <div class="input">
                     <div class="line"></div>
