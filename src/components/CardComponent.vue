@@ -50,7 +50,7 @@ export default {
                 </div>
 
                 <div class="card-body text-start">
-                    <!-- <div class="summary">Appartmaneto - {{ apartment.address }}</div> -->
+                    <div class="summary">Appartmaneto - {{ apartment.address }}</div>
                     <h5>{{ apartment.title }}</h5>
 
                     <div class="info">Ospiti {{ apartment.guests }} - Stanze {{ apartment.total_rooms }} - Letti {{

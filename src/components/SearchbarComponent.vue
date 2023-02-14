@@ -48,12 +48,8 @@ export default {
                     }
                 });
                 store.results = response.data.results;
-                console.log(store.address);
-                console.log(store.address);
-                console.log(store.results);
-                console.log(response);
-                console.log(store.results[0].latitude);
                 store.price = response.data.results.price;
+                store.loading = false;
 
             } catch (error) {
                 console.error(error);
