@@ -19,6 +19,8 @@ export const store = reactive({
     loading: true,
     datePicker: '',
     guests: 1,
+    lat: '',
+    lon: '',
 
     test_categorys: [
         {

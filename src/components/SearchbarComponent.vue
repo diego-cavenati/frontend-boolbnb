@@ -49,6 +49,9 @@ export default {
                 });
                 store.results = response.data.results;
                 store.price = response.data.results.price;
+                store.lat = response.data.poi.lat;
+                store.lon = response.data.poi.lon;
+
                 store.loading = false;
 
             } catch (error) {

@@ -38,8 +38,8 @@ export default {
                 container: this.$refs.mapRef,
                 style: 'tomtom://vector/1/basic-light',
                 // center: [45.46362, 9.18812],
-                // center: [this.longitude, this.latitude],
-                center: [store.results[0].longitude, store.results[0].latitude],
+                center: [store.lon, store.lat],
+                // center: [store.results[0].longitude, store.results[0].latitude],
                 zoom: 12,
             });
             this.map.addControl(new tt.FullscreenControl());

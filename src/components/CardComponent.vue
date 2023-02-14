@@ -1,7 +1,7 @@
 <script>
 import App from '../App.vue';
 import { store } from '../store';
-import axios from 'axios';
+
 
 export default {
     name: 'CardComponent',
@@ -50,7 +50,7 @@ export default {
                 </div>
 
                 <div class="card-body text-start">
-                    <div class="summary">Appartmaneto - {{ apartment.address }}</div>
+                    <div class="summary">{{ apartment.address }}</div>
                     <h5>{{ apartment.title }}</h5>
 
                     <div class="info">Ospiti {{ apartment.guests }} - Stanze {{ apartment.total_rooms }} - Letti {{
@@ -59,7 +59,7 @@ export default {
 
                     <div class="d-flex justify-content-end">
                         <!-- <div>⭐️</div> TODO add reviews-->
-                        <div><span class="price">{{ apartment.price }} €</span> /notte</div>
+                        <div class="nights"><span class="price">{{ apartment.price }} €</span> /notte</div>
                     </div>
 
                 </div>
@@ -103,6 +103,7 @@ export default {
 
 h5 {
     padding-bottom: 0rem;
+    color: $bb-dark;
 }
 
 .info {
@@ -114,8 +115,13 @@ h5 {
     font-size: 1.3rem;
     font-weight: 500;
     font-family: $bb-font-primary;
+    color: $bb-darker;
 }
 
+.nights {
+    color: $bb-dark;
+
+}
 
 // ON IF WE HAVE AN CAROUSEL
 // .arrow_left {

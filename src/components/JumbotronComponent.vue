@@ -18,8 +18,8 @@ export default {
         <div class="pattern">
             <div class="blur">
                 <div class="content">
-                    <h1>Lorem ipsum is simply dummy</h1>
-                    <h2>Lorem ipsum dolor sit amet.</h2>
+                    <h1>Scopri nuove destinazioni</h1>
+                    <h2>Prenota la tua casa ideale</h2>
 
                     <SearchbarComponent />
                 </div>
