@@ -1,15 +1,25 @@
 <script>
 import App from '../App.vue';
 import { store } from '../store';
-// TODO usare hiding elements di bootstrap per gestire la nav che compare sotto 
+import SearchbarComponent from './SearchbarComponent.vue';
+
 export default {
     name: 'NavbarComponent',
     data() {
         return {
-            store
+            store,
+            showInNavbar: false,
         }
     },
+    components: {
+        SearchbarComponent
+    },
     methods: {
+    },
+    computed: {
+        hideInHome() {
+            return this.$route.path === '/';
+        }
     }
 }
 </script>
@@ -17,23 +27,27 @@ export default {
 
     <nav class="ps-5 pe-5 pt-3 d-flex justify-content-between align-items-center">
         <div class="hide">
-            <!-- TODO add link home -->
-            <img src="../assets/svg/boolbnb-color.svg" alt="">
+            <router-link :to="{ name: 'home' }">
+                <img src="../assets/svg/boolbnb-color.svg" alt="">
+            </router-link>
         </div>
+        <SearchbarComponent v-if="!hideInHome" />
         <div class="d-flex align-items-center hide">
 
-            <span class="host">Passa alla modalità host</span>
+            <!-- <span class="host">Passa alla modalità host</span> -->
 
             <button type="button" class="profile_btn btn d-flex flex-row" data-bs-toggle="dropdown"
                 aria-expanded="false">
                 <i class="fa-solid fa-bars"></i>
                 <div class="profile_img">
-                    <!-- TODO add letter usere -->
-                    <span>AM</span>
+                    <!-- TODO add letter user -->
+                    <span><i class="fa-solid fa-user"></i></span>
                 </div>
             </button>
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Messaggi</a></li>
+                <li><a class="dropdown-item" href="http://127.0.0.1:8000/">Accedi</a></li>
+                <li><a class="dropdown-item" href="http://127.0.0.1:8000/register">Registrati</a></li>
+                <!-- <li><a class="dropdown-item" href="#">Messaggi</a></li>
                 <li><a class="dropdown-item" href="#">Preferiti</a></li>
                 <li>
                     <hr class="dropdown-divider">
@@ -42,7 +56,7 @@ export default {
                 <li>
                     <hr class="dropdown-divider">
                 </li>
-                <li><a class="dropdown-item" href="#">Esci</a></li>
+                <li><a class="dropdown-item" href="#">Esci</a></li> -->
             </ul>
         </div>
     </nav>
@@ -51,20 +65,31 @@ export default {
     <div class="nav_bottom">
         <div class="container icons">
 
+
+            <div class="nav_icon">
+                <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-user"></i>
+                    <span><a href="http://127.0.0.1:8000/">Accedi</a></span>
+                </button>
+            </div>
+
             <div class="nav_icon">
                 <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <span>Esplora</span>
+                    <span>Cerca</span>
                 </button>
             </div>
 
             <div class="nav_icon">
                 <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fa-regular fa-heart"></i>
-                    <span>Preferiti</span>
+                    <i class="fa-solid fa-pen"></i>
+                    <span><a href="http://127.0.0.1:8000/register">Registrati</a></span>
                 </button>
             </div>
 
+
+
+            <!--
             <div>
                 <div class="nav_icon dropup">
                     <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -86,7 +111,7 @@ export default {
                     </ul>
                 </div>
 
-            </div>
+            </div> -->
 
         </div>
     </div>
@@ -95,6 +120,10 @@ export default {
 <style lang="scss">
 @use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
+
+nav {
+    height: 5vh;
+}
 
 // Top navbar
 .profile_btn {
@@ -122,6 +151,11 @@ export default {
     justify-content: center;
     align-items: center;
     margin-left: 0.5rem;
+
+    svg {
+        color: $bb-lighter;
+
+    }
 }
 
 // bottom navbar

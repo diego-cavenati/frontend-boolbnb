@@ -5,82 +5,89 @@ import {
 // import axios per fare call api
 import axios from 'axios';
 
-
-
-
-
-
 export const store = reactive({
-    test: 'store.js funziona',
+    //carousl elements
     immagineAttiva: 0,
-    images: [
-        {
-            img: [
-                'https://a0.muscache.com/im/pictures/4f70b681-a792-4530-8c52-f2a8d262942d.jpg',
-                //'https://storage.superpixel.com/cover/2f4c5302af3bb6ea2b8201ee6d8ca8dd.png@200x200',
-                // 
-                // 'https://upload.wikimedia.org/wikipedia/commons/9/96/Logo-warga-200x200.png',
-            ]
-        },
-        // {
-        //     img : [
-        //         'https://upload.wikimedia.org/wikipedia/commons/6/60/W-200x200-300dpi.png',
-        //         'https://masterx.iulm.it/wp-content/uploads/2019/01/braccio-di-ferro-200x200.jpg',
 
-        //     ]
-        // },
-        // {
-        //     img : [
-        //         'https://upload.wikimedia.org/wikipedia/commons/6/60/W-200x200-300dpi.png',
-        //     ]
-        // },
-        // {
-        //     img : [
-        //         'https://masterx.iulm.it/wp-content/uploads/2019/01/braccio-di-ferro-200x200.jpg',
-        //     ]
-        // },
+    //searchbar
+    address: '',
+    check_in: '',
+    check_out: '',
+    price: '',
+    guests: '',
+    results: [],
+    loading: true,
+    datePicker: '',
+    guests: 1,
+
+    test_categorys: [
+        {
+            category_id: 1,
+            name: 'Minicasa',
+            img: 'Minicasa-1'
+        },
+        {
+            category_id: 2,
+            name: 'Luxury',
+            img: 'Luxury-2'
+        },
+        {
+            category_id: 3,
+            name: 'Fronte lago',
+            img: 'Fronte-lago-3'
+        },
+        {
+            category_id: 4,
+            name: 'Fronte mare',
+            img: 'Fronte-mare-4'
+        },
+        {
+            category_id: 5,
+            name: 'Sulle piste',
+            img: 'Sulle-piste-5'
+        },
+        {
+            category_id: 6,
+            name: 'Design',
+            img: 'Design-6'
+        },
+        {
+            category_id: 7,
+            name: 'Dimore storiche',
+            img: 'Dimore-storiche-7'
+        },
+        {
+            category_id: 8,
+            name: 'Case galleggianti',
+            img: 'Case-galleggianti-8'
+        },
+        {
+            category_id: 9,
+            name: "Case sull'albero",
+            img: "Case-sull'albero-9"
+        },
+        {
+            category_id: 10,
+            name: "Nel deserto",
+            img: "Nel-deserto-10"
+        },
     ],
-    services: [
-        {
-            img : 'fa-solid fa-hippo',
-            text : 'Cucina'
-        },
-        {
-            img : 'fa-solid fa-hippo',
-            text : 'Wi-fi'
-        },
-        {
-            img : 'fa-solid fa-hippo',
-            text : 'Piscina'
-        },
-        {
-            img : 'fa-solid fa-hippo',
-            text : 'TV'
-        },
-        {
-            img : 'fa-solid fa-hippo',
-            text : 'vasca da bagno'
-        },
-        {
-            img : 'fa-solid fa-hippo',
-            text : 'Allarme antincendio'
-        },
-        {
-            img : 'fa-solid fa-hippo',
-            text : 'Parchegigo gratuito della proprietà'
-        },
-        {
-            img : 'fa-solid fa-hippo',
-            text : 'Vasca idromassaggio privata'
-        },
-        {
-            img : 'fa-solid fa-hippo',
-            text : 'Lavatrice'
-        },
-        {
-            img : 'fa-solid fa-hippo',
-            text : 'Rivelatore di monossido di carbonio'
-        },
-    ]
+    services: [],
 
+
+    parseDates(dates) {
+        let firstDate = new Date(dates[0]);
+        let secondDate = new Date(dates[1]);
+
+        firstDate = firstDate.toLocaleDateString('it-IT', {
+            day: '2-digit',
+            month: '2-digit'
+        });
+        secondDate = secondDate.toLocaleDateString('it-IT', {
+            day: '2-digit',
+            month: '2-digit'
+        });
+
+        this.$store.dispatch('updateDates', { firstDate, secondDate });
+    }
 })
