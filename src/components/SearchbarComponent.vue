@@ -5,6 +5,8 @@ import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import { ref } from 'vue';
 import { watch } from 'vue';
+import '@vuepic/vue-datepicker/src/VueDatePicker/style/main.scss';
+
 
 export default {
     name: 'SearchbarComponent',
@@ -94,12 +96,14 @@ export default {
         watch(() => this.store.datePicker, this.convertDates);
     },
     mounted() {
+
     }
 }
 
 </script>
 
 <template>
+
     <div :id="elementId">
         <form @submit.prevent="search">
             <div class="container_search">
@@ -110,7 +114,7 @@ export default {
                 <div class="input">
                     <div class="line"></div>
                     <!-- <i class="fa-regular fa-calendar"></i> -->
-                    <Datepicker v-model="date" :enable-time-picker="false" :format="format" range />
+                    <Datepicker class="dataPicker" v-model="date" :enable-time-picker="false" :format="format" range />
                 </div>
                 <div class="input">
                     <div class="line"></div>
