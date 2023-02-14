@@ -96,7 +96,25 @@ export default {
         watch(() => this.store.datePicker, this.convertDates);
     },
     mounted() {
+        const searchBoxWrapper = document.getElementById('searchBox');
+        const options = {
+            searchOptions: {
+                key: "FiLLCEGWt31cQ9ECIWAD6zYjczzeC6zn",
+                language: "it-IT",
+                limit: 5,
+            },
+            autocompleteOptions: {
+                key: "FiLLCEGWt31cQ9ECIWAD6zYjczzeC6zn",
+                language: "it-IT",
+            },
 
+        }
+        const ttSearchBox = new tt.plugins.SearchBox(tt.services, options)
+        const searchBoxHTML = ttSearchBox.getSearchBoxHTML()
+        searchBoxWrapper.append(searchBoxHTML);
+        const searchBoxInput = document.querySelector('.tt-search-box-input');
+        searchBoxInput.setAttribute('v-model', this.searchTerm);
+        console.log(searchBoxHTML);
     }
 }
 
@@ -108,8 +126,9 @@ export default {
         <form @submit.prevent="search">
             <div class="container_search">
                 <div class="input" required>
-                    <i class="fa-regular fa-map"></i>
-                    <input type="text" v-model="searchTerm" placeholder="Dove vuoi andare?">
+                    <!-- <i class="fa-regular fa-map"></i> -->
+                    <div id="searchBox"></div>
+                    <!-- <input type="text" v-model="searchTerm" placeholder="Dove vuoi andare?"> -->
                 </div>
                 <div class="input">
                     <div class="line"></div>
