@@ -121,8 +121,6 @@ export default {
             console.log(store.address);
         })
 
-        const icon = document.querySelector('.tt-searchbox-input-icon');
-        icon.src = '../assets/svg/map.svg';
     }
 }
 

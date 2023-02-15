@@ -6,12 +6,12 @@
 }
 
 .tt-searchbox-filter-label {
-    font-size: 14px;
+    font-size: 0.8rem;
     background-color: #edf2f7;
     padding: 2px 0 2px 4px;
     border-radius: 2px;
     color: #000;
-    font-weight: 700;
+    font-weight: 500;
     white-space: nowrap;
     border: 1px solid transparent;
     align-items: center;
@@ -79,7 +79,7 @@
     background-position: 0;
     background-color: transparent;
     width: calc(100% - 50px);
-    font-size: 14px;
+    font-size: 1.1rem;
     min-width: 0
 }
 
@@ -93,7 +93,8 @@
     position: absolute;
     z-index: 10;
     width: 100%;
-    box-shadow: 0 2px 9px -1px rgba(0, 0, 0, .19)
+    border-radius: 0 0 1rem 1rem;
+    box-shadow: 0 2px 9px -1px rgba(0, 0, 0, .05)
 }
 
 .tt-search-box-result-list {

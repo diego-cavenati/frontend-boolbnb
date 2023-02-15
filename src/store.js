@@ -21,6 +21,7 @@ export const store = reactive({
     guests: 1,
     lat: '',
     lon: '',
+    url_back: 'http://127.0.0.1:8000',
 
     test_categorys: [
         {

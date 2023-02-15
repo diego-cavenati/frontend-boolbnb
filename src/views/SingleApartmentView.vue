@@ -104,6 +104,13 @@ export default {
             console.log(this.price_nights);
             console.log(this.total_price);
         },
+        getImagePath(path) {
+            if (path.startsWith("http")) {
+                return path; // Link esterno, restituiscilo direttamente
+            } else {
+                return this.store.url_back + '/storage/' + path; // Percorso relativo alla cartella storage
+            }
+        }
     },
     mounted() {
         const url = 'http://127.0.0.1:8000/api/apartments/' + this.$route.params.slug;
@@ -160,7 +167,7 @@ export default {
         <div class="row">
             <div class="col-12 prova2">
                 <div class="cover_img">
-                    <img class="main_img" :src="apartment.media" alt="">
+                    <img class="main_img" :src="getImagePath(apartment.media) || apartment.media" alt="">
                 </div>
             </div>
             <!-- <div class="col-5">

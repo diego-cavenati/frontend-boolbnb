@@ -14,6 +14,7 @@ export default {
 <template>
     <JumbotronComponent />
     <ShowcaseComponent />
+
 </template>
 
 <style lang="scss" scoped>
