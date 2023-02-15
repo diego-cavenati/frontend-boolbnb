@@ -40,11 +40,19 @@ export default {
         addMarker() {
             const tt = window.tt;
             var location = [this.longitude, this.latitude];
-            var popupOffset = 25;
+            // var popupOffset = 25;
 
-            var marker = new tt.Marker().setLngLat(location).addTo(this.map);
-            var popup = new tt.Popup({ offset: popupOffset }).setHTML("Your address!");
-            marker.setPopup(popup).togglePopup();
+            // var marker = new tt.Marker().setLngLat(location).addTo(this.map);
+            var element = document.createElement("div")
+            element.id = "marker"
+
+            var marker = new tt.Marker({ element: element })
+                .setLngLat(location)
+                .addTo(this.map)
+
+
+            // var popup = new tt.Popup({ offset: popupOffset }).setHTML("Your address!");
+            // marker.setPopup(popup).togglePopup();
         },
         getMap() {
             const tt = window.tt;

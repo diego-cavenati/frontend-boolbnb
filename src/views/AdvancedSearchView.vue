@@ -25,7 +25,7 @@ export default {
         addMarker(longitude, latitude) {
             const tt = window.tt;
             var location = [longitude, latitude];
-            var popupOffset = 25;
+            // var popupOffset = 25;
             // var marker = new tt.Marker().setLngLat(location).addTo(this.map);
 
             var element = document.createElement("div")
@@ -106,11 +106,11 @@ export default {
             }
             console.log(store.services_back);
         },
-        SubmitServices(){
+        SubmitServices() {
             axios.get('http://127.0.0.1:8000/api/search?address=' + '' + '&services=' + store.services_back + '&category=' + '')
-            .then( resp =>{
-                console.log(resp);
-            })
+                .then(resp => {
+                    console.log(resp);
+                })
         },
         /*
         SubmitCategory(){
@@ -203,8 +203,8 @@ export default {
             .then(response => {
                 store.services = response.data.results
             })
-            
-            //console.log('http://127.0.0.1:8000/api/search?services='+ store.services_back );
+
+        //console.log('http://127.0.0.1:8000/api/search?services='+ store.services_back );
     },
     created() {
     },
