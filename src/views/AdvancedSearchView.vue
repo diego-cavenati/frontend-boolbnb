@@ -24,12 +24,35 @@ export default {
     methods: {
         addMarker(longitude, latitude) {
             const tt = window.tt;
-            var location = [longitude, latitude]; //ciclare per risultati per aggiungere marker
+            var location = [longitude, latitude];
             var popupOffset = 25;
-            var marker = new tt.Marker().setLngLat(location).addTo(this.map);
-            var popup = new tt.Popup({ offset: popupOffset })
+            // var marker = new tt.Marker().setLngLat(location).addTo(this.map);
+
+            var element = document.createElement("div")
+            element.id = "marker"
+
+            var marker = new tt.Marker({ element: element })
+                .setLngLat(location)
+                .addTo(this.map)
+
+            // var popup = new tt.Popup({ offset: popupOffset })
             // .setHTML("Your address!");
-            marker.setPopup(popup).togglePopup();
+            // marker.setPopup(popup).togglePopup();
+
+
+            //
+
+            // const icon = {
+            //     iconUrl: '/img/pin_boolbnb.png',
+            //     iconSize: [40, 40],
+            //     iconAnchor: [0, 0],
+            // };
+
+            // const marker = new tt.Marker({ icon }).setLngLat([longitude, latitude]).addTo(this.map);
+
+            // const popup = new tt.Popup().setHTML('<h3>Il tuo titolo personalizzato</h3>');
+            // marker.setPopup(popup);
+            //          
         },
         getMap() {
             const tt = window.tt;
@@ -37,7 +60,6 @@ export default {
                 key: 'h0FDAudCcFnS8TK5dT1mvgXYkqCGc1CW',
                 container: this.$refs.mapRef,
                 style: 'tomtom://vector/1/basic-light',
-                // center: [45.46362, 9.18812],
                 center: [store.lon, store.lat],
                 // center: [store.results[0].longitude, store.results[0].latitude],
                 zoom: 12,
@@ -260,6 +282,8 @@ export default {
     height: 88vh;
     width: 100%;
 }
+
+
 
 .categories img {
     width: 30px;

@@ -120,6 +120,9 @@ export default {
             store.address = searchBoxInput.value
             console.log(store.address);
         })
+
+        const icon = document.querySelector('.tt-searchbox-input-icon');
+        icon.src = '../assets/svg/map.svg';
     }
 }
 
@@ -166,6 +169,16 @@ export default {
 <style lang="scss" scoped>
 @use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
+
+
+.tt-searchbox-icon {
+    background-image: url('../svg/map.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    width: 20px;
+    height: 20px;
+}
 
 #large_element {
 
