@@ -8,6 +8,8 @@ import axios from 'axios';
 export const store = reactive({
     //carousl elements
     immagineAttiva: 0,
+    //toggle class per i servizi
+    isActive: false,
 
     //searchbar
     address: '',
@@ -74,7 +76,10 @@ export const store = reactive({
             img: "Nel-deserto-10"
         },
     ],
+    //servizi che riceviamo dal back e stampiamo
     services: [],
+    // raccolta di ID di servizi da inviare al back
+    services_back: [],
 
 
     parseDates(dates) {
