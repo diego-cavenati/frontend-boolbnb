@@ -74,8 +74,21 @@ export default {
                     this.error = error.message;
                     this.loading = false;
                 })
+        },
+        callAll() {
+            axios.get(`http://127.0.0.1:8000/api/search`)
+                .then(response => {
+                    this.apartments = response.data.results;
+                    // this.pages = response.data.results.last_page;
+                    console.log(response);
+                    this.loading = false;
+                })
+                .catch(error => {
+                    console.error(error)
+                    this.error = error.message;
+                    this.loading = false;
+                })
         }
-
     },
     created() {
         this.callApi()
@@ -97,7 +110,10 @@ export default {
                     diam. Sit etiam sed egestas enim.
                 </p>
 
-                <button class="button">Vedi tutti</button>
+                <router-link :to="{ name: 'search' }">
+                    <button class="button" @click="callAll()">Vedi tutti</button>
+                </router-link>
+
             </div>
 
 

@@ -41,7 +41,6 @@ export default {
     methods: {
         async search() {
             try {
-                //http://127.0.0.1:8000/api/search?address=roma
                 const response = await axios.get('http://127.0.0.1:8000/api/search', {
                     params: {
                         address: store.address,
@@ -93,36 +92,35 @@ export default {
         },
     },
     created() {
-        // if (store.datePicker) {
-        //     let datesArray = store.datePicker.split(" - ");
-        //     store.check_in = datesArray[0];
-        //     store.check_out = datesArray[1];
-        //     console.log(store.check_in);
-        // }
         watch(() => this.store.datePicker, this.convertDates);
     },
     mounted() {
-        // const searchBoxWrapper = document.getElementById('searchBox');
-        // const options = {
-        //     searchOptions: {
-        //         key: "FiLLCEGWt31cQ9ECIWAD6zYjczzeC6zn",
-        //         language: "it-IT",
-        //         limit: 5,
-        //     },
-        //     autocompleteOptions: {
-        //         key: "FiLLCEGWt31cQ9ECIWAD6zYjczzeC6zn",
-        //         language: "it-IT",
-        //     },
+        const searchBoxWrapper = document.getElementById('searchBox');
+        const options = {
+            searchOptions: {
+                key: "FiLLCEGWt31cQ9ECIWAD6zYjczzeC6zn",
+                language: "it-IT",
+                limit: 5,
+                typeahead: ["address"],
+                center: [12.49167, 41.89022], //imposta il centro della ricerca su Roma, ad esempio
+                countrySet: ["IT"], //imposta la ricerca solo in Italia
+                minFuzzyLevel: 1 //imposta la corrispondenza del testo di ricerca al massimo
+            },
+            autocompleteOptions: {
+                key: "FiLLCEGWt31cQ9ECIWAD6zYjczzeC6zn",
+                language: "it-IT",
+                minLength: 1,
+            }
+        };
+        const ttSearchBox = new tt.plugins.SearchBox(tt.services, options)
+        const searchBoxHTML = ttSearchBox.getSearchBoxHTML()
+        searchBoxWrapper.append(searchBoxHTML);
+        const searchBoxInput = document.querySelector('.tt-search-box-input');
+        searchBoxInput.addEventListener('input', function () {
+            store.address = searchBoxInput.value
+            console.log(store.address);
+        })
 
-        // }
-        // const ttSearchBox = new tt.plugins.SearchBox(tt.services, options)
-        // const searchBoxHTML = ttSearchBox.getSearchBoxHTML()
-        // searchBoxWrapper.append(searchBoxHTML);
-        // const searchBoxInput = document.querySelector('.tt-search-box-input');
-        // searchBoxInput.addEventListener('input', function () {
-        //     this.store.address = searchBoxInput.value
-        // })
-        // console.log(searchBoxHTML);
     }
 }
 
@@ -135,8 +133,8 @@ export default {
             <div class="container_search">
                 <div class="input" required>
                     <!-- <i class="fa-regular fa-map"></i> -->
-                    <!-- <div id="searchBox"></div> -->
-                    <input type="text" v-model="store.address" placeholder="Dove vuoi andare?">
+                    <div id="searchBox"></div>
+                    <!-- <input type="text" v-model="store.address" placeholder="Dove vuoi andare?"> -->
                 </div>
                 <div class="input">
                     <div class="line"></div>
@@ -169,6 +167,16 @@ export default {
 <style lang="scss" scoped>
 @use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
+
+
+.tt-searchbox-icon {
+    background-image: url('../svg/map.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    width: 20px;
+    height: 20px;
+}
 
 #large_element {
 
