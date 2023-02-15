@@ -88,12 +88,51 @@ export default {
             }
 
             return result;
+        },
+        PushService(i) {
+            const element = document.getElementById('service-' + i);
+            if (!store.services_back.includes(store.services[i].id)) {
+                store.services_back.push(store.services[i].id);
+                element.classList.add('active');
+                console.log('http://127.0.0.1:8000/api/search?address=' + '' + '&services=' + store.services_back + '&category=' + '');
+            } else {
+                let elementToRemove = store.services[i].id;
+                let index = store.services_back.indexOf(elementToRemove);
+                if (index !== -1) {
+                    store.services_back.splice(index, 1);
+                }
+                element.classList.remove('active');
+                console.log('http://127.0.0.1:8000/api/search?address=' + '' + '&services=' + store.services_back + '&category=' + '');
+            }
+            console.log(store.services_back);
+        },
+        SubmitServices(){
+            axios.get('http://127.0.0.1:8000/api/search?address=' + '' + '&services=' + store.services_back + '&category=' + '')
+            .then( resp =>{
+                console.log(resp);
+            })
+        },
+        /*
+        SubmitCategory(){
+            axios.get('http://127.0.0.1:8000/api/search?services='+ {params: {services: store.services_back, category : null , address : null}} )
+            .then( resp =>{
+                console.log(resp);
+            })
         }
+        */
     },
     computed: {
+        /*
+        classObject(){
+            return {
+                active : store.isActive
+            }
+        },
+        */
         dataLoaded() {
             return store.results;
-        }
+        },
+
     },
     watch: {
         dataLoaded(newValue) {
@@ -164,9 +203,12 @@ export default {
             .then(response => {
                 store.services = response.data.results
             })
+            
+            //console.log('http://127.0.0.1:8000/api/search?services='+ store.services_back );
     },
     created() {
     },
+
 }
 </script>
 
@@ -188,15 +230,16 @@ export default {
             <div class="container">
                 <div> <!--Scrivere all'interno del popup-->
                     <div id="filterPopup" class="container rounded">
-                        <div class="close" id="filterBtn">
+                        <div @click="SubmitServices()" class="close">
                             <i class="fa-solid fa-xmark "></i>
                             close
+                            (Call api momentanea per inviare i servizi)
                         </div>
                         <div class="row">
-                            <div v-for="service in store.services" class="col-4 d-flex">
-                                <!--Stampare dinamicamente i servizi-->
-                                <div class="card p-3 my-2 card_custom">
-                                    <!--@Clickfunzione e pushare in un array service in posizione i-->
+                            <div v-for="service, i in store.services" :key="service.id" class="col-4 d-flex">
+
+                                <div @click="PushService(i)" :id="'service-' + i" class="card p-3 my-2 card_custom">
+
                                     <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
                                         role="presentation" focusable="false"
                                         style="display: block; height: 24px; width: 24px; fill: currentcolor;">
@@ -313,11 +356,29 @@ export default {
 .card_custom {
 
     width: 250px;
+    background: white;
+    transition: all .3s;
 
+    /*
+    box-shadow: 6px 6px 12px #c5c5c5,
+        -6px -6px 12px #ffffff;
+    */
     &:hover {
-        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
+        //box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
         cursor: pointer;
+        // aggiungere le proprietà alla classe dinamica
+
     }
+}
+
+.active {
+    color: white;
+    background-color: $bb-primary;
+    /*
+    box-shadow: inset 4px 4px 12px #c5c5c5,
+        inset -4px -4px 12px #ffffff;
+        */
+    border: none;
 }
 
 .close {

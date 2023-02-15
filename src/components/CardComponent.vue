@@ -46,6 +46,7 @@ export default {
                 </div> -->
                     <!-- img thumb -->
                     <img :src="apartment.media" :class="classe" alt="">
+                    <!-- TODO aggiungere funzione per il path SOLO quando torna un img uploadata-->
 
                 </div>
 
