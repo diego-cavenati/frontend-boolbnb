@@ -2,7 +2,8 @@
     background: #fff;
     font-size: 1rem;
     font-family: 'Work Sans', sans-serif;
-    position: relative
+    position: relative;
+    border-radius: 1rem 0 0 1rem;
 }
 
 .tt-searchbox-filter-label {

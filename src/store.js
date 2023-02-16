@@ -15,12 +15,13 @@ export const store = reactive({
     // posti letto per la ricerca
     bads: '',
 
+    // tomtom key
+    tomtom_key: 'FiLLCEGWt31cQ9ECIWAD6zYjczzeC6zn',
     //searchbar
     address: '',
     check_in: '',
     check_out: '',
     price: '',
-    guests: '',
     results: [],
     loading: true,
     datePicker: '',
@@ -38,7 +39,6 @@ export const store = reactive({
     // raccolta di ID di servizi da inviare al back
     services_back: [],
 
-
     parseDates(dates) {
         let firstDate = new Date(dates[0]);
         let secondDate = new Date(dates[1]);
@@ -53,5 +53,10 @@ export const store = reactive({
         });
 
         this.$store.dispatch('updateDates', { firstDate, secondDate });
+    },
+    mutations: {
+        updateAddress(state, address) {
+            state.address = address;
+        }
     }
 })
