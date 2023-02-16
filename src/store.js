@@ -11,9 +11,9 @@ export const store = reactive({
     //toggle class per i servizi
     isActive: false,
     // radius range ricerca
-    radius: 10,
+    radius: '',
     // posti letto per la ricerca
-    bads: '',
+    beds: '',
 
     // tomtom key
     tomtom_key: 'FiLLCEGWt31cQ9ECIWAD6zYjczzeC6zn',
@@ -22,6 +22,7 @@ export const store = reactive({
     check_in: '',
     check_out: '',
     price: '',
+    //le call api inseriscono i risultati dentro results
     results: [],
     loading: true,
     datePicker: '',

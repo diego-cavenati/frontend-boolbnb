@@ -42,20 +42,25 @@ export default {
     methods: {
         async search() {
             try {
-
                 const response = await axios.get('http://127.0.0.1:8000/api/search', {
                     params: {
                         address: store.address,
                     }
                 });
+
                 store.results = response.data.results;
                 store.price = response.data.results.price;
                 store.lat = response.data.poi.lat;
                 store.lon = response.data.poi.lon;
-
                 console.log(store.address);
-
                 store.loading = false;
+                
+                /*
+                const searchBoxInput = document.querySelector('.tt-search-box-input');
+                if (searchBoxInput.placeholder == '') {
+                    store.address = ''
+                }
+                */
 
                 // if (store.results) {
                 //     const searchQuery = store.address.trim();
