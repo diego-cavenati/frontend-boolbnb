@@ -41,6 +41,7 @@ export default {
     methods: {
         async search() {
             try {
+
                 const response = await axios.get('http://127.0.0.1:8000/api/search', {
                     params: {
                         address: store.address,
@@ -50,6 +51,8 @@ export default {
                 store.price = response.data.results.price;
                 store.lat = response.data.poi.lat;
                 store.lon = response.data.poi.lon;
+
+                console.log(store.address);
 
                 store.loading = false;
 
@@ -93,8 +96,7 @@ export default {
     },
     created() {
         watch(() => this.store.datePicker, this.convertDates);
-    },
-    mounted() {
+    }, mounted() {
         const searchBoxWrapper = document.getElementById('searchBox');
         const options = {
             searchOptions: {
@@ -112,22 +114,26 @@ export default {
                 minLength: 1,
             }
         };
-        const ttSearchBox = new tt.plugins.SearchBox(tt.services, options)
-        const searchBoxHTML = ttSearchBox.getSearchBoxHTML()
-        searchBoxWrapper.append(searchBoxHTML);
-        const searchBoxInput = document.querySelector('.tt-search-box-input');
-        searchBoxInput.addEventListener('input', function () {
-            store.address = searchBoxInput.value
-            console.log(store.address);
-        })
+        const searchBox = new tt.plugins.SearchBox(tt.services, options);
+        const searchBoxHTML = searchBox.getSearchBoxHTML();
+        searchBoxWrapper.appendChild(searchBoxHTML);
 
+        const searchBoxInput = document.querySelector('.tt-search-box-input');
+
+        searchBoxInput.addEventListener('change', () => {
+            const address = searchBoxInput.value;
+            console.log(address);
+            store.address = address;
+            console.log(store.address);
+            // this.$store.commit('updateAddress', address);
+        });
+        searchBoxInput.placeholder = store.address;
     }
 }
 
 </script>
 
 <template>
-
     <div :id="elementId">
         <form @submit.prevent="search">
             <div class="container_search">
@@ -146,8 +152,7 @@ export default {
                     <i class="fa-regular fa-user"></i>
 
                     <button @click="increment" :disabled="guests >= maxGuests">+</button>
-                    <input type="number" id="guests" name="guests" v-model.number="store.guests"
-                        @input="validateGuests">
+                    <input type="number" id="guests" name="guests" v-model.number="store.guests" @input="validateGuests">
                     <button @click="decrement" :disabled="guests <= 1">-</button>
 
                     <!-- <input type="text" v-model="store.guests" placeholder="Quanti siete?"> -->
@@ -160,8 +165,7 @@ export default {
                 </button>
             </router-link>
         </form>
-    </div>
-
+</div>
 </template>
 
 <style lang="scss" scoped>
