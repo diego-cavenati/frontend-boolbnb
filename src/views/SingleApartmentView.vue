@@ -133,6 +133,7 @@ export default {
                     this.apartment_id = this.apartment.id
                     this.getMap();
                     this.addMarker();
+                    console.log(this.apartment);
                 } else {
                     // this.$router.push({ name: 'not-found' }); //
                 }
@@ -232,10 +233,29 @@ export default {
                     <div class="what_find fw-semibold">Cosa troverai</div>
                     <div class="container">
                         <div class="row">
+                            
                             <div v-for="service in apartment.services" class="col-6 p-0">
-                                <!-- <span class="pe-1"><i :class=service.img></i></span> -->
-                                <span>{{ service.text }}</span>
+                            <!--  TODO far aggiungere il path per l'svg per ogni icona di ogni s -->
+                            <!-- prendere .img-->
+                                <div v-if="apartment.services">
+                                    <div class="card_custom">
+                                        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+                                            role="presentation" focusable="false"
+                                            style="display: block; height: 24px; width: 24px; fill: currentcolor;">
+                                            <path :d="service.img"></path>
+                                        </svg>
+                                        {{ service.name }}
+                                    </div>
+                                </div>
+                                <div v-else>
+                                    <span>test</span>
+                                </div>
                             </div>
+
+
+                            
+                        
+                        <!-- <span class="pe-1"><i :class=service.img></i></span> -->
                         </div>
                     </div>
                 </div>
@@ -537,5 +557,23 @@ img {
 .services {
     margin-top: -5rem;
     padding-bottom: 2rem;
+}
+
+.card_custom {
+
+width: 150px;
+background: white;
+transition: all .3s;
+
+/*
+box-shadow: 6px 6px 12px #c5c5c5,
+    -6px -6px 12px #ffffff;
+*/
+&:hover {
+    //box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
+    cursor: pointer;
+    // aggiungere le proprietà alla classe dinamica
+
+}
 }
 </style>

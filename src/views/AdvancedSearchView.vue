@@ -106,9 +106,14 @@ export default {
             console.log(store.services_back);
         },
         SubmitServices() {
-            axios.get('http://127.0.0.1:8000/api/search?address=' + '' + '&services=' + store.services_back + '&category=' + store.categories_back)
-                .then(resp => {
-                    console.log(resp);
+            axios.get('http://127.0.0.1:8000/api/search?address=' + store.address + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius + '&beds=' + store.beds)
+                .then(response => {
+                    //console.log(resp);
+                    // convertire km to metri prima di mandarli 
+
+                    store.results = response.data.results;
+                    store.loading = false
+                    console.log(store.results);
                 })
 
         },
@@ -139,7 +144,13 @@ export default {
             }
             element.classList.add('active_category');
             console.log(store.categories_back);
-        }
+            console.log(store.radius, 'radius');
+            console.log(store.beds, 'beds');
+            console.log(store.address, 'address');
+        },
+        clearMap(){
+            document.getElementById('map').style.display = 'none';
+        },
 
 
 
@@ -160,15 +171,14 @@ export default {
             }
         },
         */
+        
         dataLoaded() {
-            return store.results;
+            return store.results
         },
-
     },
     watch: {
         dataLoaded(newValue) {
             if (newValue) {
-
                 this.getMap();
                 // Inizializza l'array vuoto
                 this.mapData = [];
@@ -187,7 +197,6 @@ export default {
                         }
                     }
                 }
-
                 // Stampa l'array finale
                 const result = [];
                 const latMap = new Map();
@@ -219,7 +228,13 @@ export default {
                 for (const [lng, lat] of result) {
                     this.addMarker(parseFloat(lng), parseFloat(lat));
                 }
+            } 
+            /*
+            else {
+                this.clearMap();
+                console.log('sono nell else');
             }
+            */
         },
     },
     mounted() {
@@ -280,20 +295,20 @@ export default {
                                     <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
                                         role="presentation" focusable="false"
                                         style="display: block; height: 24px; width: 24px; fill: currentcolor;">
-                                        <path :d="service.path"></path>
+                                        <path :d="service.img"></path>
                                     </svg>
                                     {{ service.name }}
                                 </div>
                             </div>
                                 <div> <!--TODO bisogna pushare store.radius al back insieme ai servizi-->
                                     <label for="radius">Seleziona il raggio in km:</label>
-                                    <input type="number" min="0"  id="radius" v-model.number="store.radius">
+                                    <input type="number" min="0" max="100" id="radius" v-model.number="store.radius">
                                     <p>Il raggio selezionato è {{ store.radius }} km.</p>
                                 </div>
-                                <div> <!--TODO bisogna pushare store.bads al back insieme ai servizi & il raggio di ricerca-->
-                                    <label for="bads">Seleziona il raggio in km:</label>
-                                    <input type="number" min="0"  id="bads" v-model.number="store.bads">
-                                    <p>i posti letti sono {{ store.bads }} km. </p>
+                                <div> <!--TODO bisogna pushare store.beds al back insieme ai servizi & il raggio di ricerca-->
+                                    <label for="beds">Seleziona posti letto</label>
+                                    <input type="number" min="0" max="128"  id="beds" v-model.number="store.beds">
+                                    <p>i posti letti sono {{ store.beds }} </p>
                                 </div>
                         </div>
                     </div>
@@ -303,7 +318,7 @@ export default {
         </div>
         <div class="container-fluid">
             <div class="row">
-                <div id="apartments" class="col-6">
+                <div id="apartments" class="col">
                     <div class="container">
                         <div class="row">
                             <div class="cardList" v-if="store.loading">
@@ -338,14 +353,13 @@ export default {
                                 </div>
 
                             </div>
-                            <CardComponent v-for="apartment in store.results" :key="apartment.id" :apartment="apartment"
-                                v-else />
+                            <CardComponent v-for="apartment in store.results" :key="apartment.id" :apartment="apartment" v-else/>
 
                         </div>
                     </div>
 
                 </div>
-                <div class="col-6">
+                <div class="col" v-bind:class="{ 'map_hidden': !store.address }" >
                     <div id='map' ref="mapRef"></div>
                 </div>
             </div>
@@ -357,6 +371,9 @@ export default {
 @use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
 
+.map_hidden{
+    display: none;
+}
 
 #results {
     height: 95vh;
