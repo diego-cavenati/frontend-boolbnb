@@ -10,6 +10,10 @@ export const store = reactive({
     immagineAttiva: 0,
     //toggle class per i servizi
     isActive: false,
+    // radius range ricerca
+    radius: 10,
+    // posti letto per la ricerca
+    bads: '',
 
     //searchbar
     address: '',
@@ -25,58 +29,10 @@ export const store = reactive({
     lon: '',
     url_back: 'http://127.0.0.1:8000',
 
-    test_categorys: [
-        {
-            category_id: 1,
-            name: 'Minicasa',
-            img: 'Minicasa-1'
-        },
-        {
-            category_id: 2,
-            name: 'Luxury',
-            img: 'Luxury-2'
-        },
-        {
-            category_id: 3,
-            name: 'Fronte lago',
-            img: 'Fronte-lago-3'
-        },
-        {
-            category_id: 4,
-            name: 'Fronte mare',
-            img: 'Fronte-mare-4'
-        },
-        {
-            category_id: 5,
-            name: 'Sulle piste',
-            img: 'Sulle-piste-5'
-        },
-        {
-            category_id: 6,
-            name: 'Design',
-            img: 'Design-6'
-        },
-        {
-            category_id: 7,
-            name: 'Dimore storiche',
-            img: 'Dimore-storiche-7'
-        },
-        {
-            category_id: 8,
-            name: 'Case galleggianti',
-            img: 'Case-galleggianti-8'
-        },
-        {
-            category_id: 9,
-            name: "Case sull'albero",
-            img: "Case-sull'albero-9"
-        },
-        {
-            category_id: 10,
-            name: "Nel deserto",
-            img: "Nel-deserto-10"
-        },
-    ],
+    // categorie che riceviamo dal back e stampiamo
+    categories: [],
+    // categorie da inviare al back, ne inviamo solo 1 e facciamo la call per un risultato 
+    categories_back: [],
     //servizi che riceviamo dal back e stampiamo
     services: [],
     // raccolta di ID di servizi da inviare al back

@@ -73,7 +73,6 @@ export default {
         getUniqueArrayWithLatIncrease(arr) {
             const result = [];
             const latMap = new Map();
-
             for (const item of arr) {
                 const lat = item[1];
                 let latStr = lat;
@@ -86,15 +85,15 @@ export default {
                 latMap.set(latStr, true);
                 result.push([item[0], latStr]);
             }
-
             return result;
         },
         PushService(i) {
             const element = document.getElementById('service-' + i);
+            console.log(store.address);
             if (!store.services_back.includes(store.services[i].id)) {
                 store.services_back.push(store.services[i].id);
                 element.classList.add('active');
-                console.log('http://127.0.0.1:8000/api/search?address=' + '' + '&services=' + store.services_back + '&category=' + '');
+                //console.log('http://127.0.0.1:8000/api/search?address=' + '' + '&services=' + store.services_back + '&category=' + '');
             } else {
                 let elementToRemove = store.services[i].id;
                 let index = store.services_back.indexOf(elementToRemove);
@@ -102,16 +101,48 @@ export default {
                     store.services_back.splice(index, 1);
                 }
                 element.classList.remove('active');
-                console.log('http://127.0.0.1:8000/api/search?address=' + '' + '&services=' + store.services_back + '&category=' + '');
+                //console.log('http://127.0.0.1:8000/api/search?address=' + '' + '&services=' + store.services_back + '&category=' + '');
             }
             console.log(store.services_back);
         },
         SubmitServices() {
-            axios.get('http://127.0.0.1:8000/api/search?address=' + '' + '&services=' + store.services_back + '&category=' + '')
+            axios.get('http://127.0.0.1:8000/api/search?address=' + '' + '&services=' + store.services_back + '&category=' + store.categories_back)
                 .then(resp => {
                     console.log(resp);
                 })
+
         },
+        PushCategory(i) {
+            const element = document.getElementById('category-' + i);
+            // Rimuovi la classe "active" da tutti gli elementi tranne quello selezionato
+            for (let j = 0; j < store.categories.length; j++) {
+                if (j !== i) {
+                    const el = document.getElementById('category-' + j);
+                    el.classList.remove('active_category');
+                }
+            }
+            if (!store.categories_back.includes(store.categories[i].id)) {
+                store.categories_back.pop(); // rimuove l'elemento precedente
+                store.categories_back.push(store.categories[i].id);
+                console.log('faccio la call api');
+                this.SubmitServices()
+            } else if (store.categories_back.length > 0 && store.categories_back[0] === store.categories[i].id) {
+                // Se l'elemento è già presente, ma è l'unico elemento nell'array, non fare nulla
+                console.log('non faccio nulla');
+                return;
+            } else {
+                let elementToRemove = store.categories[i].id;
+                let index = store.categories_back.indexOf(elementToRemove);
+                if (index !== -1) {
+                    store.categories_back.splice(index, 1);
+                }
+            }
+            element.classList.add('active_category');
+            console.log(store.categories_back);
+        }
+
+
+
         /*
         SubmitCategory(){
             axios.get('http://127.0.0.1:8000/api/search?services='+ {params: {services: store.services_back, category : null , address : null}} )
@@ -204,6 +235,10 @@ export default {
                 store.services = response.data.results
             })
 
+        axios.get('http://127.0.0.1:8000/api/categories')
+            .then(response => {
+                store.categories = response.data.results
+            })
         //console.log('http://127.0.0.1:8000/api/search?services='+ store.services_back );
     },
     created() {
@@ -216,11 +251,13 @@ export default {
     <div id="results">
         <div class="container-fluid">
             <div class="categories d-flex justify-content-center">
-                <div class="text-center p-3" v-for="category in store.test_categorys">
-                    <img :src="getImagePath(`${category.img}.png`)" alt="">
-                    <!--Funzione per stampare le immagini dinamicamente-->
-                    <div>
-                        {{ category.name }}
+                <div class="text-center p-3" v-for="category, i in store.categories" :key="category.id">
+                    <div @click="PushCategory(i)" :id="'category-' + i">
+                        <img :src="getImagePath(`${category.img}.png`)" alt="">
+                        <!--Funzione per stampare le immagini dinamicamente-->
+                        <div>
+                            {{ category.name }}
+                        </div>
                     </div>
                 </div>
                 <div class="align-self-center p-3">
@@ -248,6 +285,16 @@ export default {
                                     {{ service.name }}
                                 </div>
                             </div>
+                                <div> <!--TODO bisogna pushare store.radius al back insieme ai servizi-->
+                                    <label for="radius">Seleziona il raggio in km:</label>
+                                    <input type="number" min="0"  id="radius" v-model.number="store.radius">
+                                    <p>Il raggio selezionato è {{ store.radius }} km.</p>
+                                </div>
+                                <div> <!--TODO bisogna pushare store.bads al back insieme ai servizi & il raggio di ricerca-->
+                                    <label for="bads">Seleziona il raggio in km:</label>
+                                    <input type="number" min="0"  id="bads" v-model.number="store.bads">
+                                    <p>i posti letti sono {{ store.bads }} km. </p>
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -303,7 +350,7 @@ export default {
                 </div>
             </div>
         </div>
-    </div>
+</div>
 </template>
 
 <style lang="scss" scoped>
@@ -379,6 +426,10 @@ export default {
         inset -4px -4px 12px #ffffff;
         */
     border: none;
+}
+
+.active_category {
+    background-color: greenyellow;
 }
 
 .close {

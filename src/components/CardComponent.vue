@@ -30,6 +30,8 @@ export default {
 
 <template>
 
+    
+
     <div :class="elementClass">
         <router-link :to="{ name: 'single-apartment', params: { slug: apartment.slug } }">
 
