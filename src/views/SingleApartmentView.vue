@@ -148,7 +148,6 @@ export default {
 
 </script>
 <template>
-
     <div class="container" v-if="!loading">
         <div>
             <h3>{{ apartment.title }}</h3>
@@ -156,19 +155,19 @@ export default {
                 {{ apartment.address }}
                 <!-- Turn on for favorites -->
                 <!-- <span>
-                    &hearts; Salva
-                </span> -->
+                                                                                &hearts; Salva
+                                                                            </span> -->
             </div>
         </div>
         <!-- turn on in case off name  -->
         <!-- <div>
-            <span>
-                Icona
-            </span>
-            <span>
-                Host: Edoardo C.
-            </span>
-        </div> -->
+                                                                        <span>
+                                                                            Icona
+                                                                        </span>
+                                                                        <span>
+                                                                            Host: Edoardo C.
+                                                                        </span>
+                                                                    </div> -->
     </div>
     <div class="container" v-if="!loading"> <!--Sezione immagini-->
         <!--TODO creare classi css apposite per ogni col per gestire e sovrascrivere il padding dato da bootstrap-->
@@ -179,24 +178,24 @@ export default {
                 </div>
             </div>
             <!-- <div class="col-5">
-                <div class="row">
-                    <div class="col-6 ">
-                        <img src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
-                    </div>
-                    <div class="col-6 ">
-                        <img class="border_top"
-                            src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
-                    </div>
-                    <div class="col-6 pt-3 "> 
-                        <img class="test1"
-                            src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
-                    </div>
-                    <div class="col-6 pt-3 ">  -->
+                                                                            <div class="row">
+                                                                                <div class="col-6 ">
+                                                                                    <img src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
+                                                                                </div>
+                                                                                <div class="col-6 ">
+                                                                                    <img class="border_top"
+                                                                                        src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
+                                                                                </div>
+                                                                                <div class="col-6 pt-3 "> 
+                                                                                    <img class="test1"
+                                                                                        src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
+                                                                                </div>
+                                                                                <div class="col-6 pt-3 ">  -->
             <!-- <img class="border_bot"
-                            src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
-                    </div>
-                </div>
-            </div> -->
+                                                                                        src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div> -->
         </div>
     </div>
     <!--ps-5, pe-5, pt-5 da togliere se si vuole modificare il padding left, right e top-->
@@ -207,19 +206,48 @@ export default {
 
                 <div class="details">
                     <div class="guest">
-                        <i class="fa-solid fa-user"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 183.89 201.64">
+                            <g id="Livello_2" data-name="Livello 2">
+                                <g id="Livello_1-2" data-name="Livello 1">
+                                    <path
+                                        d="M128.24,117.39c34.94,17.4,53.71,45.07,55.65,84.25H165.47c-.88-25.07-11-45.47-31.65-60.11-14.06-10-29.94-14.15-47.1-12.93-37.4,2.65-67.64,33.1-68.26,73H0c1.91-39.13,20.71-66.84,55.71-84.19-18.76-14-28.64-32.48-27.84-56C28.46,44,35.46,29.2,48.2,17.33a64,64,0,0,1,91.41,3.89C164.79,49.28,161.21,94.06,128.24,117.39Zm9.56-53a45.86,45.86,0,1,0-46.14,45.66A45.74,45.74,0,0,0,137.8,64.4Z" />
+                                </g>
+                            </g>
+                        </svg>
                         <span>{{ apartment.guests }}</span>
                     </div>
                     <div class="total_rooms">
-                        <i class="fa-solid fa-house"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 213.51 213.52">
+                            <g id="Livello_2" data-name="Livello 2">
+                                <g id="Livello_1-2" data-name="Livello 1">
+                                    <path
+                                        d="M64,106.77H97.06c6.5,0,13-.09,19.49,0,7.15.12,11.24,4,11.4,11.1q.24,10.24,0,20.49c-.15,6.48-4.6,11-10.48,11.05-6.06,0-10.51-4.68-10.68-11.44-.09-3.13,0-6.26,0-9.66H64V156c0,11.72-3.09,14.79-14.8,14.8-5.83,0-11.67-.17-17.49.08a10.31,10.31,0,0,0-10.14,10.29c-.13,5.8,3.74,10.64,9.57,10.68,25,.2,49.95.09,75.62.09,0-7.13-.1-14.07,0-21,.09-5,2.51-8.59,7.35-10.17,4.63-1.51,8.83-.34,11.5,3.62a16.08,16.08,0,0,1,2.24,7.91c.32,6.29.1,12.6.1,19.32h63.55V138.76c-10.2,0-20.33.06-30.45,0-5.83,0-10.15-3.2-11.28-8-1.6-6.75,2.85-12.9,9.94-13.12,8.66-.28,17.33-.11,26-.12h5.84V54H128V70.81c0,4.5.06,9,0,13.5-.15,7.36-4.26,11.75-10.78,11.64-6.17-.1-10.35-4.64-10.42-11.58-.09-8.5,0-17,0-25.49V53.52c-6.48,0-12.43.06-18.38,0a21.33,21.33,0,0,1-6.4-.79c-4.59-1.51-7-5-7.16-9.78a10,10,0,0,1,7.35-10.13,29.1,29.1,0,0,1,7.41-.73q54.48-.07,109,0C210,32,213.5,35.46,213.5,46.88q0,76,0,152c0,11.11-3.55,14.66-14.65,14.66q-81.73,0-163.47,0C13.21,213.5,0,200.25,0,178Q0,106.76,0,35.52C0,13.26,13.2.06,35.39,0c5.16,0,10.33,0,15.49,0C60.2.1,64,3.81,64,13.06q.06,43.48,0,87ZM42.49,149.19V21.52H36.88c-12.55,0-15.37,2.74-15.37,15.1V150.26Z" />
+                                </g>
+                            </g>
+                        </svg>
                         <span>{{ apartment.total_rooms }}</span>
                     </div>
                     <div class="beds">
-                        <i class="fa-solid fa-bed"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+                            <g id="Livello_2" data-name="Livello 2">
+                                <g id="Livello_1-2" data-name="Livello 1">
+                                    <path
+                                        d="M21,192H0V92c2.63-4.14,5.35-8.23,7.86-12.44,1.17-2,2.74-4.13,2.76-6.23.23-17.12.16-34.25.13-51.38,0-9,4.07-15.54,11.92-19.8C24.08,1.38,25.55.71,27,0H165c12.53,4.93,17.05,14.2,16.42,27.44-.73,15.26-.21,30.58-.11,45.88a9.82,9.82,0,0,0,1.28,5c3,4.67,6.25,9.14,9.41,13.69V192H171V171.19H21ZM170.43,96.31H21.59V149H170.43ZM32.32,21.48V74.75H52.58a8.1,8.1,0,0,0,.57-1.65c.05-5.66.06-11.32.1-17,.08-9.67,3.68-13.34,13.29-13.36q29,0,58,0c10.92,0,14.23,3.38,14.25,14.41,0,5.74,0,11.49,0,17.17h20.92V21.48Z" />
+                                </g>
+                            </g>
+                        </svg>
                         <span>{{ apartment.beds }}</span>
                     </div>
                     <div class="baths">
-                        <i class="fa-solid fa-toilet"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 214">
+                            <g id="Livello_2" data-name="Livello 2">
+                                <g id="Livello_1-2" data-name="Livello 1">
+                                    <path
+                                        d="M0,126V17C3,7.58,9.37,2,19,0H67C82.43,6,85.25,10.18,85.25,27.19V107H192v19c-.49,2.07-1,4.12-1.46,6.2-5,23.2-18.53,40.39-37.68,53.58-2.59,1.79-3.79,3.55-3.7,6.81.21,7.13-.08,14.27-.16,21.41H43c-.08-7.14-.35-14.28-.17-21.41.09-3.23-1-5-3.67-6.82-16.63-11.33-29.23-26-35.5-45.4C2.14,135.68,1.2,130.8,0,126Zm24.87,2.51c.29,1.53.4,2.5.65,3.44,5.18,19.3,17,33.21,34.65,42.25,2.9,1.49,4.2,3.16,3.91,6.5-.33,3.73-.08,7.52-.08,11.3h64c0-3.69.34-7.18-.09-10.58-.51-4,1.46-5.69,4.59-7.63,5.9-3.67,11.83-7.54,16.89-12.26,9.45-8.8,15.16-19.91,17.79-33Zm-3.4-21.86H63.66V22.16H21.47Z" />
+                                    <path d="M32.38,32.5H52.9V63.84H32.38Z" />
+                                </g>
+                            </g>
+                        </svg>
                         <span>{{ apartment.baths }}</span>
                     </div>
                 </div>
@@ -275,18 +303,18 @@ export default {
                         <!-- <Datepicker v-model="date" range /> -->
                         <!-- <div class="row"> -->
                         <!-- <div class="col ">
-                            check-in
-                            <div>{{ store.check_in }}</div>
-                        </div>
-                        <div class="col">
-                            check-out
-                            <div>{{ store.check_out }}</div>
-                        </div>
-                        <div class="col">
-                            Ospiti
-                            <div>1 ospite</div>
-                        </div>
-                    </div> -->
+                                                                                        check-in
+                                                                                        <div>{{ store.check_in }}</div>
+                                                                                    </div>
+                                                                                    <div class="col">
+                                                                                        check-out
+                                                                                        <div>{{ store.check_out }}</div>
+                                                                                    </div>
+                                                                                    <div class="col">
+                                                                                        Ospiti
+                                                                                        <div>1 ospite</div>
+                                                                                    </div>
+                                                                                </div> -->
 
                         <form @submit.prevent="sendForm()">
 
@@ -323,7 +351,7 @@ export default {
                                 <label for="" class="form-label">Messaggio*</label>
                                 <textarea rows="3" cols="50" name="body" id="body" class="form-control" placeholder=""
                                     aria-describedby="helpId" required v-model="body">
-                                    </textarea>
+                                                                                                </textarea>
 
                                 <div class="alert alert-danger" role="alert" v-for="error in errors.body">
                                     {{ error }}
@@ -331,7 +359,7 @@ export default {
                             </div>
 
                             <button type="submit" class="button" :disabled="loading_form">
-                                {{ loading_form? 'Invio in corso...': "Contatta l'host" }}
+                                {{ loading_form ? 'Invio in corso...' : "Contatta l'host" }}
                             </button>
                         </form>
                     </div>
@@ -351,11 +379,8 @@ export default {
                 <div id='map' ref="mapRef"></div>
             </div>
         </div>
-    </div>
-
-    <!-- <div>  -->
-    <!--Host and aircover-->
-    <!-- <div class="container pt-5">
+</div>
+<!-- <div>  --><!--Host and aircover--><!-- <div class="container pt-5">
             <div class="col">
                 <div class="d-flex">
                     <div class="align-self-center px-2 ">
@@ -386,9 +411,7 @@ export default {
 
             </div>
         </div>
-    </div> -->
-
-</template>
+    </div> --></template>
 
 <style lang="scss" scoped>
 @use '../assets/scss/general.scss';
@@ -521,6 +544,14 @@ img {
     font-size: 1.2rem;
     margin-top: -7rem;
     margin-bottom: 3rem;
+
+    svg {
+        color: $bb-lighter;
+        fill: $bb-lighter;
+        font-size: 1rem;
+        height: 1.5rem;
+        width: 1.5rem;
+    }
 
     div {
         padding: 0 1rem;

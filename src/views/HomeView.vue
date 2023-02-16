@@ -16,11 +16,7 @@ export default {
 <template>
     <JumbotronComponent />
     <ShowcaseComponent />
-    <TopPlacesComponent />
-    <ShowcaseComponent />
+    <!-- <TopPlacesComponent /> -->
+<!-- <ShowcaseComponent /> --></template>
 
-</template>
-
-<style lang="scss" scoped>
-@use '../assets/scss/general.scss';
-</style>
+<style lang="scss" scoped>@use '../assets/scss/general.scss';</style>

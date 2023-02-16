@@ -33,6 +33,7 @@ export default {
             store,
             date: null,
             maxGuests: 10,
+            searchTerm: '',
         }
     },
     components: {
@@ -56,9 +57,40 @@ export default {
 
                 store.loading = false;
 
+                // if (store.results) {
+                //     const searchQuery = store.address.trim();
+                //     console.log(searchQuery);
+                //     const queryParams = [];
+
+                //     if (searchQuery) {
+                //         queryParams.push(`q=${encodeURIComponent(searchQuery)}`);
+                //     }
+
+                //     const query = queryParams.join('&');
+                //     this.$router.push({ name: 'search', query });
+                // }
+                const searchQuery = store.address.trim();
+                const query = searchQuery ? `?q=${encodeURIComponent(searchQuery)}` : '';
+                this.$router.push({ name: 'search', path: '/search' + query, query: { q: searchQuery } });
+
             } catch (error) {
                 console.error(error);
             }
+
+            // const searchQuery = store.address;
+            // const query = `q=${searchQuery}`;
+            // this.$router.push({ name: 'search', query });
+
+            // const searchQuery = store.address.trim();
+            // const queryParams = [];
+            // if (searchQuery) {
+            //     queryParams.push(`q=${encodeURIComponent(searchQuery)}`);
+            // }
+
+            // const query = queryParams.join('&');
+            // this.$router.push({ name: 'search', query });
+
+
         },
         setAddress(address) {
             console.log(address);
@@ -84,6 +116,7 @@ export default {
                 this.store.guests = 1;
             }
         },
+
     },
     computed: {
         elementId() {
@@ -142,21 +175,21 @@ export default {
                     <div id="searchBox"></div>
                     <!-- <input type="text" v-model="store.address" placeholder="Dove vuoi andare?"> -->
                 </div>
-                <div class="input">
-                    <div class="line"></div>
-                    <!-- <i class="fa-regular fa-calendar"></i> -->
-                    <Datepicker class="dataPicker" v-model="date" :enable-time-picker="false" :format="format" range />
-                </div>
-                <div class="input">
-                    <div class="line"></div>
-                    <i class="fa-regular fa-user"></i>
+                <!-- <div class="input">
+                                <div class="line"></div> -->
+                <!-- <i class="fa-regular fa-calendar"></i> -->
+                <!-- <Datepicker class="dataPicker" v-model="date" :enable-time-picker="false" :format="format" range />
+                            </div>
+                            <div class="input">
+                                <div class="line"></div>
+                                <i class="fa-regular fa-user"></i> -->
 
-                    <button @click="increment" :disabled="guests >= maxGuests">+</button>
-                    <input type="number" id="guests" name="guests" v-model.number="store.guests" @input="validateGuests">
-                    <button @click="decrement" :disabled="guests <= 1">-</button>
+                <!-- <button @click="increment" :disabled="guests >= maxGuests">+</button>
+                                <input type="number" id="guests" name="guests" v-model.number="store.guests" @input="validateGuests">
+                                <button @click="decrement" :disabled="guests <= 1">-</button> -->
 
-                    <!-- <input type="text" v-model="store.guests" placeholder="Quanti siete?"> -->
-                </div>
+                <!-- <input type="text" v-model="store.guests" placeholder="Quanti siete?"> -->
+                <!-- </div> -->
             </div>
 
             <router-link :to="{ name: 'search' }">
@@ -199,7 +232,7 @@ export default {
     }
 
     .input {
-        width: calc(100%/3);
+        // width: calc(100%/3);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -257,7 +290,7 @@ export default {
 
 
     .input {
-        width: calc(100%/3);
+        // width: calc(100%/3);
         display: flex;
         align-items: center;
         justify-content: center;
