@@ -121,6 +121,7 @@ export default {
 
                 <CardComponent v-for="apartment in apartments" :key="apartment.id" :apartment="apartment" />
 
+
                 <div class="pagination">
                     <button @click="previousPage"><i class="fa-solid fa-chevron-left"></i></button>
                     <div class="page-numbers">
@@ -134,8 +135,7 @@ export default {
 
             </div>
         </div>
-    </div>
-
+</div>
 </template>
 
 <style lang="scss" scoped>
@@ -153,6 +153,10 @@ h2 {
 
 p {
     max-width: 80%;
+}
+
+.cardComponent {
+    align-items: stretch;
 }
 
 .description {
