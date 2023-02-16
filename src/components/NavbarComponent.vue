@@ -121,9 +121,9 @@ export default {
 @use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
 
-nav {
-    height: 5vh;
-}
+// nav {
+// height: 5vh;
+// }
 
 // Top navbar
 .profile_btn {

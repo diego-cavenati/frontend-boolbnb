@@ -241,41 +241,40 @@ export default {
                 </div>
             </div>
             <div class="col-5">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        {{ apartment.price }}€ notte
-                    </div>
-                    <!-- v-if="this.nights" -->
-                    <div>
-                        <h4>{{ this.nights }} notti in {{ apartment.address }}</h4>
-                        <div> {{ store.check_in }} - {{ store.check_out }}
+                <div id="contact_host" class="d-flex justify-content-between">
+                    <div class="container">
+                        <div class="apartment_price">
+                            <span class="price">{{ apartment.price }} €</span> /notte
                         </div>
-                        <div class="d-flex justify-content-between">
-                            {{ apartment.price }}€ x {{ this.nights }} notti
-                            <div>
-                                {{ this.price_nights }}
+
+                        <div v-if="this.nights">
+                            <h4>{{ this.nights }} notti in {{ apartment.address }}</h4>
+                            <div> {{ store.check_in }} - {{ store.check_out }}
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                {{ apartment.price }}€ x {{ this.nights }} notti
+                                <div>
+                                    {{ this.price_nights }}
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                Costi di pulizia
+                                <div>
+                                    100€
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between">
+                                Totale
+                                <div>
+                                    {{ this.total_price }}€
+                                </div>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-between">
-                            Costi di pulizia
-                            <div>
-                                100€
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="d-flex justify-content-between">
-                            Totale
-                            <div>
-                                {{ this.total_price }}€
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="container border rounded p-0">
-                    <!-- <Datepicker v-model="date" range /> -->
-                    <div class="row">
-                        <!--TODO aggiungere padding personalizzato se vogliamo tenere questo tipo di struttura-->
-                        <div class="col ">
+
+                        <!-- <Datepicker v-model="date" range /> -->
+                        <!-- <div class="row"> -->
+                        <!-- <div class="col ">
                             check-in
                             <div>{{ store.check_in }}</div>
                         </div>
@@ -287,56 +286,56 @@ export default {
                             Ospiti
                             <div>1 ospite</div>
                         </div>
-                    </div>
-                    <form @submit.prevent="sendForm()">
-                        <div class="border-top"> <!--TODO decidere grandezza dell'input-->
-                            <div class="mb-3 d-flex align-items-center gap-3 p-2 ">
-                                <label for="" class="form-label">Nome*</label>
-                                <input type="text" name="name" id="name"
-                                    class="form-control border-0 border-bottom w-50 rounded-0" placeholder=""
-                                    aria-describedby="helpId" required v-model="name">
+                    </div> -->
 
-                                <div class="alert alert-danger" role="alert" v-for="error in errors.name">
-                                    {{ error }}
+                        <form @submit.prevent="sendForm()">
+
+                            <div class="col_2">
+                                <div class="name">
+                                    <label for="" class="form-label">Nome*</label>
+                                    <input type="text" name="name" id="name" class="form-control" placeholder=""
+                                        aria-describedby="helpId" required v-model="name">
+
+                                    <div class="alert alert-danger" role="alert" v-for="error in errors.name">
+                                        {{ error }}
+                                    </div>
+                                </div>
+                                <div class="surname">
+                                    <label for="" class="form-label">Cognome*</label>
+                                    <input type="text" name="surname" id="surname" class="form-control" placeholder=""
+                                        aria-describedby="helpId" required v-model="surname">
+
+                                    <div class="alert alert-danger" role="alert" v-for="error in errors.surname">
+                                        {{ error }}
+                                    </div>
                                 </div>
                             </div>
-                            <div class="mb-3 d-flex align-items-center gap-3 p-2">
-                                <label for="" class="form-label">Cognome*</label>
-                                <input type="text" name="surname" id="surname"
-                                    class="form-control border-0 border-bottom w-50 rounded-0" placeholder=""
-                                    aria-describedby="helpId" required v-model="surname">
-
-                                <div class="alert alert-danger" role="alert" v-for="error in errors.surname">
-                                    {{ error }}
-                                </div>
-                            </div>
-                            <div class="mb-3 d-flex align-items-center gap-3 p-2 ">
+                            <div class="email">
                                 <label for="" class="form-label">Email*</label>
-                                <input type="email" name="email" id="email"
-                                    class="form-control border-0 border-bottom w-50 rounded-0" placeholder=""
+                                <input type="email" name="email" id="email" class="form-control" placeholder=""
                                     aria-describedby="helpId" required v-model="email">
 
                                 <div class="alert alert-danger" role="alert" v-for="error in errors.email">
                                     {{ error }}
                                 </div>
                             </div>
-                            <div class="mb-3 d-flex align-items-center gap-3 p-2 ">
-                                <label for="" class="form-label">Messagio*</label>
-                                <input type="text" name="body" id="body"
-                                    class="form-control border-0 border-bottom w-50 rounded-0" placeholder=""
+                            <div class="message">
+                                <label for="" class="form-label">Messaggio*</label>
+                                <textarea rows="3" cols="50" name="body" id="body" class="form-control" placeholder=""
                                     aria-describedby="helpId" required v-model="body">
+                                    </textarea>
 
                                 <div class="alert alert-danger" role="alert" v-for="error in errors.body">
                                     {{ error }}
                                 </div>
                             </div>
-                        </div>
-                        <button type="submit" class="custom_button" :disabled="loading_form">
-                            {{ loading_form? 'Sending...': 'Invia prenotazione' }}
-                        </button>
-                    </form>
-                </div>
 
+                            <button type="submit" class="button" :disabled="loading_form">
+                                {{ loading_form? 'Invio in corso...': "Contatta l'host" }}
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
         <hr>
@@ -344,14 +343,15 @@ export default {
     <div class="container">
         <div class="row">
             <div class="col">
+                <div class="address_map" v-if="!loading">
+                    <i class="fa-regular fa-solid fa-location-dot"></i>
+                    {{ apartment.address }}
+                </div>
                 <!-- Mappa -->
                 <div id='map' ref="mapRef"></div>
             </div>
         </div>
     </div>
-
-
-
 
     <!-- <div>  -->
     <!--Host and aircover-->
@@ -419,8 +419,65 @@ img {
     }
 }
 
+#contact_host {
+    margin-bottom: 1rem;
+    padding: 1.6rem;
+    background-color: $bb-background;
+    border-radius: 1.25rem;
+    color: $bb-dark;
+
+    .apartment_price {
+        color: $bb-dark;
+
+        .price {
+            font-size: 2rem;
+            font-weight: 500;
+        }
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+
+        label {
+            padding-top: 1rem;
+            padding-bottom: 0;
+            font-family: $bb-font-primary;
+            font-size: 1rem;
+        }
+
+        input {
+            border-radius: 6px;
+            padding: 0.8rem;
+            width: 100%;
+        }
+
+        textarea {
+            margin-bottom: 2rem;
+        }
+
+        .col_2 {
+            display: flex;
+            justify-content: space-between;
+
+            div {
+                width: 48%;
+            }
+
+            input {
+                width: 100%;
+            }
+        }
+    }
+}
+
+
 .address {
     padding-bottom: 1rem;
+}
+
+.address_map {
+    padding-bottom: 0.5rem;
 }
 
 .border_top {

@@ -181,7 +181,7 @@ export default {
 #large_element {
 
     background: #FFFFFF;
-    box-shadow: 0px 4px 8px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0px 4px 8px 4px rgba(0, 0, 0, 0.03);
     border-radius: 4rem;
     font-size: 1.2rem;
     font-family: $bb-font-secondary;
@@ -238,7 +238,7 @@ export default {
 #small_element {
     background: $bb-lighter;
     border: 1px solid $bb-light;
-    box-shadow: 0px 4px 8px 4px rgba(0, 0, 0, 0.08);
+    box-shadow: 0px 2px 4px 2px rgba(0, 0, 0, 0.02);
     border-radius: 2rem;
     font-size: 1rem;
     font-family: $bb-font-secondary;

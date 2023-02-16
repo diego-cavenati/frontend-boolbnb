@@ -132,7 +132,7 @@
 .mapboxgl-ctrl-group button {
     width: 29px;
     height: 29px;
-    display: block;
+    /* display: block; */
     padding: 0;
     outline: none;
     border: 0;
