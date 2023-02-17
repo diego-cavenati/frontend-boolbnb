@@ -109,14 +109,17 @@ export default {
             console.log(store.services_back);
         },
         SubmitServices() {
-            axios.get('http://127.0.0.1:8000/api/search?address=' + store.address + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius + '&beds=' + store.beds)
+            axios.get('http://127.0.0.1:8000/api/search?address=' + store.address + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius * 1000 + '&beds=' + store.beds)
                 .then(response => {
                     //console.log(resp);
                     // convertire km to metri prima di mandarli 
-
                     store.results = response.data.results;
                     store.loading = false
                     console.log(store.results);
+                    console.log(store.categories_back);
+                    console.log(store.radius, 'radius');
+                    console.log(store.beds, 'beds');
+                    console.log(store.address, 'address');
                 })
 
         },
@@ -275,7 +278,7 @@ export default {
 </script>
 
 <template>
-    <button class="clearInput" @click="clearInput">clear</button>
+    <!-- <button class="clearInput" @click="clearInput">clear</button> -->
     <div id="results">
         <div class="container-fluid">
             <div class="categories d-flex justify-content-center">
@@ -289,7 +292,9 @@ export default {
                     </div>
                 </div>
                 <div class="align-self-center p-3">
-                    <button class="btn btn-primary" id="filterBtn">Apri filtro</button>
+                    <button class="btn btn-primary " id="filterBtn">Apri filtro</button>
+                    <!-- <button class="btn btn-primary ms-3">Tutti gli appartamenti</button> -->
+                    
                 </div>
             </div>
             <div class="container">
@@ -323,6 +328,7 @@ export default {
                                 <input type="number" min="0" max="128" id="beds" v-model.number="store.beds">
                                 <p>i posti letti sono {{ store.beds }} </p>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -378,7 +384,7 @@ export default {
                 </div>
             </div>
         </div>
-</div>
+    </div>
 </template>
 
 <style lang="scss" scoped>
