@@ -15,6 +15,7 @@ export default {
             currentPage: 1,
             perPage: 6,
             pages: null,
+            maxHeight: null,
         }
     },
     computed: {
@@ -28,6 +29,19 @@ export default {
         }
     },
     methods: {
+        setMaxHeight() {
+            const cards = document.querySelectorAll(".card");
+            let maxHeight = 0;
+
+            cards.forEach(card => {
+                const height = card.offsetHeight;
+                if (height > maxHeight) {
+                    maxHeight = height;
+                }
+            });
+
+            this.maxHeight = maxHeight;
+        },
         previousPage() {
             if (this.currentPage > 1) {
                 this.currentPage--;
@@ -54,13 +68,11 @@ export default {
                     });
             }
         },
-
         goToPage(pageNumber) {
             this.currentPage = pageNumber;
             console.log(this.currentPage);
             this.callApi();
         },
-
         callApi() {
             axios.get(`http://127.0.0.1:8000/api/apartments?page=${this.currentPage}`)
                 .then(response => {
@@ -88,12 +100,14 @@ export default {
                     this.error = error.message;
                     this.loading = false;
                 })
-        }
+        },
+
     },
     created() {
         this.callApi()
     },
     mounted() {
+        this.setMaxHeight();
     },
 }
 </script>
@@ -116,9 +130,9 @@ export default {
 
 
             <div class="row">
-
-                <CardComponent class="col-lg-4 col-md-6 col-sm-12 pb-4" v-for="apartment in apartments" :key="apartment.id"
-                    :apartment="apartment" />
+                <div class="col-lg-4 col-md-6 col-sm-12 pb-4" v-for="(apartment, index) in apartments" :key="apartment.id">
+                    <CardComponent :apartment="apartment" />
+                </div>
 
 
                 <div class="pagination">

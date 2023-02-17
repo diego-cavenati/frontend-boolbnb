@@ -13,6 +13,13 @@ export default {
     },
     props: ['apartment'],
     methods: {
+        getImagePath(path) {
+            if (path.startsWith("http")) {
+                return path; // Link esterno, restituiscilo direttamente
+            } else {
+                return this.store.url_back + '/storage/' + path; // Percorso relativo alla cartella storage
+            }
+        }
     },
     mounted() {
     },
@@ -33,18 +40,18 @@ export default {
         <router-link :to="{ name: 'single-apartment', params: { slug: apartment.slug } }">
 
 
-            <div class="card border-0">
+            <div class="card card_height border-0">
 
                 <div class="card_img">
                     <!-- carousel -->
                     <!-- <div v-if="store.immagineAttiva > 0" @click="PrevImg()">
-                            <i class="fa-solid fa-circle-chevron-left arrow_left"></i>
-                        </div>
-                        <div v-if="store.immagineAttiva != store.images.length - 1" @click="NextImg()">
-                            <i class="fa-solid fa-circle-chevron-right arrow_right"></i>
-                        </div> -->
+                                                    <i class="fa-solid fa-circle-chevron-left arrow_left"></i>
+                                                </div>
+                                                <div v-if="store.immagineAttiva != store.images.length - 1" @click="NextImg()">
+                                                    <i class="fa-solid fa-circle-chevron-right arrow_right"></i>
+                                                </div> -->
                     <!-- img thumb -->
-                    <img :src="apartment.media" :class="classe" alt="">
+                    <img :src="getImagePath(apartment.media) || apartment.media" :class="classe" alt="">
                     <!-- TODO aggiungere funzione per il path SOLO quando torna un img uploadata-->
 
                 </div>
@@ -65,12 +72,14 @@ export default {
                 </div>
             </div>
         </router-link>
-    </div>
+</div>
 <!-- :link="element.img[store.immagineAttiva] da tenere per il card component--></template>
 
 <style lang="scss">
 @use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
+
+
 
 .card-body {
     padding: 1.6rem;
