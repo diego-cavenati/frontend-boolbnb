@@ -361,8 +361,8 @@ export default {
                                 </div>
 
                             </div>
-                            <CardComponent v-for="apartment in store.results" :key="apartment.id" :apartment="apartment"
-                                v-else />
+                            <CardComponent class="col-lg-4 col-md-6 col-sm-12 pb-4" v-for="apartment in store.results"
+                                :key="apartment.id" :apartment="apartment" v-else />
 
                         </div>
                     </div>
@@ -463,9 +463,10 @@ input[type="range"] {
 }
 
 */
-:root { 
+:root {
     --computed-radius: calc(50% - (10px / 2));
 }
+
 input[type=range] {
     -webkit-appearance: none;
     width: 100%;
@@ -516,8 +517,6 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     height: 88vh;
     width: 100%;
 }
-
-
 
 .categories img {
     width: 30px;
