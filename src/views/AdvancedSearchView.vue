@@ -148,7 +148,7 @@ export default {
             console.log(store.beds, 'beds');
             console.log(store.address, 'address');
         },
-        clearMap(){
+        clearMap() {
             document.getElementById('map').style.display = 'none';
         },
 
@@ -164,6 +164,14 @@ export default {
         */
     },
     computed: {
+        computedRadius() {
+            return console.log(`calc(${this.store.radius}% - (10px / 2))`);
+        },
+        /*
+        computedRadius() {
+            return `${store.radius}km`
+        },
+        */
         /*
         classObject(){
             return {
@@ -171,7 +179,7 @@ export default {
             }
         },
         */
-        
+
         dataLoaded() {
             return store.results
         },
@@ -228,7 +236,7 @@ export default {
                 for (const [lng, lat] of result) {
                     this.addMarker(parseFloat(lng), parseFloat(lat));
                 }
-            } 
+            }
             /*
             else {
                 this.clearMap();
@@ -300,16 +308,16 @@ export default {
                                     {{ service.name }}
                                 </div>
                             </div>
-                                <div> <!--TODO bisogna pushare store.radius al back insieme ai servizi-->
-                                    <label for="radius">Seleziona il raggio in km:</label>
-                                    <input type="number" min="0" max="100" id="radius" v-model.number="store.radius">
-                                    <p>Il raggio selezionato è {{ store.radius }} km.</p>
-                                </div>
-                                <div> <!--TODO bisogna pushare store.beds al back insieme ai servizi & il raggio di ricerca-->
-                                    <label for="beds">Seleziona posti letto</label>
-                                    <input type="number" min="0" max="128"  id="beds" v-model.number="store.beds">
-                                    <p>i posti letti sono {{ store.beds }} </p>
-                                </div>
+                            <div> <!--TODO bisogna pushare store.radius al back insieme ai servizi-->
+                                <label for="range">Seleziona il raggio in km:</label>
+                                <input type="range" min="0" max="100" id="range" v-model.number="store.radius" />
+                                <p>Il raggio selezionato è {{ store.radius }} km.</p>
+                            </div>
+                            <div> <!--TODO bisogna pushare store.beds al back insieme ai servizi & il raggio di ricerca-->
+                                <label for="beds">Seleziona posti letto</label>
+                                <input type="number" min="0" max="128" id="beds" v-model.number="store.beds">
+                                <p>i posti letti sono {{ store.beds }} </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -353,13 +361,14 @@ export default {
                                 </div>
 
                             </div>
-                            <CardComponent v-for="apartment in store.results" :key="apartment.id" :apartment="apartment" v-else/>
+                            <CardComponent v-for="apartment in store.results" :key="apartment.id" :apartment="apartment"
+                                v-else />
 
                         </div>
                     </div>
 
                 </div>
-                <div class="col" v-bind:class="{ 'map_hidden': !store.address }" >
+                <div class="col" v-bind:class="{ 'map_hidden': !store.address }">
                     <div id='map' ref="mapRef"></div>
                 </div>
             </div>
@@ -371,7 +380,125 @@ export default {
 @use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
 
-.map_hidden{
+//$range-progress: calc(#{$computed-radius}/100*100);
+/*
+input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 10px;
+    background-color: #ddd;
+    border-radius: 5px;
+    outline: none;
+    margin: 0;
+    padding: 0;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background-color: #333;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -5px;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    height: 10px;
+    //background-color: #999;
+    background: linear-gradient(to right, red 0%, red calc(var(--computed-radius) - 1px), green calc(var(--computed-radius) + 1px), green 100%);
+    border-radius: 5px;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #ccc;
+}
+*/
+/*
+:root {
+    --range-thumb-size: 20px;
+    --range-thumb-color: #333;
+    --range-track-height: 10px;
+    --range-track-bg: #ddd;
+    --range-track-fill-start: red;
+    --range-track-fill-end: green;
+    --range-track-border-radius: 5px;
+}
+
+input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: var(--range-track-height);
+    background-color: var(--range-track-bg);
+    border-radius: var(--range-track-border-radius);
+    outline: none;
+    margin: 0;
+    padding: 0;
+
+    &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: var(--range-thumb-size);
+        height: var(--range-thumb-size);
+        background-color: var(--range-thumb-color);
+        border-radius: 50%;
+        cursor: pointer;
+        margin-top: calc((var(--range-track-height) - var(--range-thumb-size)) / 2);
+    }
+
+    &::-webkit-slider-runnable-track {
+        -webkit-appearance: none;
+        height: var(--range-track-height);
+        background: linear-gradient(to right,
+                var(--range-track-fill-start) 0%,
+                var(--range-track-fill-start) calc((var(--range-thumb-size) / 2) + var(--range-thumb-size) / 4),
+                var(--range-track-fill-end) calc((var(--range-thumb-size) / 2) + var(--range-thumb-size) / 4),
+                var(--range-track-fill-end) 100%);
+        border-radius: var(--range-track-border-radius);
+    }
+
+    &:focus::-webkit-slider-runnable-track {
+        background: #ccc;
+    }
+}
+
+*/
+:root { 
+    --computed-radius: calc(50% - (10px / 2));
+}
+input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 10px;
+    background-color: #ddd;
+    border-radius: 5px;
+    outline: none;
+    margin: 0;
+    padding: 0;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background-color: #333;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -5px;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    height: 10px;
+    background: linear-gradient(to right, red 0%, red calc(var(--computed-radius) - 1px), green calc(var(--computed-radius) + 1px), green 100%);
+    border-radius: 5px;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #ccc;
+}
+
+.map_hidden {
     display: none;
 }
 
