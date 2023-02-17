@@ -22,6 +22,9 @@ export default {
         CardComponent
     },
     methods: {
+        clearInput() {
+            store.address = '';
+        },
         addMarker(longitude, latitude) {
             const tt = window.tt;
             var location = [longitude, latitude];
@@ -263,6 +266,7 @@ export default {
                 store.categories = response.data.results
             })
         //console.log('http://127.0.0.1:8000/api/search?services='+ store.services_back );
+
     },
     created() {
     },
@@ -271,6 +275,7 @@ export default {
 </script>
 
 <template>
+    <button class="clearInput" @click="clearInput">clear</button>
     <div id="results">
         <div class="container-fluid">
             <div class="categories d-flex justify-content-center">
