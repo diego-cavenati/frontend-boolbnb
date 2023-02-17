@@ -104,10 +104,8 @@ export default {
             <h2>I nostri appartamenti <span class="title_mark"> in vetrina</span></h2>
             <div class="description">
                 <p>
-                    Lorem ipsum dolor sit amet consectetur. Neque mauris massa mauris et dui volutpat
-                    nunc purus felis. Est vitae et velit at. Interdum sodales gravida mattis venenatis fusce sagittis
-                    quisque. Ut et imperdiet tempor eget sed. Eu augue consectetur adipiscing neque mauris placerat nec
-                    diam. Sit etiam sed egestas enim.
+                    Ecco i nostri appartamenti in vetrina. Siamo sicuri che troverete tra questi appartamenti la soluzione
+                    perfetta per il vostro prossimo viaggio. Boolbnb la nostra scelta migliore per le vostre vacanze!
                 </p>
 
                 <router-link :to="{ name: 'search' }">
@@ -119,7 +117,8 @@ export default {
 
             <div class="row">
 
-                <CardComponent v-for="apartment in apartments" :key="apartment.id" :apartment="apartment" />
+                <CardComponent class="col-lg-4 col-md-6 col-sm-12 pb-4" v-for="apartment in apartments" :key="apartment.id"
+                    :apartment="apartment" />
 
 
                 <div class="pagination">

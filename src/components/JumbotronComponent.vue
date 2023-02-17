@@ -21,11 +21,11 @@ export default {
                     <h1>Scopri nuove destinazioni</h1>
                     <h2>Prenota la tua casa ideale</h2>
 
-                    <SearchbarComponent />
+                    <SearchbarComponent class="mobile_hide" />
                 </div>
             </div>
         </div>
-    </div>
+</div>
 </template>
 
 <style lang="scss" scoped>
@@ -48,6 +48,7 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    text-align: center;
 }
 
 h1 {
@@ -83,5 +84,30 @@ h2 {
     position: absolute;
     left: 0;
     top: 0;
+}
+
+// MEDIA QUERY
+// desktop
+@media screen and (min-width: 744px) {
+    .nav_bottom {
+        visibility: hidden;
+    }
+}
+
+// mobile
+@media screen and (max-width: 744px) {
+    .mobile_hide {
+        // visibility: hidden;
+        display: none !important;
+    }
+
+
+    #jumbotron {
+        height: 350px;
+
+        h2 {
+            padding-bottom: 0;
+        }
+    }
 }
 </style>

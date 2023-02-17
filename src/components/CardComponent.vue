@@ -19,7 +19,7 @@ export default {
     computed: {
         elementClass() {
             if (this.$route.name === 'home') {
-                return 'col-4';
+                return '';
             } else {
                 return 'col-6';
             }
@@ -29,9 +29,6 @@ export default {
 </script>
 
 <template>
-
-    
-
     <div :class="elementClass">
         <router-link :to="{ name: 'single-apartment', params: { slug: apartment.slug } }">
 
@@ -41,11 +38,11 @@ export default {
                 <div class="card_img">
                     <!-- carousel -->
                     <!-- <div v-if="store.immagineAttiva > 0" @click="PrevImg()">
-                    <i class="fa-solid fa-circle-chevron-left arrow_left"></i>
-                </div>
-                <div v-if="store.immagineAttiva != store.images.length - 1" @click="NextImg()">
-                    <i class="fa-solid fa-circle-chevron-right arrow_right"></i>
-                </div> -->
+                            <i class="fa-solid fa-circle-chevron-left arrow_left"></i>
+                        </div>
+                        <div v-if="store.immagineAttiva != store.images.length - 1" @click="NextImg()">
+                            <i class="fa-solid fa-circle-chevron-right arrow_right"></i>
+                        </div> -->
                     <!-- img thumb -->
                     <img :src="apartment.media" :class="classe" alt="">
                     <!-- TODO aggiungere funzione per il path SOLO quando torna un img uploadata-->
@@ -69,8 +66,7 @@ export default {
             </div>
         </router-link>
     </div>
-    <!-- :link="element.img[store.immagineAttiva] da tenere per il card component-->
-</template>
+<!-- :link="element.img[store.immagineAttiva] da tenere per il card component--></template>
 
 <style lang="scss">
 @use '../assets/scss/general.scss';
