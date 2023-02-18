@@ -5,10 +5,29 @@ export default {
     name: 'JumbotronComponent',
     data() {
         return {
+            isMobileView: false,
         }
     },
     components: {
         SearchbarComponent
+    },
+    // computed: {
+    //     isMobileView() {
+    //         const mediaQuery = window.matchMedia('(max-width: 744px)');
+    //         return mediaQuery.matches;
+    //     }
+    // },
+    created() {
+        window.addEventListener('resize', this.handleResize);
+        this.handleResize();
+    },
+    destroyed() {
+        window.removeEventListener('resize', this.handleResize);
+    },
+    methods: {
+        handleResize() {
+            this.isMobileView = window.innerWidth <= 744;
+        },
     }
 }
 </script>
@@ -21,11 +40,12 @@ export default {
                     <h1>Scopri nuove destinazioni</h1>
                     <h2>Prenota la tua casa ideale</h2>
 
-                    <SearchbarComponent class="mobile_hide" />
+                    <SearchbarComponent v-if="!isMobileView" />
+                    <!-- class="mobile_hide" -->
                 </div>
             </div>
         </div>
-</div>
+    </div>
 </template>
 
 <style lang="scss" scoped>

@@ -9,18 +9,41 @@ export default {
         return {
             store,
             showInNavbar: false,
+            isMobileView: false,
         }
+    },
+    computed: {
+        // isHomepage() {
+        //     return this.$route.path === '/';
+        // }
     },
     components: {
         SearchbarComponent
     },
-    methods: {
+    props: {
+        showSearchbar: {
+            type: Boolean,
+            default: false,
+        },
     },
     computed: {
-        hideInHome() {
+        isHomepage() {
             return this.$route.path === '/';
-        }
+        },
     }
+
+    // created() {
+    //     window.addEventListener('resize', this.handleResize);
+    //     this.handleResize();
+    // },
+    // destroyed() {
+    //     window.removeEventListener('resize', this.handleResize);
+    // },
+    // methods: {
+    //     handleResize() {
+    //         this.isMobileView = window.innerWidth <= 744;
+    //     },
+    // },
 }
 </script>
 <template>
@@ -30,7 +53,8 @@ export default {
                 <img src="../assets/svg/boolbnb-color.svg" alt="">
             </router-link>
         </div>
-        <SearchbarComponent v-if="!hideInHome" />
+        <SearchbarComponent v-if="showSearchbar & isHomepage" />
+        <SearchbarComponent v-if="!isHomepage" />
         <div class="d-flex align-items-center hide">
 
             <!-- <span class="host">Passa alla modalità host</span> -->
@@ -46,15 +70,15 @@ export default {
                 <li><a class="dropdown-item" href="http://127.0.0.1:8000/">Accedi</a></li>
                 <li><a class="dropdown-item" href="http://127.0.0.1:8000/register">Registrati</a></li>
                 <!-- <li><a class="dropdown-item" href="#">Messaggi</a></li>
-                                                                <li><a class="dropdown-item" href="#">Preferiti</a></li>
-                                                                <li>
-                                                                    <hr class="dropdown-divider">
-                                                                </li>
-                                                                <li><a class="dropdown-item" href="#">Gestisci gli annunci</a></li>
-                                                                <li>
-                                                                    <hr class="dropdown-divider">
-                                                                </li>
-                                                                <li><a class="dropdown-item" href="#">Esci</a></li> -->
+                                                                                                                                                                                <li><a class="dropdown-item" href="#">Preferiti</a></li>
+                                                                                                                                                                                <li>
+                                                                                                                                                                                    <hr class="dropdown-divider">
+                                                                                                                                                                                </li>
+                                                                                                                                                                                <li><a class="dropdown-item" href="#">Gestisci gli annunci</a></li>
+                                                                                                                                                                                <li>
+                                                                                                                                                                                    <hr class="dropdown-divider">
+                                                                                                                                                                                </li>
+                                                                                                                                                                                <li><a class="dropdown-item" href="#">Esci</a></li> -->
             </ul>
         </div>
     </nav>
@@ -90,31 +114,31 @@ export default {
 
 
             <!--
-                                                            <div>
-                                                                <div class="nav_icon dropup">
-                                                                    <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                        <i class="fa-solid fa-user"></i>
-                                                                        <span>Accedi</span>
-                                                                    </button>
+                                                                                                                                                                            <div>
+                                                                                                                                                                                <div class="nav_icon dropup">
+                                                                                                                                                                                    <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                                                                                                                        <i class="fa-solid fa-user"></i>
+                                                                                                                                                                                        <span>Accedi</span>
+                                                                                                                                                                                    </button>
 
-                                                                    <ul class="dropdown-menu">
-                                                                        <li><a class="dropdown-item" href="#">Messaggi</a></li>
-                                                                        <li><a class="dropdown-item" href="#">Preferiti</a></li>
-                                                                        <li>
-                                                                            <hr class="dropdown-divider">
-                                                                        </li>
-                                                                        <li><a class="dropdown-item" href="#">Gestisci gli annunci</a></li>
-                                                                        <li>
-                                                                            <hr class="dropdown-divider">
-                                                                        </li>
-                                                                        <li><a class="dropdown-item" href="#">Esci</a></li>
-                                                                    </ul>
-                                                                </div>
+                                                                                                                                                                                    <ul class="dropdown-menu">
+                                                                                                                                                                                        <li><a class="dropdown-item" href="#">Messaggi</a></li>
+                                                                                                                                                                                        <li><a class="dropdown-item" href="#">Preferiti</a></li>
+                                                                                                                                                                                        <li>
+                                                                                                                                                                                            <hr class="dropdown-divider">
+                                                                                                                                                                                        </li>
+                                                                                                                                                                                        <li><a class="dropdown-item" href="#">Gestisci gli annunci</a></li>
+                                                                                                                                                                                        <li>
+                                                                                                                                                                                            <hr class="dropdown-divider">
+                                                                                                                                                                                        </li>
+                                                                                                                                                                                        <li><a class="dropdown-item" href="#">Esci</a></li>
+                                                                                                                                                                                    </ul>
+                                                                                                                                                                                </div>
 
-                                                            </div> -->
+                                                                                                                                                                            </div> -->
 
         </div>
-</div>
+    </div>
 </template>
 
 <style lang="scss">
@@ -230,6 +254,10 @@ nav {
     .nav_bottom {
         padding-left: 1rem;
         padding-right: 1rem;
+    }
+
+    .my-component-homepage {
+        display: none;
     }
 }
 

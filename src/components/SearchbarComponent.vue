@@ -24,7 +24,6 @@ export default {
         }
 
         return {
-            // date,
             format,
         }
     },
@@ -52,49 +51,25 @@ export default {
                 store.price = response.data.results.price;
                 store.lat = response.data.poi.lat;
                 store.lon = response.data.poi.lon;
-                console.log(store.address);
                 store.loading = false;
-                
-                /*
-                const searchBoxInput = document.querySelector('.tt-search-box-input');
-                if (searchBoxInput.placeholder == '') {
-                    store.address = ''
-                }
-                */
 
-                // if (store.results) {
-                //     const searchQuery = store.address.trim();
-                //     console.log(searchQuery);
-                //     const queryParams = [];
-
-                //     if (searchQuery) {
-                //         queryParams.push(`q=${encodeURIComponent(searchQuery)}`);
-                //     }
-
-                //     const query = queryParams.join('&');
-                //     this.$router.push({ name: 'search', query });
-                // }
                 const searchQuery = store.address.trim();
                 const query = searchQuery ? `?q=${encodeURIComponent(searchQuery)}` : '';
                 this.$router.push({ name: 'search', path: '/search' + query, query: { q: searchQuery } });
 
+                const mapHiddenEmptyAddress = document.querySelector('.hide_map_custom')
+                if (!store.address) {
+                    mapHiddenEmptyAddress.classList.add('map_hidden')
+                    console.log(mapHiddenEmptyAddress);
+                } if (store.address) {
+                    mapHiddenEmptyAddress.classList.remove('map_hidden');
+                    console.log(mapHiddenEmptyAddress);
+
+                }
+
             } catch (error) {
                 console.error(error);
             }
-
-            // const searchQuery = store.address;
-            // const query = `q=${searchQuery}`;
-            // this.$router.push({ name: 'search', query });
-
-            // const searchQuery = store.address.trim();
-            // const queryParams = [];
-            // if (searchQuery) {
-            //     queryParams.push(`q=${encodeURIComponent(searchQuery)}`);
-            // }
-
-            // const query = queryParams.join('&');
-            // this.$router.push({ name: 'search', query });
-
 
         },
         setAddress(address) {
@@ -121,7 +96,9 @@ export default {
                 this.store.guests = 1;
             }
         },
-
+        clearAdress() {
+            store.address = '';
+        },
     },
     computed: {
         elementId() {
@@ -142,9 +119,9 @@ export default {
                 language: "it-IT",
                 limit: 5,
                 typeahead: ["address"],
-                center: [12.49167, 41.89022], //imposta il centro della ricerca su Roma, ad esempio
-                countrySet: ["IT"], //imposta la ricerca solo in Italia
-                minFuzzyLevel: 1 //imposta la corrispondenza del testo di ricerca al massimo
+                center: [12.49167, 41.89022],
+                countrySet: ["IT"],
+                minFuzzyLevel: 1
             },
             autocompleteOptions: {
                 key: "FiLLCEGWt31cQ9ECIWAD6zYjczzeC6zn",
@@ -157,15 +134,17 @@ export default {
         searchBoxWrapper.appendChild(searchBoxHTML);
 
         const searchBoxInput = document.querySelector('.tt-search-box-input');
+        const searchBoxInputContainer = document.querySelector('.tt-search-box-input-container');
+        searchBoxInputContainer.insertAdjacentHTML('afterbegin', `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
+  <path d='M15,4.946l-6-2L2,5.279V21.387l7-2.333,6,2,7-2.333V2.613Zm-5,.442,4,1.333V18.612l-4-1.333ZM4,6.721,8,5.388V17.279L4,18.613ZM20,17.279l-4,1.333V6.721l4-1.334Z'/>
+</svg>`)
 
         searchBoxInput.addEventListener('change', () => {
             const address = searchBoxInput.value;
-            console.log(address);
             store.address = address;
-            console.log(store.address);
-            // this.$store.commit('updateAddress', address);
         });
-        searchBoxInput.placeholder = store.address;
+        searchBoxInput.value = store.address;
+
     }
 }
 
@@ -177,21 +156,21 @@ export default {
             <div class="container_search">
                 <div class="input" required>
                     <!-- <i class="fa-regular fa-map"></i> -->
-                    <div id="searchBox"></div>
+                    <div id="searchBox" @click="clearAdress()"></div>
                     <!-- <input type="text" v-model="store.address" placeholder="Dove vuoi andare?"> -->
                 </div>
                 <!-- <div class="input">
-                                <div class="line"></div> -->
+                                                                                                                <div class="line"></div> -->
                 <!-- <i class="fa-regular fa-calendar"></i> -->
                 <!-- <Datepicker class="dataPicker" v-model="date" :enable-time-picker="false" :format="format" range />
-                            </div>
-                            <div class="input">
-                                <div class="line"></div>
-                                <i class="fa-regular fa-user"></i> -->
+                                                                                                                </div>
+                                                                                                                <div class="input">
+                                                                                                                 <div class="line"></div>
+                                                                                                                <i class="fa-regular fa-user"></i> -->
 
                 <!-- <button @click="increment" :disabled="guests >= maxGuests">+</button>
-                                <input type="number" id="guests" name="guests" v-model.number="store.guests" @input="validateGuests">
-                                <button @click="decrement" :disabled="guests <= 1">-</button> -->
+                                                                                                                <input type="number" id="guests" name="guests" v-model.number="store.guests" @input="validateGuests">
+                                                                                                                <button @click="decrement" :disabled="guests <= 1">-</button> -->
 
                 <!-- <input type="text" v-model="store.guests" placeholder="Quanti siete?"> -->
                 <!-- </div> -->
@@ -203,21 +182,15 @@ export default {
                 </button>
             </router-link>
         </form>
-</div>
+    </div>
 </template>
 
 <style lang="scss" scoped>
 @use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
 
-
-.tt-searchbox-icon {
-    background-image: url('../svg/map.svg');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    width: 20px;
-    height: 20px;
+.map_hidden {
+    display: none;
 }
 
 #large_element {

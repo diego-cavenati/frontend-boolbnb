@@ -30,7 +30,7 @@ export default {
     },
     methods: {
         setMaxHeight() {
-            const cards = document.querySelectorAll(".card_component");
+            const cards = document.querySelectorAll(".card");
             let maxHeight = 0;
 
             cards.forEach(card => {
@@ -115,11 +115,12 @@ export default {
 <template>
     <div id="showcase">
         <div class="container">
-            <h2>I nostri appartamenti <span class="title_mark"> in vetrina</span></h2>
+            <h2>Scopri le nostre categorie <span class="title_mark">di appartamenti</span></h2>
             <div class="description">
                 <p>
-                    Ecco i nostri appartamenti in vetrina. Siamo sicuri che troverete tra questi appartamenti la soluzione
-                    perfetta per il vostro prossimo viaggio. Boolbnb la nostra scelta migliore per le vostre vacanze!
+                    Benvenuti nel nostro catalogo di appartamenti unici e spettacolari, suddivisi in diverse categorie per
+                    soddisfare le esigenze di ogni tipo di viaggiatore. Siamo orgogliosi di offrire una vasta gamma di
+                    alloggi unici, dal lusso assoluto alle sistemazioni più minimaliste e funzionali.
                 </p>
 
                 <router-link :to="{ name: 'search' }">
@@ -128,29 +129,26 @@ export default {
 
             </div>
 
+
             <div class="row">
+                <div class="col-lg-4 col-md-6 col-sm-12 pb-4" v-for="(apartment, index) in apartments" :key="apartment.id">
+                    <CardComponent :apartment="apartment" />
+                </div>
 
-                <div class="box-container col-lg-4 col-md-6 col-sm-12 pb-4" v-for="(apartment, index) in apartments"
-                    :key="apartment.id">
-                    <CardComponent class="box" :apartment="apartment" />
+
+                <div class="pagination">
+                    <button @click="previousPage"><i class="fa-solid fa-chevron-left"></i></button>
+                    <div class="page-numbers">
+                        <div v-for="pageNumber in pageNumbers" :key="pageNumber"
+                            :class="{ active: currentPage === pageNumber }" @click="goToPage(pageNumber)">
+                            {{ pageNumber }}
+                        </div>
+                    </div>
+                    <button @click="nextPage"><i class="fa-solid fa-chevron-right"></i></button>
                 </div>
 
             </div>
-
         </div>
-
-
-        <div class="pagination">
-            <button @click="previousPage"><i class="fa-solid fa-chevron-left"></i></button>
-            <div class="page-numbers">
-                <div v-for="pageNumber in pageNumbers" :key="pageNumber" :class="{ active: currentPage === pageNumber }"
-                    @click="goToPage(pageNumber)">
-                    {{ pageNumber }}
-                </div>
-            </div>
-            <button @click="nextPage"><i class="fa-solid fa-chevron-right"></i></button>
-        </div>
-
     </div>
 </template>
 
@@ -158,14 +156,6 @@ export default {
 @use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
 
-.box-container {
-    display: flex;
-    align-items: stretch;
-}
-
-.box {
-    flex: 1;
-}
 
 #showcase {
     padding: 5rem 0;
@@ -179,9 +169,8 @@ p {
     max-width: 80%;
 }
 
-.card_component {
-    display: flex;
-    // align-items: stretch;
+.cardComponent {
+    align-items: stretch;
 }
 
 .description {

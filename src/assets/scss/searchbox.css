@@ -45,7 +45,7 @@
 
 .tt-searchbox-filter-label.-highlighted .tt-searchbox-filter-label__close-button svg,
 .tt-searchbox-filter-label__close-button:hover svg {
-    fill: #7a7e80
+    fill: #ffffff
 }
 
 .tt-search-box-input-container {
@@ -136,7 +136,7 @@
 
 .tt-search-box-result-list-bold {
     font-weight: 700;
-    color: #000
+    color: #000;
 }
 
 .tt-search-box-close-icon {
@@ -154,12 +154,13 @@
     visibility: hidden
 }
 
+.tt-search-box-input-container>div:nth-child(2) {
+    display: none;
+}
 
-/* .tt-searchbox-icon {
+/* .tt-search-box-input-container>div {
+    color: #000;
     background-image: url('../svg/map.svg');
     background-repeat: no-repeat;
-    background-position: center;
     background-size: contain;
-    width: 20px;
-    height: 20px;
 } */
