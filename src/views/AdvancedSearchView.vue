@@ -115,13 +115,14 @@ export default {
                     // convertire km to metri prima di mandarli 
                     store.results = response.data.results;
                     store.loading = false
-                    console.log(store.results);
+                    console.log('funziono, nascondo');
                     console.log(store.categories_back);
                     console.log(store.radius, 'radius');
                     console.log(store.beds, 'beds');
                     console.log(store.address, 'address');
+                    console.log(store.results);
+                    console.log('http://127.0.0.1:8000/api/search?address=' + store.address + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius * 1000 + '&beds=' + store.beds);
                 })
-
         },
         PushCategory(i) {
             const element = document.getElementById('category-' + i);
@@ -136,7 +137,7 @@ export default {
                 store.categories_back.pop(); // rimuove l'elemento precedente
                 store.categories_back.push(store.categories[i].id);
                 console.log('faccio la call api');
-                this.SubmitServices()
+                this.SubmitServices() // esegue la call api in base a tutti i dati
             } else if (store.categories_back.length > 0 && store.categories_back[0] === store.categories[i].id) {
                 // Se l'elemento è già presente, ma è l'unico elemento nell'array, non fare nulla
                 console.log('non faccio nulla');
@@ -157,8 +158,28 @@ export default {
         clearMap() {
             document.getElementById('map').style.display = 'none';
         },
-
-
+        AllApartments() {
+            store.categories_back = []; // Rimuovi tutti gli elementi dall'array categories_back
+            const categories = document.querySelectorAll('.active_category'); // Seleziona tutti gli elementi che hanno la classe "active_category"
+            categories.forEach(category => category.classList.remove('active_category')); // Rimuovi la classe "active_category" da tutti gli elementi
+            //console.log(store.categories_back);
+            axios.get('http://127.0.0.1:8000/api/search')
+                .then(response => {
+                    store.results = response.data.results;
+                    console.log(store.results);
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        },
+        HideShowPopup() {
+            const element = document.getElementById("filterPopup")
+            element.classList.toggle("hide")
+        },
+        SearchHide(){
+            this.SubmitServices();
+            this.HideShowPopup();
+        }
 
         /*
         SubmitCategory(){
@@ -269,7 +290,14 @@ export default {
                 store.categories = response.data.results
             })
         //console.log('http://127.0.0.1:8000/api/search?services='+ store.services_back );
-
+        /* // possibile funzione per far scomparire il popup 
+        document.addEventListener("click", function (event) {
+            var elementoDaNascondere = document.getElementById("filterPopup");
+            if (event.target !== elementoDaNascondere && parseInt(window.getComputedStyle(event.target).getPropertyValue("z-index")) < 11) {
+                elementoDaNascondere.style.display = "none";
+            }
+        });
+        */
     },
     created() {
     },
@@ -278,10 +306,17 @@ export default {
 </script>
 
 <template>
-    <!-- <button class="clearInput" @click="clearInput">clear</button> -->
     <div id="results">
         <div class="container-fluid">
             <div class="categories d-flex justify-content-center">
+                <div class="text-center pt-1">
+                    <div @click="AllApartments()" class="all_apartments">
+                        <img src="../assets/img/pin_boolbnb.png" alt="">
+                        <div>
+                            ALL
+                        </div>
+                    </div>
+                </div>
                 <div class="text-center p-3" v-for="category, i in store.categories" :key="category.id">
                     <div @click="PushCategory(i)" :id="'category-' + i">
                         <img :src="getImagePath(`${category.img}.png`)" alt="">
@@ -292,18 +327,19 @@ export default {
                     </div>
                 </div>
                 <div class="align-self-center p-3">
-                    <button class="btn btn-primary " id="filterBtn">Apri filtro</button>
+                    <button @click="HideShowPopup()" class="btn btn-primary " id="filterBtn">Apri filtro</button>
                     <!-- <button class="btn btn-primary ms-3">Tutti gli appartamenti</button> -->
-                    
                 </div>
             </div>
             <div class="container">
                 <div> <!--Scrivere all'interno del popup-->
-                    <div id="filterPopup" class="container rounded">
-                        <div @click="SubmitServices()" class="close">
-                            <i class="fa-solid fa-xmark "></i>
-                            close
-                            (Call api momentanea per inviare i servizi)
+                    <div id="filterPopup" class="container rounded hide">
+                        <div @click="SearchHide()" class="close">
+                            <button class="btn btn-primary ms-3">CERCA</button>
+                            <!-- Bottone di ricerca per categoria, via servizi etc-->
+                        </div>
+                        <div>
+                            <button @click="HideShowPopup()" class="btn btn-primary ms-3">CHIUDI</button>
                         </div>
                         <div class="row">
                             <div v-for="service, i in store.services" :key="service.id" class="col-4 d-flex">
@@ -320,14 +356,32 @@ export default {
                             </div>
                             <div> <!--TODO bisogna pushare store.radius al back insieme ai servizi-->
                                 <label for="range">Seleziona il raggio in km:</label>
-                                <input type="range" min="0" max="100" id="range" v-model.number="store.radius" />
+                                <input type="range" min="20" max="100" id="range" v-model.number="store.radius" />
                                 <p>Il raggio selezionato è {{ store.radius }} km.</p>
                             </div>
-                            <div> <!--TODO bisogna pushare store.beds al back insieme ai servizi & il raggio di ricerca-->
-                                <label for="beds">Seleziona posti letto</label>
-                                <input type="number" min="0" max="128" id="beds" v-model.number="store.beds">
-                                <p>i posti letti sono {{ store.beds }} </p>
+                            <!--
+                                                <div class="card card_custom"> 
+                                                    <svg class="beds_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><g id="Livello_2" data-name="Livello 2"><g id="Livello_1-2" data-name="Livello 1"><path d="M21,192H0V92c2.63-4.14,5.35-8.23,7.86-12.44,1.17-2,2.74-4.13,2.76-6.23.23-17.12.16-34.25.13-51.38,0-9,4.07-15.54,11.92-19.8C24.08,1.38,25.55.71,27,0H165c12.53,4.93,17.05,14.2,16.42,27.44-.73,15.26-.21,30.58-.11,45.88a9.82,9.82,0,0,0,1.28,5c3,4.67,6.25,9.14,9.41,13.69V192H171V171.19H21ZM170.43,96.31H21.59V149H170.43ZM32.32,21.48V74.75H52.58a8.1,8.1,0,0,0,.57-1.65c.05-5.66.06-11.32.1-17,.08-9.67,3.68-13.34,13.29-13.36q29,0,58,0c10.92,0,14.23,3.38,14.25,14.41,0,5.74,0,11.49,0,17.17h20.92V21.48Z"/></g></g></svg>
+                                                    <input type="number" min="0" max="128" id="beds" v-model.number="store.beds">
+                                                    <p>i posti letti sono {{ store.beds }} </p>
+                                                </div>
+                                            -->
+                            <div class="beds-input">
+                                <label for="beds">Posti Letto</label>
+                                <div class="beds-input-container">
+                                    <svg class="beds-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+                                        <g id="Livello_2" data-name="Livello 2">
+                                            <g id="Livello_1-2" data-name="Livello 1">
+                                                <path
+                                                    d="M21,192H0V92c2.63-4.14,5.35-8.23,7.86-12.44,1.17-2,2.74-4.13,2.76-6.23.23-17.12.16-34.25.13-51.38,0-9,4.07-15.54,11.92-19.8C24.08,1.38,25.55.71,27,0H165c12.53,4.93,17.05,14.2,16.42,27.44-.73,15.26-.21,30.58-.11,45.88a9.82,9.82,0,0,0,1.28,5c3,4.67,6.25,9.14,9.41,13.69V192H171V171.19H21ZM170.43,96.31H21.59V149H170.43ZM32.32,21.48V74.75H52.58a8.1,8.1,0,0,0,.57-1.65c.05-5.66.06-11.32.1-17,.08-9.67,3.68-13.34,13.29-13.36q29,0,58,0c10.92,0,14.23,3.38,14.25,14.41,0,5.74,0,11.49,0,17.17h20.92V21.48Z" />
+                                            </g>
+                                        </g>
+                                    </svg>
+                                    <input type="number" id="beds" v-model.number="store.beds">
+                                </div>
+                                <p>i posti letti sono {{ store.beds }}</p>
                             </div>
+
 
                         </div>
                     </div>
@@ -391,89 +445,6 @@ export default {
 @use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
 
-//$range-progress: calc(#{$computed-radius}/100*100);
-/*
-input[type=range] {
-    -webkit-appearance: none;
-    width: 100%;
-    height: 10px;
-    background-color: #ddd;
-    border-radius: 5px;
-    outline: none;
-    margin: 0;
-    padding: 0;
-}
-
-input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 20px;
-    height: 20px;
-    background-color: #333;
-    border-radius: 50%;
-    cursor: pointer;
-    margin-top: -5px;
-}
-
-input[type=range]::-webkit-slider-runnable-track {
-    -webkit-appearance: none;
-    height: 10px;
-    //background-color: #999;
-    background: linear-gradient(to right, red 0%, red calc(var(--computed-radius) - 1px), green calc(var(--computed-radius) + 1px), green 100%);
-    border-radius: 5px;
-}
-
-input[type=range]:focus::-webkit-slider-runnable-track {
-    background: #ccc;
-}
-*/
-/*
-:root {
-    --range-thumb-size: 20px;
-    --range-thumb-color: #333;
-    --range-track-height: 10px;
-    --range-track-bg: #ddd;
-    --range-track-fill-start: red;
-    --range-track-fill-end: green;
-    --range-track-border-radius: 5px;
-}
-
-input[type="range"] {
-    -webkit-appearance: none;
-    width: 100%;
-    height: var(--range-track-height);
-    background-color: var(--range-track-bg);
-    border-radius: var(--range-track-border-radius);
-    outline: none;
-    margin: 0;
-    padding: 0;
-
-    &::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        width: var(--range-thumb-size);
-        height: var(--range-thumb-size);
-        background-color: var(--range-thumb-color);
-        border-radius: 50%;
-        cursor: pointer;
-        margin-top: calc((var(--range-track-height) - var(--range-thumb-size)) / 2);
-    }
-
-    &::-webkit-slider-runnable-track {
-        -webkit-appearance: none;
-        height: var(--range-track-height);
-        background: linear-gradient(to right,
-                var(--range-track-fill-start) 0%,
-                var(--range-track-fill-start) calc((var(--range-thumb-size) / 2) + var(--range-thumb-size) / 4),
-                var(--range-track-fill-end) calc((var(--range-thumb-size) / 2) + var(--range-thumb-size) / 4),
-                var(--range-track-fill-end) 100%);
-        border-radius: var(--range-track-border-radius);
-    }
-
-    &:focus::-webkit-slider-runnable-track {
-        background: #ccc;
-    }
-}
-
-*/
 :root {
     --computed-radius: calc(50% - (10px / 2));
 }
@@ -510,6 +481,54 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     background: #ccc;
 }
 
+.beds-input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.beds-input label {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.beds-input-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 0.5rem;
+}
+
+.beds-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 0.5rem;
+    fill: #ccc;
+}
+
+#beds {
+    width: 3rem;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+}
+
+.beds-input p {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: #666;
+}
+
+/*
+.beds_svg {
+    width: 30px;
+}
+*/
+.all_apartments {
+    cursor: pointer;
+}
+
 .map_hidden {
     display: none;
 }
@@ -522,6 +541,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 #apartments {
     max-height: 88vh;
     overflow: auto;
+    //overflow: hidden;
 }
 
 #map {
@@ -534,6 +554,8 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 }
 
 // filter
+
+
 #filterPopup {
     z-index: 11;
     position: fixed;
@@ -543,15 +565,19 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     background-color: white;
     padding: 20px;
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease-out, visibility 0s 0.3s;
+    //opacity: 0;
+    //transition: opacity 0.3s ease-out, visibility 0s 0.3s;
 }
 
+/*
 #filterPopup.open {
     opacity: 1;
     visibility: visible;
     transition-delay: 0s;
+}
+*/
+.hide {
+    display: none;
 }
 
 .card_custom {
