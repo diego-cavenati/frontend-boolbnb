@@ -277,8 +277,7 @@ export default {
 }
 </script>
 
-<template>
-    <!-- <button class="clearInput" @click="clearInput">clear</button> -->
+<template><!-- <button class="clearInput" @click="clearInput">clear</button> -->
     <div id="results">
         <div class="container-fluid">
             <div class="categories d-flex justify-content-center">
@@ -294,7 +293,7 @@ export default {
                 <div class="align-self-center p-3">
                     <button class="btn btn-primary " id="filterBtn">Apri filtro</button>
                     <!-- <button class="btn btn-primary ms-3">Tutti gli appartamenti</button> -->
-                    
+
                 </div>
             </div>
             <div class="container">
@@ -379,7 +378,7 @@ export default {
                     </div>
 
                 </div>
-                <div class="col" v-bind:class="{ 'map_hidden': !store.address }">
+                <div class="col hide_map_custom">
                     <div id='map' ref="mapRef"></div>
                 </div>
             </div>

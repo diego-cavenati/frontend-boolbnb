@@ -40,31 +40,31 @@ export default {
         <router-link :to="{ name: 'single-apartment', params: { slug: apartment.slug } }">
 
 
-            <div class="card card_height border-0">
+            <div class="card h-100 border-0">
 
                 <div class="card_img">
                     <!-- carousel -->
                     <!-- <div v-if="store.immagineAttiva > 0" @click="PrevImg()">
-                                                    <i class="fa-solid fa-circle-chevron-left arrow_left"></i>
-                                                </div>
-                                                <div v-if="store.immagineAttiva != store.images.length - 1" @click="NextImg()">
-                                                    <i class="fa-solid fa-circle-chevron-right arrow_right"></i>
-                                                </div> -->
+                                                                                                                                <i class="fa-solid fa-circle-chevron-left arrow_left"></i>
+                                                                                                                            </div>
+                                                                                                                            <div v-if="store.immagineAttiva != store.images.length - 1" @click="NextImg()">
+                                                                                                                                <i class="fa-solid fa-circle-chevron-right arrow_right"></i>
+                                                                                                                            </div> -->
                     <!-- img thumb -->
                     <img :src="getImagePath(apartment.media) || apartment.media" :class="classe" alt="">
                     <!-- TODO aggiungere funzione per il path SOLO quando torna un img uploadata-->
 
                 </div>
 
-                <div class="card-body text-start">
+                <div class="card_body text-start d-flex flex-column justify-content-between">
                     <div class="summary">{{ apartment.address }}</div>
                     <h5>{{ apartment.title }}</h5>
 
                     <div class="info">Ospiti {{ apartment.guests }} - Stanze {{ apartment.total_rooms }} - Letti {{
                         apartment.beds
-                    }} - Bagni {{ apartment.baths }} - Mq {{ apartments.mq }}</div>
+                    }} - Bagni {{ apartment.baths }} - Mq {{ apartment.mq }}</div>
 
-                    <div class="d-flex justify-content-end">
+                    <div>
                         <!-- <div>⭐️</div> TODO add reviews-->
                         <div class="nights"><span class="price">{{ apartment.price }} €</span> /notte</div>
                     </div>
@@ -72,7 +72,7 @@ export default {
                 </div>
             </div>
         </router-link>
-</div>
+    </div>
 <!-- :link="element.img[store.immagineAttiva] da tenere per il card component--></template>
 
 <style lang="scss">
@@ -81,10 +81,11 @@ export default {
 
 
 
-.card-body {
+.card_body {
     padding: 1.6rem;
     background-color: $bb-background;
     border-radius: 0 0 1.25rem 1.25rem;
+    height: 100%;
 }
 
 .card_img {
@@ -124,10 +125,14 @@ h5 {
     font-weight: 500;
     font-family: $bb-font-primary;
     color: $bb-darker;
+
 }
 
 .nights {
     color: $bb-dark;
+    // position: absolute;
+    // bottom: 5%;
+    // right: 5%;
 
 }
 
