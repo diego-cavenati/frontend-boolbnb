@@ -2,6 +2,7 @@
 import JumbotronComponent from '../components/JumbotronComponent.vue';
 import ShowcaseComponent from '../components/ShowcaseComponent.vue';
 import TopPlacesComponent from '../components/TopPlacesComponent.vue';
+import CategoryApartmentComponent from '../components/CategoryApartmentComponent.vue';
 
 export default {
     name: 'HomeView',
@@ -9,6 +10,7 @@ export default {
         JumbotronComponent,
         ShowcaseComponent,
         TopPlacesComponent,
+        CategoryApartmentComponent
     }
 }
 </script>
@@ -16,7 +18,10 @@ export default {
 <template>
     <JumbotronComponent />
     <ShowcaseComponent />
-    <!-- <TopPlacesComponent /> -->
-<!-- <ShowcaseComponent /> --></template>
+    <TopPlacesComponent />
+    <CategoryApartmentComponent />
+</template>
 
-<style lang="scss" scoped>@use '../assets/scss/general.scss';</style>
+<style lang="scss" scoped>
+@use '../assets/scss/general.scss';
+</style>

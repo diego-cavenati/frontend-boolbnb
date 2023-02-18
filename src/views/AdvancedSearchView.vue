@@ -305,7 +305,9 @@ export default {
 }
 </script>
 
+
 <template>
+
     <div id="results">
         <div class="container-fluid">
             <div class="categories d-flex justify-content-center">
@@ -433,7 +435,7 @@ export default {
                     </div>
 
                 </div>
-                <div class="col" v-bind:class="{ 'map_hidden': !store.address }">
+                <div class="col hide_map_custom">
                     <div id='map' ref="mapRef"></div>
                 </div>
             </div>
