@@ -279,10 +279,6 @@ export default {
                                     <span>test</span>
                                 </div>
                             </div>
-
-
-                            
-                        
                         <!-- <span class="pe-1"><i :class=service.img></i></span> -->
                         </div>
                     </div>
