@@ -17,6 +17,7 @@ export default {
             client: null,
             apartments: [],
             mapData: [],
+            categoriesWrapper: null,
         }
     },
     components: {
@@ -180,7 +181,11 @@ export default {
         SearchHide() {
             this.SubmitServices();
             this.HideShowPopup();
-        }
+        },
+        slide(direction) {
+            const scrollStep = this.categoriesWrapper.offsetWidth / 2;
+            this.categoriesWrapper.scrollLeft += scrollStep * direction;
+        },
 
         /*
         SubmitCategory(){
@@ -293,6 +298,7 @@ export default {
             .then(response => {
                 store.categories = response.data.results
             })
+        this.categoriesWrapper = document.querySelector('.categories-wrapper');
         //console.log('http://127.0.0.1:8000/api/search?services='+ store.services_back );
         /* // possibile funzione per far scomparire il popup 
         document.addEventListener("click", function (event) {
@@ -313,29 +319,40 @@ export default {
 <template>
     <div id="results">
         <div class="container-fluid">
-            <div class="categories d-flex justify-content-center">
-                <div class="text-center pt-1">
-                    <div @click="AllApartments()" class="all_apartments">
-                        <img src="../assets/img/pin_boolbnb.png" alt="">
-                        <div>
-                            ALL
+            
+            <div class="categories-wrapper">
+                <div class="categories d-flex justify-content-center">
+                    <div class="text-center pt-1">
+                        <div class="btn btn-left" @click="slide(-1)">
+                    <span class="arrow">&lt;</span>
+                </div>
+                        <div @click="AllApartments()" class="all_apartments">
+                            <img src="../assets/img/pin_boolbnb.png" alt="">
+                            <div>
+                                ALL
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="text-center p-3" v-for="category, i in store.categories" :key="category.id">
-                    <div @click="PushCategory(i)" :id="'category-' + i">
-                        <img :src="getImagePath(`${category.img}.png`)" alt="">
-                        <!--Funzione per stampare le immagini dinamicamente-->
-                        <div>
-                            {{ category.name }}
+                    <div class="text-center p-3" v-for="category, i in store.categories" :key="category.id">
+                        <div @click="PushCategory(i)" :id="'category-' + i">
+                            <img :src="getImagePath(`${category.img}.png`)" alt="">
+                            <div>
+                                {{ category.name }}
+                            </div>
                         </div>
                     </div>
+                    <div class="align-self-center p-3">
+                        <button @click="HideShowPopup()" class="btn btn-primary " id="filterBtn">Apri filtro</button>
+                    </div>
+                    <div class="btn btn-right" @click="slide(1)">
+                    <span class="arrow">&gt;</span>
+                    </div>
                 </div>
-                <div class="align-self-center p-3">
-                    <button @click="HideShowPopup()" class="btn btn-primary " id="filterBtn">Apri filtro</button>
-                    <!-- <button class="btn btn-primary ms-3">Tutti gli appartamenti</button> -->
-                </div>
+                
+                
             </div>
+
+
             <div class="container">
                 <div> <!--Scrivere all'interno del popup-->
                     <div id="filterPopup" class="container rounded hide">
@@ -366,12 +383,14 @@ export default {
                             </div>
                             <!--
 
+
                                                                                                                                                                                             <div class="card card_custom"> 
                                                                                                                                                                                                 <svg class="beds_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><g id="Livello_2" data-name="Livello 2"><g id="Livello_1-2" data-name="Livello 1"><path d="M21,192H0V92c2.63-4.14,5.35-8.23,7.86-12.44,1.17-2,2.74-4.13,2.76-6.23.23-17.12.16-34.25.13-51.38,0-9,4.07-15.54,11.92-19.8C24.08,1.38,25.55.71,27,0H165c12.53,4.93,17.05,14.2,16.42,27.44-.73,15.26-.21,30.58-.11,45.88a9.82,9.82,0,0,0,1.28,5c3,4.67,6.25,9.14,9.41,13.69V192H171V171.19H21ZM170.43,96.31H21.59V149H170.43ZM32.32,21.48V74.75H52.58a8.1,8.1,0,0,0,.57-1.65c.05-5.66.06-11.32.1-17,.08-9.67,3.68-13.34,13.29-13.36q29,0,58,0c10.92,0,14.23,3.38,14.25,14.41,0,5.74,0,11.49,0,17.17h20.92V21.48Z"/></g></g></svg>
                                                                                                                                                                                                 <input type="number" min="0" max="128" id="beds" v-model.number="store.beds">
                                                                                                                                                                                                 <p>i posti letti sono {{ store.beds }} </p>
                                                                                                                                                                                             </div>
                                                                                                                                                                                         -->
+
 
                             <div class="beds-input">
                                 <label for="beds">Posti Letto</label>
@@ -673,4 +692,74 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 }
 
 // Loading-map
+
+// carousel category
+.categories-wrapper {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.categories {
+  display: flex;
+  flex-wrap: nowrap;
+  transition: transform 0.5s;
+  white-space: nowrap;
+}
+/*
+.categories-wrapper .btn {
+  position: fixed;
+  top: 25%;
+  transform: translateY(-50%);
+  z-index: 1;
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+*/
+.btn-right, .btn-left{
+    display: none;
+    position: fixed;
+  top: 13%;
+  transform: translateY(-50%);
+  z-index: 1;
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+  //display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.categories-wrapper .btn-left {
+  left: 20px;
+}
+
+.categories-wrapper .btn-right {
+  right: 20px;
+}
+
+
+.categories {
+  min-width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  transition: transform 0.5s;
+  white-space: nowrap;
+}
+
+@media screen and (max-width: 1472px) {
+    .btn-left, .btn-right{
+        display: flex;
+    }
+}
 </style>
