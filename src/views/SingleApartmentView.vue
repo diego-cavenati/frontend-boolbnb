@@ -160,47 +160,50 @@ export default {
                 {{ apartment.address }}
                 <!-- Turn on for favorites -->
                 <!-- <span>
-                                &hearts; Salva
-                                </span> -->
+                                        &hearts; Salva
+                                        </span> -->
             </div>
         </div>
         <!-- turn on in case off name  -->
         <!-- <div>
-                                                                                                                                                                                                                            <span>
-                                                                                                                                                                                                                                Icona
-                                                                                                                                                                                                                            </span>
-                                                                                                                                                                                                                            <span>
-                                                                                                                                                                                                                                Host: Edoardo C.
-                                                                                                                                                                                                                            </span>
-                                                                                                                                                                    </div> -->
+                                                                                                                                                                                                                                    <span>
+                                                                                                                                                                                                                                        Icona
+                                                                                                                                                                                                                                    </span>
+                                                                                                                                                                                                                                    <span>
+                                                                                                                                                                                                                                        Host: Edoardo C.
+                                                                                                                                                                                                                                    </span>
+                                                                                                                                                                            </div> -->
     </div>
     <div class="container" v-if="!loading"> <!--Sezione immagini-->
         <!--TODO creare classi css apposite per ogni col per gestire e sovrascrivere il padding dato da bootstrap-->
         <div class="row">
             <div class="col-12 prova2">
                 <div class="cover_img">
+                    <div class="badge_promotion" v-if="apartment.subscription">
+                        IN EVIDENZA
+                    </div>
                     <img class="main_img" :src="getImagePath(apartment.media) || apartment.media" alt="">
                 </div>
             </div>
             <!-- <div class="col-5">
-                                                                                                                                                                                <div class="row">
-                                                                                                                                                                                                                                        <div class="col-6 ">
-                                                                                                                                                                                                                                                                                                    <img src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
-                                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                                        <div class="col-6 ">
-                                                                                                                                                                                                                                                                                                                <img class="border_top"
-                                                                                                                                                                                                                                                                                                                    src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
+                                                                                                                                                                                        <div class="row">
+                                                                                                                                                                                                                                                <div class="col-6 ">
+                                                                                                                                                                                                                                                                                                            <img src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
                                                                                                                                                                                                                                                                                                             </div>
-                                                                                                                                                                                                                                                                                                                                    <div class="col-6 pt-3 "> 
-                                                                                                                                                                                                                                                                                                                                        <img class="test1"
-                                                                                                                                                                                                                                                                                                                                            src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
-                                                                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                                                                    <div class="col-6 pt-3 ">  -->
+                                                                                                                                                                                                                                                                                                                <div class="col-6 ">
+                                                                                                                                                                                                                                                                                                                        <img class="border_top"
+                                                                                                                                                                                                                                                                                                                            src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
+                                                                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                                                                                                            <div class="col-6 pt-3 "> 
+                                                                                                                                                                                                                                                                                                                                                <img class="test1"
+                                                                                                                                                                                                                                                                                                                                                    src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
+                                                                                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                                                                                            <div class="col-6 pt-3 ">  -->
             <!-- <img class="border_bot"
-                                                                                                                                                                                                                                                                                                                                            src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
-                                                                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                            </div> -->
+                                                                                                                                                                                                                                                                                                                                                    src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
+                                                                                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                                                                                    </div> -->
         </div>
     </div>
     <!--ps-5, pe-5, pt-5 da togliere se si vuole modificare il padding left, right e top-->
@@ -328,18 +331,18 @@ export default {
                         <!-- <Datepicker v-model="date" range /> -->
                         <!-- <div class="row"> -->
                         <!-- <div class="col ">
-                                                                                                                                                                                                                                                                                                                                            check-in
-                                                                                                                                                                                                                                                                                                                                            <div>{{ store.check_in }}</div>
-                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                        <div class="col">
-                                                                                                                                                                                                                                                                                                                                            check-out
-                                                                                                                                                                                                                                                                                                                                            <div>{{ store.check_out }}</div>
-                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                        <div class="col">
-                                                                                                                                                                                                                                                                                                                                            Ospiti
-                                                                                                                                                                                                                                                                                                                                            <div>1 ospite</div>
-                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                    </div> -->
+                                                                                                                                                                                                                                                                                                                                                    check-in
+                                                                                                                                                                                                                                                                                                                                                    <div>{{ store.check_in }}</div>
+                                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                                                <div class="col">
+                                                                                                                                                                                                                                                                                                                                                    check-out
+                                                                                                                                                                                                                                                                                                                                                    <div>{{ store.check_out }}</div>
+                                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                                                <div class="col">
+                                                                                                                                                                                                                                                                                                                                                    Ospiti
+                                                                                                                                                                                                                                                                                                                                                    <div>1 ospite</div>
+                                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                                            </div> -->
 
                         <form @submit.prevent="sendForm()">
 
@@ -376,7 +379,7 @@ export default {
                                 <label for="" class="form-label">Messaggio*</label>
                                 <textarea rows="3" cols="50" name="body" id="body" class="form-control" placeholder=""
                                     aria-describedby="helpId" required v-model="body">
-                                                                                                                                                                                                                                                                                                                                                    </textarea>
+                                                                                                                                                                                                                                                                                                                                                            </textarea>
 
                                 <div class="alert alert-danger" role="alert" v-for="error in errors.body">
                                     {{ error }}
@@ -448,6 +451,19 @@ export default {
     width: 100%;
     height: 100%;
     border-radius: 1rem;
+}
+
+
+.badge_promotion {
+    background: linear-gradient(89.74deg, $bb-primary 0.19%, $bb-secondary 99.78%);
+    border-radius: 1rem;
+    padding: 0.3rem 0.8rem;
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: $bb-lighter;
 }
 
 h3 {
