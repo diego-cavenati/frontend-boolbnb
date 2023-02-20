@@ -165,17 +165,17 @@ export default {
                     <!-- <input type="text" v-model="store.address" placeholder="Dove vuoi andare?"> -->
                 </div>
                 <!-- <div class="input">
-                                                                                                                                            <div class="line"></div> -->
+                                                                                                                                                <div class="line"></div> -->
                 <!-- <i class="fa-regular fa-calendar"></i> -->
                 <!-- <Datepicker class="dataPicker" v-model="date" :enable-time-picker="false" :format="format" range />
-                                                                                                                                            </div>
-                                                                                                                                            <div class="input">
-                                                                                                                                             <div class="line"></div>
-                                                                                                                                            <i class="fa-regular fa-user"></i> -->
+                                                                                                                                                </div>
+                                                                                                                                                <div class="input">
+                                                                                                                                                 <div class="line"></div>
+                                                                                                                                                <i class="fa-regular fa-user"></i> -->
 
                 <!-- <button @click="increment" :disabled="guests >= maxGuests">+</button>
-                                                                                                                                            <input type="number" id="guests" name="guests" v-model.number="store.guests" @input="validateGuests">
-                                                                                                                                            <button @click="decrement" :disabled="guests <= 1">-</button> -->
+                                                                                                                                                <input type="number" id="guests" name="guests" v-model.number="store.guests" @input="validateGuests">
+                                                                                                                                                <button @click="decrement" :disabled="guests <= 1">-</button> -->
 
                 <!-- <input type="text" v-model="store.guests" placeholder="Quanti siete?"> -->
                 <!-- </div> -->
@@ -320,7 +320,7 @@ export default {
 
 @media screen and (max-width: 744px) {
     #small_element {
-        width: 100%;
+        // width: 100%;
     }
 }
 </style>
