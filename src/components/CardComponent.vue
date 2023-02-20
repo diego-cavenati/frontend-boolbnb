@@ -43,13 +43,16 @@ export default {
             <div class="card h-100 border-0">
 
                 <div class="card_img">
+                    <div class="badge_promotion" v-if="apartment.subscription">
+                        IN EVIDENZA
+                    </div>
                     <!-- carousel -->
                     <!-- <div v-if="store.immagineAttiva > 0" @click="PrevImg()">
-                                                                                                                                <i class="fa-solid fa-circle-chevron-left arrow_left"></i>
-                                                                                                                            </div>
-                                                                                                                            <div v-if="store.immagineAttiva != store.images.length - 1" @click="NextImg()">
-                                                                                                                                <i class="fa-solid fa-circle-chevron-right arrow_right"></i>
-                                                                                                                            </div> -->
+                                                                                                                                                                                                        <i class="fa-solid fa-circle-chevron-left arrow_left"></i>
+                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                    <div v-if="store.immagineAttiva != store.images.length - 1" @click="NextImg()">
+                                                                                                                                                                                                        <i class="fa-solid fa-circle-chevron-right arrow_right"></i>
+                                                                                                                                                                                                    </div> -->
                     <!-- img thumb -->
                     <img :src="getImagePath(apartment.media) || apartment.media" :class="classe" alt="">
                     <!-- TODO aggiungere funzione per il path SOLO quando torna un img uploadata-->
@@ -79,7 +82,17 @@ export default {
 @use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
 
-
+.badge_promotion {
+    background: linear-gradient(89.74deg, $bb-primary 0.19%, $bb-secondary 99.78%);
+    border-radius: 1rem;
+    padding: 0.3rem 0.8rem;
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: $bb-lighter;
+}
 
 .card_body {
     padding: 1.6rem;
