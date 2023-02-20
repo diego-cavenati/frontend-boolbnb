@@ -118,13 +118,15 @@ export default {
             } else {
                 return this.store.url_back + '/storage/' + path; // Percorso relativo alla cartella storage
             }
-        }
+        },
+
     },
     mounted() {
         const url = 'http://127.0.0.1:8000/api/apartments/' + this.$route.params.slug;
         console.log(url);
         axios.get(url)
             .then(resp => {
+                console.log(resp);
                 if (resp.data.success) {
                     this.apartment = resp.data.results;
                     this.latitude = resp.data.results.latitude;
@@ -141,6 +143,8 @@ export default {
             .catch(err => {
                 console.log(err);
             });
+
+        //getServices('http://127.0.0.1:8000/api/services')
     },
     created() {
         watch(() => this.store.datePicker, this.calc_price);
@@ -156,57 +160,54 @@ export default {
                 {{ apartment.address }}
                 <!-- Turn on for favorites -->
                 <!-- <span>
-                            &hearts; Salva
-                            </span> -->
+                                &hearts; Salva
+                                </span> -->
             </div>
         </div>
         <!-- turn on in case off name  -->
         <!-- <div>
-                    <span>
-                   Icona
-                    </span>
-                    <span>
-                    Host: Edoardo C.
-                    </span>
-                    </div> -->
+                                                                                                                                                                                                                            <span>
+                                                                                                                                                                                                                                Icona
+                                                                                                                                                                                                                            </span>
+                                                                                                                                                                                                                            <span>
+                                                                                                                                                                                                                                Host: Edoardo C.
+                                                                                                                                                                                                                            </span>
+                                                                                                                                                                    </div> -->
     </div>
     <div class="container" v-if="!loading"> <!--Sezione immagini-->
-
+        <!--TODO creare classi css apposite per ogni col per gestire e sovrascrivere il padding dato da bootstrap-->
         <div class="row">
             <div class="col-12 prova2">
                 <div class="cover_img">
-                    <div class="badge_promotion" v-if="apartment.subscription">
-                        IN EVIDENZA
-                    </div>
                     <img class="main_img" :src="getImagePath(apartment.media) || apartment.media" alt="">
                 </div>
             </div>
             <!-- <div class="col-5">
-                        <div class="row">
-                       <div class="col-6 ">
-                        <img src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
-                         </div>
-                        <div class="col-6 ">
-                                                                                                            <img class="border_top"
-                                                                                                                src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
-                                                                                                        </div>
-                                                                                                        <div class="col-6 pt-3 "> 
-                                                                                                            <img class="test1"
-                                                                                                                src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
-                                                                                                        </div>
-                                                                                                        <div class="col-6 pt-3 ">  -->
+                                                                                                                                                                                <div class="row">
+                                                                                                                                                                                                                                        <div class="col-6 ">
+                                                                                                                                                                                                                                                                                                    <img src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
+                                                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                                                                        <div class="col-6 ">
+                                                                                                                                                                                                                                                                                                                <img class="border_top"
+                                                                                                                                                                                                                                                                                                                    src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
+                                                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                                                                                    <div class="col-6 pt-3 "> 
+                                                                                                                                                                                                                                                                                                                                        <img class="test1"
+                                                                                                                                                                                                                                                                                                                                            src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
+                                                                                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                                                                                                    <div class="col-6 pt-3 ">  -->
             <!-- <img class="border_bot"
-                                                                                                                src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                </div> -->
+                                                                                                                                                                                                                                                                                                                                            src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
+                                                                                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                            </div> -->
         </div>
     </div>
     <!--ps-5, pe-5, pt-5 da togliere se si vuole modificare il padding left, right e top-->
     <div class="container pt-5" v-if="!loading"> <!-- Sezione descrizione, servizi e check in-->
         <div>{{ date }}</div>
         <div class="row">
-            <div class="col-7">
+            <div class="col-sm-12 col-lg-7">
 
                 <div class="details">
                     <div class="guest">
@@ -266,9 +267,10 @@ export default {
                         <div class="row">
 
                             <div v-for="service in apartment.services" class="col-6 p-0">
-
-                                <div v-if="apartment.services">
-                                    <div class="card_custom">
+                                <!--  TODO far aggiungere il path per l'svg per ogni icona di ogni s -->
+                                <!-- prendere .img-->
+                                <div v-if="apartment.services" class="py-2">
+                                    <div class="card_custom d-flex gap-2 pb-1">
                                         <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
                                             role="presentation" focusable="false"
                                             style="display: block; height: 24px; width: 24px; fill: currentcolor;">
@@ -281,13 +283,17 @@ export default {
                                     <span>test</span>
                                 </div>
                             </div>
+                            <hr class="linea">
+
+
+
 
                             <!-- <span class="pe-1"><i :class=service.img></i></span> -->
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-5">
+            <div class="col-sm-12 col-lg-5">
                 <div id="contact_host" class="d-flex justify-content-between">
                     <div class="container">
                         <div class="apartment_price">
@@ -322,18 +328,18 @@ export default {
                         <!-- <Datepicker v-model="date" range /> -->
                         <!-- <div class="row"> -->
                         <!-- <div class="col ">
-                                        check-in
-                                        <div>{{ store.check_in }}</div>
-                                        </div>
-                                        <div class="col">
-                                        check-out
-                                        <div>{{ store.check_out }}</div>
-                                        </div>
-                                        <div class="col">
-                                        Ospiti
-                                        <div>1 ospite</div>
-                                        </div>
-                                        </div> -->
+                                                                                                                                                                                                                                                                                                                                            check-in
+                                                                                                                                                                                                                                                                                                                                            <div>{{ store.check_in }}</div>
+                                                                                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                                                                                        <div class="col">
+                                                                                                                                                                                                                                                                                                                                            check-out
+                                                                                                                                                                                                                                                                                                                                            <div>{{ store.check_out }}</div>
+                                                                                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                                                                                        <div class="col">
+                                                                                                                                                                                                                                                                                                                                            Ospiti
+                                                                                                                                                                                                                                                                                                                                            <div>1 ospite</div>
+                                                                                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                                                                                    </div> -->
 
                         <form @submit.prevent="sendForm()">
 
@@ -370,7 +376,7 @@ export default {
                                 <label for="" class="form-label">Messaggio*</label>
                                 <textarea rows="3" cols="50" name="body" id="body" class="form-control" placeholder=""
                                     aria-describedby="helpId" required v-model="body">
-                                                                                                                        </textarea>
+                                                                                                                                                                                                                                                                                                                                                    </textarea>
 
                                 <div class="alert alert-danger" role="alert" v-for="error in errors.body">
                                     {{ error }}
@@ -618,6 +624,19 @@ box-shadow: 6px 6px 12px #c5c5c5,
         cursor: pointer;
         // aggiungere le proprietà alla classe dinamica
 
+    }
+}
+
+/* Media Query */
+.linea {
+    display: none;
+}
+
+@media screen and (max-width: 992px) {
+    .linea {
+        display: block;
+        padding: 0.5rem 0;
+        margin-top: 0.75rem;
     }
 }
 </style>
