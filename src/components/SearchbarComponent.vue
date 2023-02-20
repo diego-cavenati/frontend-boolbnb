@@ -10,6 +10,12 @@ import '@vuepic/vue-datepicker/src/VueDatePicker/style/main.scss';
 
 export default {
     name: 'SearchbarComponent',
+    props: {
+        id: {
+            type: String,
+            required: true
+        }
+    },
     setup() {
         const format = (dates) => {
             const start = dates[0];
@@ -46,6 +52,7 @@ export default {
                         address: store.address,
                     }
                 });
+                console.log(response);
 
                 store.results = response.data.results;
                 store.price = response.data.results.price;
@@ -101,13 +108,13 @@ export default {
         },
     },
     computed: {
-        elementId() {
-            if (this.$route.name === 'home') {
-                return 'large_element';
-            } else {
-                return 'small_element';
-            }
-        },
+        // elementId() {
+        //     if (this.$route.name === 'home') {
+        //         return 'large_element';
+        //     } else {
+        //         return 'small_element';
+        //     }
+        // },
     },
     created() {
         watch(() => this.store.datePicker, this.convertDates);
@@ -144,33 +151,32 @@ export default {
             store.address = address;
         });
         searchBoxInput.value = store.address;
-
     }
 }
 
 </script>
 
 <template>
-    <div :id="elementId">
+    <div :id="id">
         <form @submit.prevent="search">
             <div class="container_search">
-                <div class="input" required>
+                <div class="input">
                     <!-- <i class="fa-regular fa-map"></i> -->
                     <div id="searchBox" @click="clearAdress()"></div>
                     <!-- <input type="text" v-model="store.address" placeholder="Dove vuoi andare?"> -->
                 </div>
                 <!-- <div class="input">
-                                                                                                                <div class="line"></div> -->
+                                                                                                                                                    <div class="line"></div> -->
                 <!-- <i class="fa-regular fa-calendar"></i> -->
                 <!-- <Datepicker class="dataPicker" v-model="date" :enable-time-picker="false" :format="format" range />
-                                                                                                                </div>
-                                                                                                                <div class="input">
-                                                                                                                 <div class="line"></div>
-                                                                                                                <i class="fa-regular fa-user"></i> -->
+                                                                                                                                                    </div>
+                                                                                                                                                    <div class="input">
+                                                                                                                                                     <div class="line"></div>
+                                                                                                                                                    <i class="fa-regular fa-user"></i> -->
 
                 <!-- <button @click="increment" :disabled="guests >= maxGuests">+</button>
-                                                                                                                <input type="number" id="guests" name="guests" v-model.number="store.guests" @input="validateGuests">
-                                                                                                                <button @click="decrement" :disabled="guests <= 1">-</button> -->
+                                                                                                                                                    <input type="number" id="guests" name="guests" v-model.number="store.guests" @input="validateGuests">
+                                                                                                                                                    <button @click="decrement" :disabled="guests <= 1">-</button> -->
 
                 <!-- <input type="text" v-model="store.guests" placeholder="Quanti siete?"> -->
                 <!-- </div> -->
@@ -304,6 +310,18 @@ export default {
     .container_search {
         display: flex;
         align-items: center;
+    }
+}
+
+
+// MEDIA QUERY
+@media screen and (min-width: 744px) {
+    //
+}
+
+@media screen and (max-width: 744px) {
+    #small_element {
+        // width: 100%;
     }
 }
 </style>

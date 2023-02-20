@@ -6,6 +6,7 @@ export default {
     data() {
         return {
             isMobileView: false,
+            large_element: 'large_element',
         }
     },
     components: {
@@ -40,7 +41,7 @@ export default {
                     <h1>Scopri nuove destinazioni</h1>
                     <h2>Prenota la tua casa ideale</h2>
 
-                    <SearchbarComponent v-if="!isMobileView" />
+                    <SearchbarComponent v-if="!isMobileView" :id="large_element" />
                     <!-- class="mobile_hide" -->
                 </div>
             </div>

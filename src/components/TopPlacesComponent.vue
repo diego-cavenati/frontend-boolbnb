@@ -5,34 +5,28 @@ export default {
         return {
             destinations: [
                 {
-                    name: 'Tokyo',
-                    flag: 'https://restcountries.com/data/jpn.svg',
-                    image: 'https://images.unsplash.com/photo-1514897463413-ebe473b5ed16',
-                    address: 'Tokyo, Japan'
-                },
-                {
                     name: 'Paris',
-                    flag: 'https://restcountries.com/data/fra.svg',
-                    image: 'https://images.unsplash.com/photo-1502773860571-c8eaee33c7d2',
-                    address: 'Paris, France'
+                    flag: 'https://flagicons.lipis.dev/flags/4x3/fr.svg',
+                    image: 'https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80',
+                    address: 'Parigi'
                 },
                 {
                     name: 'New York',
-                    flag: 'https://restcountries.com/data/usa.svg',
-                    image: 'https://images.unsplash.com/photo-1464790719320-516ecd75af6c',
-                    address: 'New York, USA'
+                    flag: 'https://flagicons.lipis.dev/flags/4x3/us.svg',
+                    image: 'https://images.unsplash.com/photo-1499092346589-b9b6be3e94b2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1742&q=80',
+                    address: 'New York'
                 },
                 {
                     name: 'Sydney',
-                    flag: 'https://restcountries.com/data/aus.svg',
-                    image: 'https://images.unsplash.com/photo-1516982113433-5a5d39cd7013',
-                    address: 'Sydney, Australia'
+                    flag: 'https://flagicons.lipis.dev/flags/4x3/au.svg',
+                    image: 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80',
+                    address: 'Sydney'
                 },
                 {
-                    name: 'Rio de Janeiro',
-                    flag: 'https://restcountries.com/data/bra.svg',
-                    image: 'https://images.unsplash.com/photo-1534562394296-8a1e92401f31',
-                    address: 'Rio de Janeiro, Brazil'
+                    name: 'Roma',
+                    flag: 'https://flagicons.lipis.dev/flags/4x3/it.svg',
+                    image: 'https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80',
+                    address: 'Roma'
                 }
             ]
         }
@@ -45,21 +39,34 @@ export default {
     }
 }
 </script>
+
 <template>
-    <div class="card-section">
-        <div class="card" v-for="destination in destinations" :key="destination.name"
-            @click="redirectToAddress(destination)">
-            <h3>{{ destination.name }}</h3>
-            <img :src="destination.flag" :alt="`${destination.name} flag`" class="flag">
-            <div class="image-container">
-                <img :src="destination.image" :alt="`${destination.name} image`">
+    <div class="top_places">
+        <div class="container card-section">
+            <div class="card" v-for="destination in destinations" :key="destination.name"
+                @click="redirectToAddress(destination)">
+                <h3>{{ destination.name }}</h3>
+                <img :src="destination.flag" :alt="`${destination.name} flag`" class="flag">
+                <div class="image-container">
+                    <img :src="destination.image" :alt="`${destination.name} image`">
+                </div>
             </div>
         </div>
     </div>
 </template>
-<style scoped>
+
+<style lang="scss" scoped>
+@use '../assets/scss/general.scss';
+@use '../assets/scss/partials/variables.scss' as *;
+
+.top_places {
+    background: linear-gradient(90deg, $bb-primary 0%, $bb-secondary 100%);
+
+}
+
 .card-section {
     display: grid;
+    padding: 3rem 0;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     grid-gap: 20px;
 }
