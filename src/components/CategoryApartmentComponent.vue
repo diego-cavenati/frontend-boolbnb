@@ -14,7 +14,7 @@ export default {
             apartments: [],
             currentPage: 1,
             perPage: 6,
-            pages: null,
+            pages: 0,
             maxHeight: null,
         }
     },
@@ -45,53 +45,21 @@ export default {
         previousPage() {
             if (this.currentPage > 1) {
                 this.currentPage--;
-                console.log(this.currentPage);
-                axios.get(`http://127.0.0.1:8000/api/apartments?page=${this.currentPage}`)
-                    .then(response => {
-                        this.apartments = response.data.results.data;
-                    })
-                    .catch(error => {
-                        console.error(error)
-                    });
             }
         },
         nextPage() {
-            if (this.currentPage > 0 && this.currentPage < this.pages) {
+            if (this.currentPage < this.pages) {
                 this.currentPage++;
-                console.log(this.currentPage);
-                axios.get(`http://127.0.0.1:8000/api/apartments?page=${this.currentPage}`)
-                    .then(response => {
-                        this.apartments = response.data.results.data;
-                    })
-                    .catch(error => {
-                        console.error(error)
-                    });
             }
         },
         goToPage(pageNumber) {
             this.currentPage = pageNumber;
-            console.log(this.currentPage);
-            this.callApi();
-        },
-        callApi() {
-            axios.get(`http://127.0.0.1:8000/api/apartments?page=${this.currentPage}`)
-                .then(response => {
-                    this.apartments = response.data.results.data;
-                    this.pages = response.data.results.last_page;
-                    console.log(response.data.results.last_page);
-                    this.loading = false;
-                })
-                .catch(error => {
-                    console.error(error)
-                    this.error = error.message;
-                    this.loading = false;
-                })
         },
         callAll() {
             axios.get(`http://127.0.0.1:8000/api/search`)
                 .then(response => {
                     this.apartments = response.data.results;
-                    // this.pages = response.data.results.last_page;
+                    this.pages = Math.ceil(this.apartments.length / this.perPage);
                     console.log(response);
                     this.loading = false;
                 })
@@ -104,7 +72,8 @@ export default {
 
     },
     created() {
-        this.callApi()
+        this.callAll()
+
     },
     mounted() {
         this.setMaxHeight();

@@ -10,6 +10,7 @@ export default {
             store,
             showInNavbar: false,
             isMobileView: false,
+            small_element: 'small_element',
         }
     },
     computed: {
@@ -53,8 +54,8 @@ export default {
                 <img src="../assets/svg/boolbnb-color.svg" alt="">
             </router-link>
         </div>
-        <SearchbarComponent v-if="showSearchbar & isHomepage" />
-        <SearchbarComponent v-if="!isHomepage" />
+        <SearchbarComponent :id="small_element" v-if="showSearchbar & isHomepage" />
+        <SearchbarComponent :id="small_element" v-if="!isHomepage" />
         <div class="d-flex align-items-center hide">
 
             <!-- <span class="host">Passa alla modalità host</span> -->
@@ -70,15 +71,15 @@ export default {
                 <li><a class="dropdown-item" href="http://127.0.0.1:8000/">Accedi</a></li>
                 <li><a class="dropdown-item" href="http://127.0.0.1:8000/register">Registrati</a></li>
                 <!-- <li><a class="dropdown-item" href="#">Messaggi</a></li>
-                                                                                                                                                                                <li><a class="dropdown-item" href="#">Preferiti</a></li>
-                                                                                                                                                                                <li>
-                                                                                                                                                                                    <hr class="dropdown-divider">
-                                                                                                                                                                                </li>
-                                                                                                                                                                                <li><a class="dropdown-item" href="#">Gestisci gli annunci</a></li>
-                                                                                                                                                                                <li>
-                                                                                                                                                                                    <hr class="dropdown-divider">
-                                                                                                                                                                                </li>
-                                                                                                                                                                                <li><a class="dropdown-item" href="#">Esci</a></li> -->
+                                                                                                                                                                                                    <li><a class="dropdown-item" href="#">Preferiti</a></li>
+                                                                                                                                                                                                    <li>
+                                                                                                                                                                                                        <hr class="dropdown-divider">
+                                                                                                                                                                                                    </li>
+                                                                                                                                                                                                    <li><a class="dropdown-item" href="#">Gestisci gli annunci</a></li>
+                                                                                                                                                                                                    <li>
+                                                                                                                                                                                                        <hr class="dropdown-divider">
+                                                                                                                                                                                                    </li>
+                                                                                                                                                                                                    <li><a class="dropdown-item" href="#">Esci</a></li> -->
             </ul>
         </div>
     </nav>
@@ -114,28 +115,28 @@ export default {
 
 
             <!--
-                                                                                                                                                                            <div>
-                                                                                                                                                                                <div class="nav_icon dropup">
-                                                                                                                                                                                    <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                                                                                                                                        <i class="fa-solid fa-user"></i>
-                                                                                                                                                                                        <span>Accedi</span>
-                                                                                                                                                                                    </button>
+                                                                                                                                                                                                <div>
+                                                                                                                                                                                                    <div class="nav_icon dropup">
+                                                                                                                                                                                                        <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                                                                                                                                            <i class="fa-solid fa-user"></i>
+                                                                                                                                                                                                            <span>Accedi</span>
+                                                                                                                                                                                                        </button>
 
-                                                                                                                                                                                    <ul class="dropdown-menu">
-                                                                                                                                                                                        <li><a class="dropdown-item" href="#">Messaggi</a></li>
-                                                                                                                                                                                        <li><a class="dropdown-item" href="#">Preferiti</a></li>
-                                                                                                                                                                                        <li>
-                                                                                                                                                                                            <hr class="dropdown-divider">
-                                                                                                                                                                                        </li>
-                                                                                                                                                                                        <li><a class="dropdown-item" href="#">Gestisci gli annunci</a></li>
-                                                                                                                                                                                        <li>
-                                                                                                                                                                                            <hr class="dropdown-divider">
-                                                                                                                                                                                        </li>
-                                                                                                                                                                                        <li><a class="dropdown-item" href="#">Esci</a></li>
-                                                                                                                                                                                    </ul>
-                                                                                                                                                                                </div>
+                                                                                                                                                                                                        <ul class="dropdown-menu">
+                                                                                                                                                                                                            <li><a class="dropdown-item" href="#">Messaggi</a></li>
+                                                                                                                                                                                                            <li><a class="dropdown-item" href="#">Preferiti</a></li>
+                                                                                                                                                                                                            <li>
+                                                                                                                                                                                                                <hr class="dropdown-divider">
+                                                                                                                                                                                                            </li>
+                                                                                                                                                                                                            <li><a class="dropdown-item" href="#">Gestisci gli annunci</a></li>
+                                                                                                                                                                                                            <li>
+                                                                                                                                                                                                                <hr class="dropdown-divider">
+                                                                                                                                                                                                            </li>
+                                                                                                                                                                                                            <li><a class="dropdown-item" href="#">Esci</a></li>
+                                                                                                                                                                                                        </ul>
+                                                                                                                                                                                                    </div>
 
-                                                                                                                                                                            </div> -->
+                                                                                                                                                                                                </div> -->
 
         </div>
     </div>
@@ -248,7 +249,7 @@ nav {
 
 @media screen and (max-width: 744px) {
     .hide {
-        visibility: hidden;
+        display: none;
     }
 
     .nav_bottom {
