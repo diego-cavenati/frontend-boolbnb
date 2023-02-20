@@ -16,6 +16,8 @@ export default {
             perPage: 6,
             pages: null,
             maxHeight: null,
+            nextPageUrl: '',
+            prevPageUrl: '',
         }
     },
     computed: {
@@ -43,30 +45,40 @@ export default {
             this.maxHeight = maxHeight;
         },
         previousPage() {
-            if (this.currentPage > 1) {
-                this.currentPage--;
-                console.log(this.currentPage);
-                axios.get(`http://127.0.0.1:8000/api/apartments?page=${this.currentPage}`)
-                    .then(response => {
-                        this.apartments = response.data.results.data;
-                    })
-                    .catch(error => {
-                        console.error(error)
-                    });
+            if (this.prevPageUrl !== null) {
+                if (this.currentPage > 1) {
+                    this.currentPage--;
+                    console.log(this.currentPage);
+                    axios.get(`http://127.0.0.1:8000/api/showcase?page=${this.currentPage}`)
+                        .then(response => {
+                            this.apartments = response.data.results.data;
+                            this.nextPageUrl = response.data.results.next_page_url;
+                            this.prevPageUrl = response.data.results.prev_page_url
+                        })
+                        .catch(error => {
+                            console.error(error)
+                        });
+                }
             }
+
         },
         nextPage() {
-            if (this.currentPage > 0 && this.currentPage < this.pages) {
-                this.currentPage++;
-                console.log(this.currentPage);
-                axios.get(`http://127.0.0.1:8000/api/apartments?page=${this.currentPage}`)
-                    .then(response => {
-                        this.apartments = response.data.results.data;
-                    })
-                    .catch(error => {
-                        console.error(error)
-                    });
+            if (this.nextPageUrl !== null) {
+                if (this.currentPage > 0 && this.currentPage < this.pages) {
+                    this.currentPage++;
+                    console.log(this.currentPage);
+                    axios.get(`http://127.0.0.1:8000/api/showcase?page=${this.currentPage}`)
+                        .then(response => {
+                            this.apartments = response.data.results.data;
+                            this.nextPageUrl = response.data.results.next_page_url;
+                            this.prevPageUrl = response.data.results.prev_page_url
+                        })
+                        .catch(error => {
+                            console.error(error)
+                        });
+                }
             }
+
         },
         goToPage(pageNumber) {
             this.currentPage = pageNumber;
@@ -74,11 +86,13 @@ export default {
             this.callApi();
         },
         callApi() {
-            axios.get(`http://127.0.0.1:8000/api/apartments?page=${this.currentPage}`)
+            axios.get(`http://127.0.0.1:8000/api/showcase`)
                 .then(response => {
                     this.apartments = response.data.results.data;
                     this.pages = response.data.results.last_page;
-                    console.log(response.data.results.last_page);
+                    console.log(response.data.results.next_page_url);
+                    this.nextPageUrl = response.data.results.next_page_url;
+                    this.prevPageUrl = response.data.results.prev_page_url
                     this.loading = false;
                 })
                 .catch(error => {
@@ -141,14 +155,18 @@ export default {
 
 
         <div class="pagination">
-            <button @click="previousPage"><i class="fa-solid fa-chevron-left"></i></button>
+            <button @click="previousPage">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
             <div class="page-numbers">
                 <div v-for="pageNumber in pageNumbers" :key="pageNumber" :class="{ active: currentPage === pageNumber }"
                     @click="goToPage(pageNumber)">
                     {{ pageNumber }}
                 </div>
             </div>
-            <button @click="nextPage"><i class="fa-solid fa-chevron-right"></i></button>
+            <button @click="nextPage">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
         </div>
 
     </div>
