@@ -1,8 +1,14 @@
 <script>
+import axios from 'axios';
+
 export default {
     name: 'TopPlacesComponent',
     data() {
         return {
+            startIndex: 0,
+            displayedDestinations: [],
+            cardWidth: 0,
+            offset: 0,
             destinations: [
                 {
                     name: 'Paris',
@@ -27,14 +33,70 @@ export default {
                     flag: 'https://flagicons.lipis.dev/flags/4x3/it.svg',
                     image: 'https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80',
                     address: 'Roma'
-                }
+                },
+                {
+                    name: 'Barcellona',
+                    flag: 'https://flagicons.lipis.dev/flags/4x3/es.svg',
+                    image: 'https://images.unsplash.com/photo-1558642084-fd07fae5282e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1472&q=80',
+                    address: 'barcellona'
+                },
+                {
+                    name: 'Bali',
+                    flag: 'https://flagicons.lipis.dev/flags/4x3/id.svg',
+                    image: 'https://images.unsplash.com/photo-1554481923-a6918bd997bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1530&q=80',
+                    address: 'bali'
+                },
             ]
+        }
+    },
+    computed: {
+        displayedDestinations() {
+            return this.destinations.slice(this.startIndex, this.startIndex + 3)
         }
     },
     methods: {
         redirectToAddress(destination) {
-            // Qui si potrebbe effettuare una chiamata API per reindirizzare l'utente all'indirizzo specificato nella proprietà 'address' della destinazione cliccata
             console.log(`Redirecting to ${destination.address}...`);
+        },
+        redirectToAddress(destination) {
+            console.log(`Redirecting to ${destination.address}...`);
+        },
+        async searchApi(destination) {
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/api/search', {
+                    params: {
+                        address: destination
+                    }
+                });
+                console.log(response.data);
+
+                // Reindirizza l'utente alla pagina /search
+                this.$router.push('/search');
+
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        scroll(direction) {
+            if (window.innerWidth < 768) { // se larghezza dello schermo è inferiore a 768px (media query per i dispositivi mobili)
+                const newIndex = this.startIndex + direction;
+                if (newIndex >= 0 && newIndex <= this.destinations.length - 1) {
+                    this.startIndex = newIndex;
+                    this.displayedDestinations = [this.destinations[this.startIndex]];
+                    this.offset = -this.startIndex * this.cardWidth;
+                }
+            } else { // altrimenti usa lo scorrimento a tre a tre come prima
+                const newIndex = this.startIndex + direction;
+                if (newIndex >= 0 && newIndex <= this.destinations.length - 3) {
+                    this.startIndex = newIndex;
+                    this.displayedDestinations = this.destinations.slice(this.startIndex, this.startIndex + 3);
+                    this.offset = -this.startIndex * this.cardWidth;
+                }
+            }
+        },
+        mounted() {
+            this.cardWidth = document.querySelector(".card").clientWidth;
+            this.displayedDestinations = this.destinations.slice(this.startIndex, this.startIndex + 3);
         }
     }
 }
@@ -42,15 +104,34 @@ export default {
 
 <template>
     <div class="top_places">
-        <div class="container card-section">
-            <div class="card" v-for="destination in destinations" :key="destination.name"
-                @click="redirectToAddress(destination)">
-                <h3>{{ destination.name }}</h3>
-                <img :src="destination.flag" :alt="`${destination.name} flag`" class="flag">
-                <div class="image-container">
-                    <img :src="destination.image" :alt="`${destination.name} image`">
-                </div>
+        <div class="container">
+            <h2>Ecco le migliori <span class="title_mark"> destinazioni 2023</span></h2>
+            <div class="description">
+                <p>
+                    Siamo entusiasti di presentare una selezione di destinazioni che vi lascerà senza fiato. Crediamo
+                    fermamente che tra questi appartamenti troverete la soluzione perfetta per la vostra prossima avventura.
+                </p>
             </div>
+            <div class="carousel">
+                <div class="row flex-nowrap overflow-x-auto card-container"
+                    :style="{ transform: `translateX(${offset}px)` }">
+                    <div class="d-inline-block col-12 col-lg-4 card" v-for="(destination, index) in displayedDestinations"
+                        :key="destination.name">
+                        <div class="image-container"
+                            :style="{ 'background-image': `url(${destination.image})`, 'background-size': 'cover' }">
+                            <h3>{{ destination.name }} <img :src="destination.flag" :alt="`${destination.name} flag`"
+                                    class="flag"></h3>
+                        </div>
+                    </div>
+                </div>
+                <button class="prev" @click="scroll(-1)" :disabled="startIndex === 0">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <button class="next" @click="scroll(1)" :disabled="startIndex + 3 >= destinations.length">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+
         </div>
     </div>
 </template>
@@ -59,46 +140,108 @@ export default {
 @use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
 
-.top_places {
-    background: linear-gradient(90deg, $bb-primary 0%, $bb-secondary 100%);
 
+.top_places {
+    background: $bb-background;
+    padding: 5rem 0;
+
+    .container {
+        .carousel {
+            position: relative;
+        }
+    }
+}
+
+button {
+    font-size: 2rem;
+    top: 50%;
+    position: absolute;
+    color: $bb-primary;
+}
+
+button.prev {
+    left: -40px;
+}
+
+button.next {
+    right: -40px;
+}
+
+.description {
+    display: flex;
+    align-items: center;
+    padding-bottom: 2rem;
+    justify-content: space-between;
 }
 
 .card-section {
     display: grid;
-    padding: 3rem 0;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     grid-gap: 20px;
 }
 
+
 .card {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 1rem;
     cursor: pointer;
     overflow: hidden;
-    transition: transform 0.3s;
+    border: none;
+    transition: all 0.3s;
+
+    .main_img {
+        transition: transform 0.2s;
+        width: 100%;
+        background-size: cover;
+    }
 }
 
-.card:hover {
-    transform: translateY(-5px);
+
+.card.slide-in {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.card.slide-out {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+
+.card:hover .main_img {
+    transform: scale(1.2);
+}
+
+.card .image-container {
+    position: relative;
+}
+
+.card .image-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5));
 }
 
 h3 {
     font-size: 1.5rem;
     margin: 20px;
-}
+    display: flex;
+    z-index: 2;
+    position: relative;
 
-.flag {
-    width: 50px;
-    margin: 0 auto;
-    display: block;
+    .flag {
+        width: 50px;
+        position: relative;
+        padding-left: 0.6rem;
+    }
 }
 
 .image-container {
     position: relative;
     overflow: hidden;
-    height: 200px;
+    aspect-ratio: 1.2/2;
 }
 
 img {

@@ -7,17 +7,15 @@ export default {
         return {
             isMobileView: false,
             large_element: 'large_element',
+            text: "Amsterdam",
+            typedText: "",
+            currentIndex: 0,
+            typingSpeed: 500, // Mezzo secondo
         }
     },
     components: {
         SearchbarComponent
     },
-    // computed: {
-    //     isMobileView() {
-    //         const mediaQuery = window.matchMedia('(max-width: 744px)');
-    //         return mediaQuery.matches;
-    //     }
-    // },
     created() {
         window.addEventListener('resize', this.handleResize);
         this.handleResize();
@@ -29,7 +27,20 @@ export default {
         handleResize() {
             this.isMobileView = window.innerWidth <= 744;
         },
-    }
+        typeNextLetter() {
+            if (this.currentIndex < this.text.length) {
+                // Aggiungi la prossima lettera
+                this.typedText += this.text.charAt(this.currentIndex);
+                this.currentIndex++;
+
+                // Ripeti la funzione con la distanza di tempo specificata
+                setTimeout(this.typeNextLetter, this.typingSpeed);
+            }
+        },
+    },
+    mounted() {
+        this.typeNextLetter();
+    },
 }
 </script>
 
@@ -38,11 +49,11 @@ export default {
         <div class="pattern">
             <div class="blur">
                 <div class="content">
+                    <!-- <input type="text" ref="input" v-model="typedText"> -->
                     <h1>Scopri nuove destinazioni</h1>
                     <h2>Prenota la tua casa ideale</h2>
 
                     <SearchbarComponent v-if="!isMobileView" :id="large_element" />
-                    <!-- class="mobile_hide" -->
                 </div>
             </div>
         </div>
