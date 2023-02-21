@@ -21,7 +21,7 @@ export default {
             activeCategoryIndex: null,
             currentPage: 1,
             perPage: 6,
-            pages: null,
+            // pages: null,
             maxHeight: null,
             nextPageUrl: '',
             prevPageUrl: '',
@@ -36,9 +36,9 @@ export default {
                 if (this.currentPage > 1) {
                     this.currentPage--;
                     console.log(this.currentPage);
-                    axios.get(`http://127.0.0.1:8000/api/showcase?page=${this.currentPage}`)
+                    axios.get(`http://127.0.0.1:8000/api/search?page=${this.currentPage}`)
                         .then(response => {
-                            this.apartments = response.data.results.data;
+                            store.results = response.data.results.data;
                             this.nextPageUrl = response.data.results.next_page_url;
                             this.prevPageUrl = response.data.results.prev_page_url
                         })
@@ -51,12 +51,12 @@ export default {
         },
         nextPage() {
             if (this.nextPageUrl !== null) {
-                if (this.currentPage > 0 && this.currentPage < this.pages) {
+                if (this.currentPage > 0 && this.currentPage < store.pages) {
                     this.currentPage++;
-                    console.log(this.currentPage);
-                    axios.get(`http://127.0.0.1:8000/api/showcase?page=${this.currentPage}`)
+
+                    axios.get(`http://127.0.0.1:8000/api/search?page=${this.currentPage}`)
                         .then(response => {
-                            this.apartments = response.data.results.data;
+                            store.results = response.data.results.data;
                             this.nextPageUrl = response.data.results.next_page_url;
                             this.prevPageUrl = response.data.results.prev_page_url
                         })
@@ -324,7 +324,7 @@ export default {
         },
         */
         pageNumbers() {
-            return this.pages;
+            return store.pages;
         },
         paginatedApartments() {
             const start = (this.currentPage - 1) * this.perPage;
@@ -530,17 +530,17 @@ export default {
                                 <p>Il raggio selezionato è {{ store.radius }} km.</p>
                             </div>
                             <!-- <div class="card card_custom">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <svg class="beds_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <g id="Livello_2" data-name="Livello 2">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <g id="Livello_1-2" data-name="Livello 1">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <path
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        d="M21,192H0V92c2.63-4.14,5.35-8.23,7.86-12.44,1.17-2,2.74-4.13,2.76-6.23.23-17.12.16-34.25.13-51.38,0-9,4.07-15.54,11.92-19.8C24.08,1.38,25.55.71,27,0H165c12.53,4.93,17.05,14.2,16.42,27.44-.73,15.26-.21,30.58-.11,45.88a9.82,9.82,0,0,0,1.28,5c3,4.67,6.25,9.14,9.41,13.69V192H171V171.19H21ZM170.43,96.31H21.59V149H170.43ZM32.32,21.48V74.75H52.58a8.1,8.1,0,0,0,.57-1.65c.05-5.66.06-11.32.1-17,.08-9.67,3.68-13.34,13.29-13.36q29,0,58,0c10.92,0,14.23,3.38,14.25,14.41,0,5.74,0,11.49,0,17.17h20.92V21.48Z" />
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </g>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </g>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </svg>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <input type="number" min="0" max="128" id="beds" v-model.number="store.beds">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <p>i posti letti sono {{ store.beds }} </p>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <svg class="beds_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <g id="Livello_2" data-name="Livello 2">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <g id="Livello_1-2" data-name="Livello 1">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <path
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                d="M21,192H0V92c2.63-4.14,5.35-8.23,7.86-12.44,1.17-2,2.74-4.13,2.76-6.23.23-17.12.16-34.25.13-51.38,0-9,4.07-15.54,11.92-19.8C24.08,1.38,25.55.71,27,0H165c12.53,4.93,17.05,14.2,16.42,27.44-.73,15.26-.21,30.58-.11,45.88a9.82,9.82,0,0,0,1.28,5c3,4.67,6.25,9.14,9.41,13.69V192H171V171.19H21ZM170.43,96.31H21.59V149H170.43ZM32.32,21.48V74.75H52.58a8.1,8.1,0,0,0,.57-1.65c.05-5.66.06-11.32.1-17,.08-9.67,3.68-13.34,13.29-13.36q29,0,58,0c10.92,0,14.23,3.38,14.25,14.41,0,5.74,0,11.49,0,17.17h20.92V21.48Z" />
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </g>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </g>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </svg>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <input type="number" min="0" max="128" id="beds" v-model.number="store.beds">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <p>i posti letti sono {{ store.beds }} </p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div> -->
 
 
 
@@ -609,7 +609,7 @@ export default {
 
                             </div>
 
-                            <div class="pagination">
+                            <div class="pagination" v-if="store.pages > 1 && !store.loading">
                                 <button @click="previousPage">
                                     <i class="fa-solid fa-chevron-left"></i>
                                 </button>
@@ -939,6 +939,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 // Pagination
 .pagination {
     padding-top: 1.5rem;
+    padding-bottom: 1rem;
     display: flex;
     justify-content: center;
     align-items: center;
