@@ -145,6 +145,8 @@ export default {
         searchBoxWrapper.appendChild(searchBoxHTML);
 
         const searchBoxInput = document.querySelector('.tt-search-box-input');
+        searchBoxInput.placeholder = 'Dove vuoi andare?';
+
         const searchBoxInputContainer = document.querySelector('.tt-search-box-input-container');
         searchBoxInputContainer.insertAdjacentHTML('afterbegin', `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
   <path d='M15,4.946l-6-2L2,5.279V21.387l7-2.333,6,2,7-2.333V2.613Zm-5,.442,4,1.333V18.612l-4-1.333ZM4,6.721,8,5.388V17.279L4,18.613ZM20,17.279l-4,1.333V6.721l4-1.334Z'/>
@@ -177,18 +179,18 @@ export default {
                     <!-- <input type="text" v-model="store.address" placeholder="Dove vuoi andare?"> -->
                 </div>
                 <!-- <div class="input">
-                                <div class="line"></div> -->
+                                        <div class="line"></div> -->
                 <!-- <i class="fa-regular fa-calendar"></i> -->
                 <!-- <Datepicker class="dataPicker" v-model="date" :enable-time-picker="false" :format="format" range />
-                                </div>
-                                <div class="input">
-                                <div class="line"></div>
-                                <i class="fa-regular fa-user"></i> -->
+                                        </div>
+                                        <div class="input">
+                                        <div class="line"></div>
+                                        <i class="fa-regular fa-user"></i> -->
 
                 <!-- <button @click="increment" :disabled="guests >= maxGuests">+</button>
-                                <input type="number" id="guests" name="guests" v-model.number="store.guests" @input="validateGuests">
+                                        <input type="number" id="guests" name="guests" v-model.number="store.guests" @input="validateGuests">
 
-                                <input type="text" v-model="store.guests" placeholder="Quanti siete?"> -->
+                                        <input type="text" v-model="store.guests" placeholder="Quanti siete?"> -->
                 <!-- </div> -->
             </div>
 

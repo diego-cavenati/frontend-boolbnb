@@ -493,9 +493,9 @@ export default {
                             <span class="arrow">&lt;</span>
                         </div>
                         <div @click="AllApartments()" class="all_apartments">
-                            <img src="../assets/img/pin_boolbnb.png" alt="">
+                            <img src="../assets/img/tutti-gli-alloggi.png" alt="">
                             <div>
-                                ALL
+                                Tutti gli alloggi
                             </div>
                         </div>
                     </div>
@@ -510,7 +510,10 @@ export default {
                         </div>
                     </div>
                     <div class="align-self-center p-3">
-                        <button @click="HideShowPopup()" class="btn btn-primary " id="filterBtn">Apri filtro</button>
+                        <button @click="HideShowPopup()" class="button" id="filterBtn">
+                            <i class="fa-solid fa-sliders"></i>
+                            Filtri
+                        </button>
                     </div>
                     <div class="btn btn-right" @click="slide(1)">
                         <span class="arrow">&gt;</span>
@@ -527,36 +530,38 @@ export default {
     </div>
 -->
 
-            <div class="container">
-                <div> <!--Scrivere all'interno del popup-->
-                    <div id="filterPopup" class="container rounded hide">
-                        <div @click="SearchHide()" class="close">
-                            <button class="btn btn-primary ms-3">CERCA</button>
-                            <!-- Bottone di ricerca per categoria, via servizi etc-->
-                        </div>
-                        <div>
-                            <button @click="HideShowPopup()" class="btn btn-primary ms-3">CHIUDI</button>
-                        </div>
-                        <div class="row">
-                            <div v-for="service, i in store.services" :key="service.id" class="col-4 d-flex">
 
-                                <div @click="PushService(i)" :id="'service-' + i" class="card p-3 my-2 card_custom">
-
-                                    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
-                                        role="presentation" focusable="false"
-                                        style="display: block; height: 24px; width: 24px; fill: currentcolor;">
-                                        <path :d="service.img"></path>
-                                    </svg>
-                                    {{ service.name }}
-                                </div>
+            <div> <!--Scrivere all'interno del popup-->
+                <div id="filterPopup" class="container rounded hide">
+                    <div class="close">
+                        <button @click="HideShowPopup()"></button>
+                    </div>
+                    <div class="row">
+                        <h3>Servizi</h3>
+                        <div v-for="service, i in store.services" :key="service.id"
+                            class="col-xl-3 col-md-4 col-sm-6 d-flex">
+                            <div @click="PushService(i)" :id="'service-' + i" class="card p-3 my-2 card_custom">
+                                <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+                                    role="presentation" focusable="false"
+                                    style="display: block; height: 24px; width: 24px; fill: currentcolor;">
+                                    <path :d="service.img"></path>
+                                </svg>
+                                {{ service.name }}
                             </div>
-                            <div> <!--TODO bisogna pushare store.radius al back insieme ai servizi-->
-                                <label for="range">Seleziona il raggio in km:</label>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-6 distance">
+                                <h3>Seleziona il raggio in km:</h3>
+                                <!--TODO bisogna pushare store.radius al back insieme ai servizi-->
                                 <input type="range" min="20" max="100" id="range" v-model.number="store.radius" />
                                 <p>Il raggio selezionato è {{ store.radius }} km.</p>
                             </div>
-                            <div class="beds-input">
-                                <label for="beds">Posti Letto</label>
+
+
+                            <div class="col-6 beds-input">
+                                <h3 for="beds">Posti Letto</h3>
                                 <div class="beds-input-container">
                                     <svg class="beds-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
                                         <g id="Livello_2" data-name="Livello 2">
@@ -571,10 +576,16 @@ export default {
                                 <p>i posti letti sono {{ store.beds }}</p>
                             </div>
                         </div>
+
+                    </div>
+                    <div @click="SearchHide()" class="confirm">
+                        <button class="button">Applica i filtri</button>
+                        <!-- Bottone di ricerca per categoria, via servizi etc-->
                     </div>
                 </div>
-
             </div>
+
+
         </div>
         <div class="container-fluid">
             <div class="row">
@@ -582,8 +593,10 @@ export default {
                     <div class="container">
                         <div class="row">
 
+
                             <CardComponent class="pb-4" v-if="!store.loading"
                                 v-for="apartment in store.results" :apartment="apartment" />
+
 
                             <div class="cardList row row-cols-4" v-else-if="store.loading">
                                 <div class=" col cardLoading is-loading">
@@ -615,7 +628,6 @@ export default {
                                         <p></p>
                                     </div>
                                 </div>
-
                             </div>
 
                             <div class="pagination" v-if="store.pages > 1 && !store.loading">
@@ -691,9 +703,9 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 }
 
 .beds-input {
+    padding-top: 2rem;
     display: flex;
     flex-direction: column;
-    align-items: center;
 }
 
 .beds-input label {
@@ -715,6 +727,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 0.5rem;
+    width: 50%;
 }
 
 .beds-icon {
@@ -780,8 +793,12 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
-    padding: 20px;
-    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    border-radius: 1.3rem !important;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.3);
     //opacity: 0;
     //transition: opacity 0.3s ease-out, visibility 0s 0.3s;
 }
@@ -797,11 +814,21 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     display: none;
 }
 
-.card_custom {
+.distance {
+    padding-top: 2rem;
+    width: 50%;
+}
 
-    width: 250px;
+.card_custom {
+    width: 100%;
+    padding: 1rem;
+    display: flex;
     background: white;
     transition: all .3s;
+
+    svg {
+        margin-bottom: 0.4rem;
+    }
 
     /*
     box-shadow: 6px 6px 12px #c5c5c5,
@@ -826,14 +853,32 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 }
 
 .active_category {
-    background-color: greenyellow;
+    border-bottom: 2px solid $bb-primary;
+    color: $bb-primary;
+    font-weight: 500;
+}
+
+.confirm {
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .close {
-    position: absolute;
-    right: 30px;
+
     cursor: pointer;
+    display: flex;
+    justify-content: flex-end;
+    height: 30px;
+
+    button:after {
+        display: inline-block;
+        content: "\00d7";
+        color: $bb-light;
+        font-size: 3rem;
+    }
 }
+
 
 //Loading card
 .cardList {

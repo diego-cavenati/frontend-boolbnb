@@ -50,17 +50,17 @@ export default {
         }
     },
     computed: {
-        displayedDestinations() {
+        displayedDestinationsBg() {
             return this.destinations.slice(this.startIndex, this.startIndex + 3)
+        },
+        displayedDestinationsMd() {
+            return this.destinations.slice(this.startIndex, this.startIndex + 2)
+        },
+        displayedDestinationsSm() {
+            return this.destinations.slice(this.startIndex, this.startIndex + 1)
         }
     },
     methods: {
-        redirectToAddress(destination) {
-            console.log(`Redirecting to ${destination.address}...`);
-        },
-        redirectToAddress(destination) {
-            console.log(`Redirecting to ${destination.address}...`);
-        },
         async searchApi(destination) {
             try {
                 const response = await axios.get('http://127.0.0.1:8000/api/search', {
@@ -115,10 +115,29 @@ export default {
             <div class="carousel">
                 <div class="row flex-nowrap overflow-x-auto card-container"
                     :style="{ transform: `translateX(${offset}px)` }">
-                    <div class="d-inline-block col-12 col-lg-4 card" v-for="(destination, index) in displayedDestinations"
-                        :key="destination.name">
+                    <div class="col-sm-12 col-md-6 col-lg-4 card_top bg_screen"
+                        v-for="(destination, index) in displayedDestinationsBg" :key="destination.name"
+                        @click="searchApi(destination.name)">
                         <div class="image-container"
-                            :style="{ 'background-image': `url(${destination.image})`, 'background-size': 'cover' }">
+                            :style="{ 'background-image': `url(${destination.image})`, 'background-size': 'cover', 'background-position': 'bottom' }">
+                            <h3>{{ destination.name }} <img :src="destination.flag" :alt="`${destination.name} flag`"
+                                    class="flag"></h3>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4 card_top md_screen"
+                        v-for="(destination, index) in displayedDestinationsMd" :key="destination.name"
+                        @click="searchApi(destination.name)">
+                        <div class="image-container"
+                            :style="{ 'background-image': `url(${destination.image})`, 'background-size': 'cover', 'background-position': 'bottom' }">
+                            <h3>{{ destination.name }} <img :src="destination.flag" :alt="`${destination.name} flag`"
+                                    class="flag"></h3>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4 card_top sm_screen"
+                        v-for="(destination, index) in displayedDestinationsSm" :key="destination.name"
+                        @click="searchApi(destination.name)">
+                        <div class="image-container"
+                            :style="{ 'background-image': `url(${destination.image})`, 'background-size': 'cover', 'background-position': 'bottom' }">
                             <h3>{{ destination.name }} <img :src="destination.flag" :alt="`${destination.name} flag`"
                                     class="flag"></h3>
                         </div>
@@ -159,12 +178,26 @@ button {
     color: $bb-primary;
 }
 
+
+
+button.next,
 button.prev {
-    left: -40px;
+    // background-color: $bb-background;
+    // background: rgba(255, 255, 255, 0.25);
+    padding: 0.8rem;
+    border-radius: 50%;
+
+    svg {
+        aspect-ratio: 1/1;
+    }
+}
+
+button.prev {
+    left: -50px;
 }
 
 button.next {
-    right: -40px;
+    right: -50px;
 }
 
 .description {
@@ -181,7 +214,7 @@ button.next {
 }
 
 
-.card {
+.card_top {
     border-radius: 1rem;
     cursor: pointer;
     overflow: hidden;
@@ -210,11 +243,11 @@ button.next {
     transform: scale(1.2);
 }
 
-.card .image-container {
+.card_top .image-container {
     position: relative;
 }
 
-.card .image-container::before {
+.card_top .image-container::before {
     content: "";
     position: absolute;
     top: 0;
@@ -241,7 +274,8 @@ h3 {
 .image-container {
     position: relative;
     overflow: hidden;
-    aspect-ratio: 1.2/2;
+    aspect-ratio: 1.3/2;
+    border-radius: 1rem;
 }
 
 img {
@@ -251,5 +285,80 @@ img {
     position: absolute;
     top: 0;
     left: 0;
+}
+
+.sm_screen,
+.md_screen {
+    display: none;
+
+}
+
+@media screen and (max-width: 991.5px) {
+    .bg_screen {
+        display: none;
+    }
+
+    .md_screen {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .md_screen {
+        display: none;
+
+    }
+
+    .sm_screen {
+        display: block;
+    }
+
+    .image-container {
+        aspect-ratio: 1.8/2;
+    }
+
+    button.prev {
+        left: -40px;
+    }
+
+    button.next {
+        right: -40px;
+    }
+
+    button.next,
+    button.prev {
+        // background-color: $bb-background;
+        background: rgba(255, 255, 255, 0.5);
+        padding: 0.5rem;
+
+        svg {
+            aspect-ratio: 1/1;
+        }
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .image-container {
+        aspect-ratio: 1.5/2;
+    }
+
+    button.prev {
+        left: -45px;
+    }
+
+    button.next {
+        right: -45px;
+    }
+
+    button.next,
+    button.prev {
+        // background-color: $bb-background;
+        background: rgba(255, 255, 255, 0.8);
+        padding: 0.5rem;
+
+        svg {
+            aspect-ratio: 1/1;
+        }
+    }
 }
 </style>
