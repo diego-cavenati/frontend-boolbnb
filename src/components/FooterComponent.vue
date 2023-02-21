@@ -21,15 +21,15 @@ export default {
                     </div>
 
                     <div class="links">
-                        <a href="#">Link 1</a>
+                        <a href="#">Home</a>
                         <span class="divider"></span>
-                        <a href="#">Link 2</a>
+                        <a href="#">About</a>
                         <span class="divider"></span>
-                        <a href="#">Link 3</a>
+                        <a href="#">Contacts</a>
                         <span class="divider"></span>
-                        <a href="#">Link 4</a>
+                        <a href="#">Apartments</a>
                         <span class="divider"></span>
-                        <a href="#">Link 5</a>
+                        <a href="#">More</a>
                     </div>
 
                     <div class="description">
