@@ -115,7 +115,7 @@ export default {
                     const tt = window.tt;
 
                     this.map = tt.map({
-                        key: 'DTunj3EjYUvPwXVpG88PRAlGDhO22xSb',
+                        key: 'RitTw3OZunU68B1yxrwneACwmdSgnggU',
                         container: this.$refs.mapRef,
                         style: 'tomtom://vector/1/basic-light',
                         center: [store.lon, store.lat],
@@ -487,8 +487,8 @@ export default {
 
         <div class="container-fluid">
             <div class="categories-wrapper">
-                <div class="categories d-flex justify-content-center">
-                    <div class="text-center pt-1">
+                <div class="categories d-flex justify-content-center align-items-center">
+                    <div class="text-center p-3">
                         <div class="btn btn-left" @click="slide(-1)">
                             <span class="arrow">&lt;</span>
                         </div>
@@ -521,14 +521,14 @@ export default {
                 </div>
 
             </div>
-<!--
+            <!--
 
-    <div>
-        <button @click=" HideShowMap()" class="btn btn-primary test_map">
-            MAPPA
-        </button>
-    </div>
--->
+                <div>
+                    <button @click=" HideShowMap()" class="btn btn-primary test_map">
+                        MAPPA
+                    </button>
+                </div>
+            -->
 
 
             <div> <!--Scrivere all'interno del popup-->
@@ -590,12 +590,12 @@ export default {
         <div class="container-fluid">
             <div class="row">
                 <div id="apartments" class="col">
-                    <div class="container">
+                    <div class="container pb-5">
                         <div class="row">
 
 
-                            <CardComponent class="pb-4" v-if="!store.loading"
-                                v-for="apartment in store.results" :apartment="apartment" />
+                            <CardComponent class="pb-4" v-if="!store.loading" v-for="apartment in store.results"
+                                :apartment="apartment" />
 
 
                             <div class="cardList row row-cols-4" v-else-if="store.loading">
@@ -1048,23 +1048,23 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     }
 }
 
-.hide_map_custom{
+.hide_map_custom {
     display: none;
 }
 
 @media screen and (min-width: 1399px) {
-    .hide_map_custom{
+    .hide_map_custom {
         display: block;
     }
 }
 
-.test_map{
+.test_map {
     display: none;
 }
 
 @media screen and (max-width: 743px) {
-    .test_map{
-    display: block;
-}
+    .test_map {
+        display: block;
+    }
 }
 </style>
