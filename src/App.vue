@@ -38,7 +38,7 @@ export default {
             return this.$route.path === '/';
         },
         showSearchbar() {
-            return this.isHomepage & this.isMobileView;
+            return this.isHomepage && this.isMobileView;
         },
     },
 }
