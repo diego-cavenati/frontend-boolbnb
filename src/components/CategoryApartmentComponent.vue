@@ -14,8 +14,10 @@ export default {
             apartments: [],
             currentPage: 1,
             perPage: 6,
-            pages: 0,
+            pages: null,
             maxHeight: null,
+            nextPageUrl: '',
+            prevPageUrl: '',
         }
     },
     computed: {
@@ -43,24 +45,57 @@ export default {
             this.maxHeight = maxHeight;
         },
         previousPage() {
-            if (this.currentPage > 1) {
-                this.currentPage--;
+            // if (this.currentPage > 1) {
+            //     this.currentPage--;
+            // }
+            if (this.prevPageUrl !== null) {
+                if (this.currentPage > 1) {
+                    this.currentPage--;
+                    console.log(this.currentPage);
+                    axios.get(`http://127.0.0.1:8000/api/search?page=${this.currentPage}`)
+                        .then(response => {
+                            this.apartments = response.data.results.data;
+                            this.nextPageUrl = response.data.results.next_page_url;
+                            this.prevPageUrl = response.data.results.prev_page_url
+                        })
+                        .catch(error => {
+                            console.error(error)
+                        });
+                }
             }
         },
         nextPage() {
-            if (this.currentPage < this.pages) {
-                this.currentPage++;
+            // if (this.currentPage < this.pages) {
+            //     this.currentPage++;
+            // }
+            if (this.nextPageUrl !== null) {
+                if (this.currentPage > 0 && this.currentPage < this.pages) {
+                    this.currentPage++;
+                    console.log(this.currentPage);
+                    axios.get(`http://127.0.0.1:8000/api/search?page=${this.currentPage}`)
+                        .then(response => {
+                            this.apartments = response.data.results.data;
+                            this.nextPageUrl = response.data.results.next_page_url;
+                            this.prevPageUrl = response.data.results.prev_page_url
+                        })
+                        .catch(error => {
+                            console.error(error)
+                        });
+                }
             }
         },
         goToPage(pageNumber) {
             this.currentPage = pageNumber;
+            console.log(this.currentPage);
+            this.callApi();
         },
         callAll() {
             axios.get(`http://127.0.0.1:8000/api/search`)
                 .then(response => {
-                    this.apartments = response.data.results;
-                    this.pages = Math.ceil(this.apartments.length / this.perPage);
-                    console.log(response);
+                    this.apartments = response.data.results.data;
+                    // this.pages = Math.ceil(this.apartments.length / this.perPage);
+                    // console.log(response);
+                    this.pages = response.data.results.last_page;
                     this.loading = false;
                 })
                 .catch(error => {

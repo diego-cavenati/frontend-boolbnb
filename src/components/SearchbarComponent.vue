@@ -51,12 +51,14 @@ export default {
                 const response = await axios.get('http://127.0.0.1:8000/api/search?address=' + store.address + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius * 1000 + '&beds=' + store.beds);
                 console.log(response);
 
-                store.results = response.data.results;
-                store.price = response.data.results.price;
+                store.results = response.data.results.data;
+                store.price = response.data.results.data.price;
+
                 if (response.data.poi !== null) {
                     store.lat = response.data.poi.lat;
                     store.lon = response.data.poi.lon;
                 }
+
                 store.loading = false;
 
                 const searchQuery = store.address;
@@ -174,18 +176,18 @@ export default {
                     <!-- <input type="text" v-model="store.address" placeholder="Dove vuoi andare?"> -->
                 </div>
                 <!-- <div class="input">
-                        <div class="line"></div> -->
+                            <div class="line"></div> -->
                 <!-- <i class="fa-regular fa-calendar"></i> -->
                 <!-- <Datepicker class="dataPicker" v-model="date" :enable-time-picker="false" :format="format" range />
-                        </div>
-                        <div class="input">
-                        <div class="line"></div>
-                        <i class="fa-regular fa-user"></i> -->
+                            </div>
+                            <div class="input">
+                            <div class="line"></div>
+                            <i class="fa-regular fa-user"></i> -->
 
                 <!-- <button @click="increment" :disabled="guests >= maxGuests">+</button>
-                        <input type="number" id="guests" name="guests" v-model.number="store.guests" @input="validateGuests">
+                            <input type="number" id="guests" name="guests" v-model.number="store.guests" @input="validateGuests">
 
-                        <input type="text" v-model="store.guests" placeholder="Quanti siete?"> -->
+                            <input type="text" v-model="store.guests" placeholder="Quanti siete?"> -->
                 <!-- </div> -->
             </div>
 

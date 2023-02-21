@@ -19,13 +19,59 @@ export default {
             mapData: [],
             categoriesWrapper: null,
             activeCategoryIndex: null,
-
+            currentPage: 1,
+            perPage: 6,
+            pages: null,
+            maxHeight: null,
+            nextPageUrl: '',
+            prevPageUrl: '',
         }
     },
     components: {
         CardComponent
     },
     methods: {
+        previousPage() {
+            if (this.prevPageUrl !== null) {
+                if (this.currentPage > 1) {
+                    this.currentPage--;
+                    console.log(this.currentPage);
+                    axios.get(`http://127.0.0.1:8000/api/showcase?page=${this.currentPage}`)
+                        .then(response => {
+                            this.apartments = response.data.results.data;
+                            this.nextPageUrl = response.data.results.next_page_url;
+                            this.prevPageUrl = response.data.results.prev_page_url
+                        })
+                        .catch(error => {
+                            console.error(error)
+                        });
+                }
+            }
+
+        },
+        nextPage() {
+            if (this.nextPageUrl !== null) {
+                if (this.currentPage > 0 && this.currentPage < this.pages) {
+                    this.currentPage++;
+                    console.log(this.currentPage);
+                    axios.get(`http://127.0.0.1:8000/api/showcase?page=${this.currentPage}`)
+                        .then(response => {
+                            this.apartments = response.data.results.data;
+                            this.nextPageUrl = response.data.results.next_page_url;
+                            this.prevPageUrl = response.data.results.prev_page_url
+                        })
+                        .catch(error => {
+                            console.error(error)
+                        });
+                }
+            }
+
+        },
+        goToPage(pageNumber) {
+            this.currentPage = pageNumber;
+            console.log(this.currentPage);
+            this.callApi();
+        },
         addMarker(longitude, latitude) {
             try {
                 if (this.map) {
@@ -42,7 +88,6 @@ export default {
                         .addTo(this.map)
                 }
 
-
             } catch (error) {
                 console.error(error);
                 // Expected output: ReferenceError: nonExistentFunction is not defined
@@ -51,10 +96,7 @@ export default {
             // var popup = new tt.Popup({ offset: popupOffset })
             // .setHTML("Your address!");
             // marker.setPopup(popup).togglePopup();
-
-
             //
-
             // const icon = {
             //     iconUrl: '/img/pin_boolbnb.png',
             //     iconSize: [40, 40],
@@ -90,9 +132,6 @@ export default {
                 // Expected output: ReferenceError: nonExistentFunction is not defined
                 // (Note: the exact output may be browser-dependent)
             }
-
-
-
         },
         getImagePath: function (imgPath) {
             return new URL(`../assets/img/${imgPath}`, import.meta.url).href;
@@ -154,8 +193,8 @@ export default {
                     .then(response => {
                         //console.log(resp);
                         // convertire km to metri prima di mandarli 
-                        store.results = response.data.results;
-                        store.price = response.data.results.price;
+                        store.results = response.data.results.data;
+                        store.price = response.data.results.data.price;
                         store.lat = response.data.poi.lat;
                         store.lon = response.data.poi.lon;
                         store.loading = false;
@@ -170,16 +209,11 @@ export default {
                         console.log(err);
                     })
 
-
-
-
-
             } catch (error) {
                 console.error(error);
                 // Expected output: ReferenceError: nonExistentFunction is not defined
                 // (Note: the exact output may be browser-dependent)
             }
-
 
         },
         PushCategory(i) {
@@ -200,7 +234,6 @@ export default {
                     console.log(this.map);
  */
                     this.SubmitServices();
-
 
                     // esegue la call api in base a tutti i dati
                 } else if (store.categories_back.length > 0 && store.categories_back[0] === store.categories[i].id) {
@@ -235,13 +268,8 @@ export default {
             if (this.map) {
                 this.map.remove();
                 this.map = null;
-
             }
-
-
-
             //document.getElementById('map').style.display = 'none';
-
         },
         AllApartments() {
             store.categories_back = []; // Rimuovi tutti gli elementi dall'array categories_back
@@ -250,7 +278,7 @@ export default {
             //console.log(store.categories_back);
             axios.get('http://127.0.0.1:8000/api/search?address=' + store.address + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius * 1000 + '&beds=' + store.beds)
                 .then(response => {
-                    store.results = response.data.results;
+                    store.results = response.data.results.data;
                     console.log(store.results);
                 })
                 .catch(error => {
@@ -295,7 +323,14 @@ export default {
             }
         },
         */
-
+        pageNumbers() {
+            return this.pages;
+        },
+        paginatedApartments() {
+            const start = (this.currentPage - 1) * this.perPage;
+            const end = start + this.perPage;
+            return this.apartments.slice(start, end);
+        },
         dataLoaded() {
             return store.results
         },
@@ -464,10 +499,7 @@ export default {
                         <span class="arrow">&gt;</span>
                     </div>
                 </div>
-
-
             </div>
-
 
             <div class="container">
                 <div> <!--Scrivere all'interno del popup-->
@@ -498,17 +530,17 @@ export default {
                                 <p>Il raggio selezionato è {{ store.radius }} km.</p>
                             </div>
                             <!-- <div class="card card_custom">
-                                                                                                                                                                                                                                                                                                                                                                                                                                    <svg class="beds_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
-                                                                                                                                                                                                                                                                                                                                                                                                                                        <g id="Livello_2" data-name="Livello 2">
-                                                                                                                                                                                                                                                                                                                                                                                                                                            <g id="Livello_1-2" data-name="Livello 1">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                <path
-                                                                                                                                                                                                                                                                                                                                                                                                                                                    d="M21,192H0V92c2.63-4.14,5.35-8.23,7.86-12.44,1.17-2,2.74-4.13,2.76-6.23.23-17.12.16-34.25.13-51.38,0-9,4.07-15.54,11.92-19.8C24.08,1.38,25.55.71,27,0H165c12.53,4.93,17.05,14.2,16.42,27.44-.73,15.26-.21,30.58-.11,45.88a9.82,9.82,0,0,0,1.28,5c3,4.67,6.25,9.14,9.41,13.69V192H171V171.19H21ZM170.43,96.31H21.59V149H170.43ZM32.32,21.48V74.75H52.58a8.1,8.1,0,0,0,.57-1.65c.05-5.66.06-11.32.1-17,.08-9.67,3.68-13.34,13.29-13.36q29,0,58,0c10.92,0,14.23,3.38,14.25,14.41,0,5.74,0,11.49,0,17.17h20.92V21.48Z" />
-                                                                                                                                                                                                                                                                                                                                                                                                                                            </g>
-                                                                                                                                                                                                                                                                                                                                                                                                                                        </g>
-                                                                                                                                                                                                                                                                                                                                                                                                                                    </svg>
-                                                                                                                                                                                                                                                                                                                                                                                                                                    <input type="number" min="0" max="128" id="beds" v-model.number="store.beds">
-                                                                                                                                                                                                                                                                                                                                                                                                                                    <p>i posti letti sono {{ store.beds }} </p>
-                                                                                                                                                                                                                                                                                                                                                                                                                                </div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <svg class="beds_svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <g id="Livello_2" data-name="Livello 2">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <g id="Livello_1-2" data-name="Livello 1">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <path
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        d="M21,192H0V92c2.63-4.14,5.35-8.23,7.86-12.44,1.17-2,2.74-4.13,2.76-6.23.23-17.12.16-34.25.13-51.38,0-9,4.07-15.54,11.92-19.8C24.08,1.38,25.55.71,27,0H165c12.53,4.93,17.05,14.2,16.42,27.44-.73,15.26-.21,30.58-.11,45.88a9.82,9.82,0,0,0,1.28,5c3,4.67,6.25,9.14,9.41,13.69V192H171V171.19H21ZM170.43,96.31H21.59V149H170.43ZM32.32,21.48V74.75H52.58a8.1,8.1,0,0,0,.57-1.65c.05-5.66.06-11.32.1-17,.08-9.67,3.68-13.34,13.29-13.36q29,0,58,0c10.92,0,14.23,3.38,14.25,14.41,0,5.74,0,11.49,0,17.17h20.92V21.48Z" />
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </g>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </g>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </svg>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <input type="number" min="0" max="128" id="beds" v-model.number="store.beds">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <p>i posti letti sono {{ store.beds }} </p>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div> -->
 
 
 
@@ -577,7 +609,20 @@ export default {
 
                             </div>
 
-
+                            <div class="pagination">
+                                <button @click="previousPage">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </button>
+                                <div class="page-numbers">
+                                    <div v-for="pageNumber in pageNumbers" :key="pageNumber"
+                                        :class="{ active: currentPage === pageNumber }" @click="goToPage(pageNumber)">
+                                        {{ pageNumber }}
+                                    </div>
+                                </div>
+                                <button @click="nextPage">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -889,6 +934,50 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     transition: transform 0.5s;
     white-space: nowrap;
 }
+
+
+// Pagination
+.pagination {
+    padding-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    button {
+        color: $bb-dark;
+
+        svg {
+            color: $bb-text-gray;
+        }
+    }
+}
+
+.page-numbers {
+    display: flex;
+    margin: 0 1rem;
+    align-items: baseline;
+}
+
+.page-numbers div {
+
+    padding: 0.5rem;
+    cursor: pointer;
+    font-family: $bb-secondary;
+
+    &.active {
+        padding: 0.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: $bb-primary;
+        color: white;
+        height: 1.5rem;
+        aspect-ratio: 1/1;
+        border-radius: 50%;
+    }
+}
+
+
 
 @media screen and (max-width: 1472px) {
 
