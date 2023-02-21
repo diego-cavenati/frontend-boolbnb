@@ -15,17 +15,42 @@ export default {
         CardComponent,
         NavbarComponent,
         FooterComponent
-    }
+    },
+    data() {
+        return {
+            isMobileView: false,
+        };
+    },
+    created() {
+        window.addEventListener('resize', this.handleResize);
+        this.handleResize();
+    },
+    destroyed() {
+        window.removeEventListener('resize', this.handleResize);
+    },
+    methods: {
+        handleResize() {
+            this.isMobileView = window.innerWidth <= 744;
+        },
+    },
+    computed: {
+        isHomepage() {
+            return this.$route.path === '/';
+        },
+        showSearchbar() {
+            return this.isHomepage && this.isMobileView;
+        },
+    },
 }
 </script>
 
 <template>
+    <NavbarComponent v-if="!isHomepage" />
+    <NavbarComponent :show-searchbar="showSearchbar" v-else />
 
-    <NavbarComponent />
     <router-view></router-view>
 
     <FooterComponent />
-
 </template>
 
 <style lang="scss" scoped>

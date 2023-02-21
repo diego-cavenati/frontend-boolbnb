@@ -10,6 +10,12 @@ import '@vuepic/vue-datepicker/src/VueDatePicker/style/main.scss';
 
 export default {
     name: 'SearchbarComponent',
+    props: {
+        id: {
+            type: String,
+            required: true
+        }
+    },
     setup() {
         const format = (dates) => {
             const start = dates[0];
@@ -24,7 +30,6 @@ export default {
         }
 
         return {
-            // date,
             format,
         }
     },
@@ -33,6 +38,7 @@ export default {
             store,
             date: null,
             maxGuests: 10,
+            searchTerm: '',
         }
     },
     components: {
@@ -41,19 +47,44 @@ export default {
     methods: {
         async search() {
             try {
-                //http://127.0.0.1:8000/api/search?address=roma
-                const response = await axios.get('http://127.0.0.1:8000/api/search', {
-                    params: {
-                        address: store.address,
-                    }
-                });
-                store.results = response.data.results;
-                store.price = response.data.results.price;
+                //console.log('http://127.0.0.1:8000/api/search?address=' + store.address + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius * 1000 + '&beds=' + store.beds)
+                const response = await axios.get('http://127.0.0.1:8000/api/search?address=' + store.address + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius * 1000 + '&beds=' + store.beds);
+                console.log(response);
+
+                store.results = response.data.results.data;
+                store.pages = response.data.results.last_page;
+                store.price = response.data.results.data.price;
+
+                if (response.data.poi !== null) {
+                    store.lat = response.data.poi.lat;
+                    store.lon = response.data.poi.lon;
+                }
+
                 store.loading = false;
+
+                const searchQuery = store.address;
+                const query = searchQuery ? `?q=${encodeURIComponent(searchQuery)}` : '';
+                this.$router.push({ name: 'search', path: '/search' + query, query: { q: searchQuery } });
+
+                const mapHiddenEmptyAddress = document.querySelector('.col.hide_map_custom');
+                const map = document.querySelector('.hide_map_custom #map')
+                if (store.address.length == 0 || store.address == null) {
+                    console.log(store.address);
+                    mapHiddenEmptyAddress.classList.add('d-none')
+                    map.classList.add('map_hidden')
+
+                }
+                if (store.address.length > 0) {
+                    mapHiddenEmptyAddress.classList.remove('d-none')
+                    map.classList.remove('map_hidden');
+                    console.log(map);
+
+                }
 
             } catch (error) {
                 console.error(error);
             }
+
         },
         setAddress(address) {
             console.log(address);
@@ -79,78 +110,88 @@ export default {
                 this.store.guests = 1;
             }
         },
-    },
-    computed: {
-        elementId() {
-            if (this.$route.name === 'home') {
-                return 'large_element';
-            } else {
-                return 'small_element';
-            }
+        clearAdress() {
+            const searchBoxInput = document.querySelector('.tt-search-box-input');
+            store.address = '';
+            searchBoxInput.value = '';
+
         },
     },
-    created() {
-        // if (store.datePicker) {
-        //     let datesArray = store.datePicker.split(" - ");
-        //     store.check_in = datesArray[0];
-        //     store.check_out = datesArray[1];
-        //     console.log(store.check_in);
-        // }
-        watch(() => this.store.datePicker, this.convertDates);
-    },
-    mounted() {
-        // const searchBoxWrapper = document.getElementById('searchBox');
-        // const options = {
-        //     searchOptions: {
-        //         key: "FiLLCEGWt31cQ9ECIWAD6zYjczzeC6zn",
-        //         language: "it-IT",
-        //         limit: 5,
-        //     },
-        //     autocompleteOptions: {
-        //         key: "FiLLCEGWt31cQ9ECIWAD6zYjczzeC6zn",
-        //         language: "it-IT",
-        //     },
+    computed: {
 
-        // }
-        // const ttSearchBox = new tt.plugins.SearchBox(tt.services, options)
-        // const searchBoxHTML = ttSearchBox.getSearchBoxHTML()
-        // searchBoxWrapper.append(searchBoxHTML);
-        // const searchBoxInput = document.querySelector('.tt-search-box-input');
-        // searchBoxInput.addEventListener('input', function () {
-        //     this.store.address = searchBoxInput.value
-        // })
-        // console.log(searchBoxHTML);
+    },
+    created() {
+        watch(() => this.store.datePicker, this.convertDates);
+    }, mounted() {
+        const searchBoxWrapper = document.getElementById('searchBox');
+        const options = {
+            searchOptions: {
+                key: "DTunj3EjYUvPwXVpG88PRAlGDhO22xSb",
+                language: "it-IT",
+                limit: 5,
+                typeahead: ["address"],
+                center: [12.49167, 41.89022],
+                countrySet: ["IT"],
+                minFuzzyLevel: 1
+            },
+            autocompleteOptions: {
+                key: "DTunj3EjYUvPwXVpG88PRAlGDhO22xSb",
+                language: "it-IT",
+                minLength: 1,
+            }
+        };
+        const searchBox = new tt.plugins.SearchBox(tt.services, options);
+        const searchBoxHTML = searchBox.getSearchBoxHTML();
+        searchBoxWrapper.appendChild(searchBoxHTML);
+
+        const searchBoxInput = document.querySelector('.tt-search-box-input');
+        searchBoxInput.placeholder = 'Dove vuoi andare?';
+
+        const searchBoxInputContainer = document.querySelector('.tt-search-box-input-container');
+        searchBoxInputContainer.insertAdjacentHTML('afterbegin', `<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
+  <path d='M15,4.946l-6-2L2,5.279V21.387l7-2.333,6,2,7-2.333V2.613Zm-5,.442,4,1.333V18.612l-4-1.333ZM4,6.721,8,5.388V17.279L4,18.613ZM20,17.279l-4,1.333V6.721l4-1.334Z'/>
+</svg>`)
+
+        searchBoxInput.addEventListener('change', () => {
+            const address = searchBoxInput.value;
+            store.address = address;
+
+            console.log(store.address);
+
+        });
+        searchBoxInput.value = store.address;
+        console.log('value:' + searchBoxInput.value);
+        searchBoxInput.addEventListener('click', () => {
+            this.clearAdress()
+        });
     }
 }
 
 </script>
 
 <template>
-
-    <div :id="elementId">
+    <div :id="id">
         <form @submit.prevent="search">
             <div class="container_search">
-                <div class="input" required>
+                <div class="input">
                     <!-- <i class="fa-regular fa-map"></i> -->
-                    <!-- <div id="searchBox"></div> -->
-                    <input type="text" v-model="store.address" placeholder="Dove vuoi andare?">
+                    <div id="searchBox"></div>
+                    <!-- <input type="text" v-model="store.address" placeholder="Dove vuoi andare?"> -->
                 </div>
-                <div class="input">
-                    <div class="line"></div>
-                    <!-- <i class="fa-regular fa-calendar"></i> -->
-                    <Datepicker class="dataPicker" v-model="date" :enable-time-picker="false" :format="format" range />
-                </div>
-                <div class="input">
-                    <div class="line"></div>
-                    <i class="fa-regular fa-user"></i>
+                <!-- <div class="input">
+                                        <div class="line"></div> -->
+                <!-- <i class="fa-regular fa-calendar"></i> -->
+                <!-- <Datepicker class="dataPicker" v-model="date" :enable-time-picker="false" :format="format" range />
+                                        </div>
+                                        <div class="input">
+                                        <div class="line"></div>
+                                        <i class="fa-regular fa-user"></i> -->
 
-                    <button @click="increment" :disabled="guests >= maxGuests">+</button>
-                    <input type="number" id="guests" name="guests" v-model.number="store.guests"
-                        @input="validateGuests">
-                    <button @click="decrement" :disabled="guests <= 1">-</button>
+                <!-- <button @click="increment" :disabled="guests >= maxGuests">+</button>
+                                        <input type="number" id="guests" name="guests" v-model.number="store.guests" @input="validateGuests">
 
-                    <!-- <input type="text" v-model="store.guests" placeholder="Quanti siete?"> -->
-                </div>
+                                        <input type="text" v-model="store.guests" placeholder="Quanti siete?"> -->
+                <!-- </div> -->
             </div>
 
             <router-link :to="{ name: 'search' }">
@@ -160,17 +201,20 @@ export default {
             </router-link>
         </form>
     </div>
-
 </template>
 
 <style lang="scss" scoped>
 @use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
 
+.map_hidden {
+    display: none;
+}
+
 #large_element {
 
     background: #FFFFFF;
-    box-shadow: 0px 4px 8px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0px 4px 8px 4px rgba(0, 0, 0, 0.03);
     border-radius: 4rem;
     font-size: 1.2rem;
     font-family: $bb-font-secondary;
@@ -184,7 +228,7 @@ export default {
     }
 
     .input {
-        width: calc(100%/3);
+        // width: calc(100%/3);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -227,7 +271,7 @@ export default {
 #small_element {
     background: $bb-lighter;
     border: 1px solid $bb-light;
-    box-shadow: 0px 4px 8px 4px rgba(0, 0, 0, 0.08);
+    box-shadow: 0px 2px 4px 2px rgba(0, 0, 0, 0.02);
     border-radius: 2rem;
     font-size: 1rem;
     font-family: $bb-font-secondary;
@@ -242,7 +286,7 @@ export default {
 
 
     .input {
-        width: calc(100%/3);
+        // width: calc(100%/3);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -280,4 +324,12 @@ export default {
         align-items: center;
     }
 }
+
+
+// MEDIA QUERY
+@media screen and (min-width: 744px) {
+    //
+}
+
+@media screen and (max-width: 744px) {}
 </style>

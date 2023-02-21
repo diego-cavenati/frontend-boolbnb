@@ -5,11 +5,42 @@ export default {
     name: 'JumbotronComponent',
     data() {
         return {
+            isMobileView: false,
+            large_element: 'large_element',
+            text: "Amsterdam",
+            typedText: "",
+            currentIndex: 0,
+            typingSpeed: 500, // Mezzo secondo
         }
     },
     components: {
         SearchbarComponent
-    }
+    },
+    created() {
+        window.addEventListener('resize', this.handleResize);
+        this.handleResize();
+    },
+    destroyed() {
+        window.removeEventListener('resize', this.handleResize);
+    },
+    methods: {
+        handleResize() {
+            this.isMobileView = window.innerWidth <= 744;
+        },
+        typeNextLetter() {
+            if (this.currentIndex < this.text.length) {
+                // Aggiungi la prossima lettera
+                this.typedText += this.text.charAt(this.currentIndex);
+                this.currentIndex++;
+
+                // Ripeti la funzione con la distanza di tempo specificata
+                setTimeout(this.typeNextLetter, this.typingSpeed);
+            }
+        },
+    },
+    mounted() {
+        this.typeNextLetter();
+    },
 }
 </script>
 
@@ -18,10 +49,11 @@ export default {
         <div class="pattern">
             <div class="blur">
                 <div class="content">
-                    <h1>Lorem ipsum is simply dummy</h1>
-                    <h2>Lorem ipsum dolor sit amet.</h2>
+                    <!-- <input type="text" ref="input" v-model="typedText"> -->
+                    <h1>Scopri nuove destinazioni</h1>
+                    <h2>Prenota la tua casa ideale</h2>
 
-                    <SearchbarComponent />
+                    <SearchbarComponent v-if="!isMobileView" :id="large_element" />
                 </div>
             </div>
         </div>
@@ -48,6 +80,7 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    text-align: center;
 }
 
 h1 {
@@ -83,5 +116,30 @@ h2 {
     position: absolute;
     left: 0;
     top: 0;
+}
+
+// MEDIA QUERY
+// desktop
+@media screen and (min-width: 744px) {
+    .nav_bottom {
+        visibility: hidden;
+    }
+}
+
+// mobile
+@media screen and (max-width: 744px) {
+    .mobile_hide {
+        // visibility: hidden;
+        display: none !important;
+    }
+
+
+    #jumbotron {
+        height: 350px;
+
+        h2 {
+            padding-bottom: 0;
+        }
+    }
 }
 </style>
