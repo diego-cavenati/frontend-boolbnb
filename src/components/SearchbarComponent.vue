@@ -47,30 +47,34 @@ export default {
     methods: {
         async search() {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/search', {
-                    params: {
-                        address: store.address,
-                    }
-                });
+                //console.log('http://127.0.0.1:8000/api/search?address=' + store.address + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius * 1000 + '&beds=' + store.beds)
+                const response = await axios.get('http://127.0.0.1:8000/api/search?address=' + store.address + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius * 1000 + '&beds=' + store.beds);
                 console.log(response);
 
                 store.results = response.data.results;
                 store.price = response.data.results.price;
-                store.lat = response.data.poi.lat;
-                store.lon = response.data.poi.lon;
+                if (response.data.poi !== null) {
+                    store.lat = response.data.poi.lat;
+                    store.lon = response.data.poi.lon;
+                }
                 store.loading = false;
 
-                const searchQuery = store.address.trim();
+                const searchQuery = store.address;
                 const query = searchQuery ? `?q=${encodeURIComponent(searchQuery)}` : '';
                 this.$router.push({ name: 'search', path: '/search' + query, query: { q: searchQuery } });
 
-                const mapHiddenEmptyAddress = document.querySelector('.hide_map_custom')
-                if (!store.address) {
-                    mapHiddenEmptyAddress.classList.add('map_hidden')
-                    console.log(mapHiddenEmptyAddress);
-                } if (store.address) {
-                    mapHiddenEmptyAddress.classList.remove('map_hidden');
-                    console.log(mapHiddenEmptyAddress);
+                const mapHiddenEmptyAddress = document.querySelector('.col.hide_map_custom');
+                const map = document.querySelector('.hide_map_custom #map')
+                if (store.address.length == 0 || store.address == null) {
+                    console.log(store.address);
+                    mapHiddenEmptyAddress.classList.add('d-none')
+                    map.classList.add('map_hidden')
+
+                }
+                if (store.address.length > 0) {
+                    mapHiddenEmptyAddress.classList.remove('d-none')
+                    map.classList.remove('map_hidden');
+                    console.log(map);
 
                 }
 
@@ -104,7 +108,10 @@ export default {
             }
         },
         clearAdress() {
+            const searchBoxInput = document.querySelector('.tt-search-box-input');
             store.address = '';
+            searchBoxInput.value = '';
+
         },
     },
     computed: {
@@ -122,7 +129,7 @@ export default {
         const searchBoxWrapper = document.getElementById('searchBox');
         const options = {
             searchOptions: {
-                key: "FiLLCEGWt31cQ9ECIWAD6zYjczzeC6zn",
+                key: "DTunj3EjYUvPwXVpG88PRAlGDhO22xSb",
                 language: "it-IT",
                 limit: 5,
                 typeahead: ["address"],
@@ -131,7 +138,7 @@ export default {
                 minFuzzyLevel: 1
             },
             autocompleteOptions: {
-                key: "FiLLCEGWt31cQ9ECIWAD6zYjczzeC6zn",
+                key: "DTunj3EjYUvPwXVpG88PRAlGDhO22xSb",
                 language: "it-IT",
                 minLength: 1,
             }
@@ -149,8 +156,18 @@ export default {
         searchBoxInput.addEventListener('change', () => {
             const address = searchBoxInput.value;
             store.address = address;
+
+            console.log(store.address);
+
         });
         searchBoxInput.value = store.address;
+        console.log('value:' + searchBoxInput.value);
+        searchBoxInput.addEventListener('click', () => {
+            this.clearAdress()
+        });
+
+
+
     }
 }
 
@@ -162,21 +179,20 @@ export default {
             <div class="container_search">
                 <div class="input">
                     <!-- <i class="fa-regular fa-map"></i> -->
-                    <div id="searchBox" @click="clearAdress()"></div>
+                    <div id="searchBox"></div>
                     <!-- <input type="text" v-model="store.address" placeholder="Dove vuoi andare?"> -->
                 </div>
                 <!-- <div class="input">
-                                                                                                                                                        <div class="line"></div> -->
+                                                                                                                                                                                                                                                                                                                                                                               <div class="line"></div> -->
                 <!-- <i class="fa-regular fa-calendar"></i> -->
                 <!-- <Datepicker class="dataPicker" v-model="date" :enable-time-picker="false" :format="format" range />
-                                                                                                                                                        </div>
-                                                                                                                                                        <div class="input">
-                                                                                                                                                         <div class="line"></div>
-                                                                                                                                                        <i class="fa-regular fa-user"></i> -->
+                                                                                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                                                                                                <div class="input">
+                                                                                                                                                                                                                                                                                                                                                                                                 <div class="line"></div>
+                                                                                                                                                                                                                                                                                                                                                                                                <i class="fa-regular fa-user"></i> -->
 
                 <!-- <button @click="increment" :disabled="guests >= maxGuests">+</button>
-                                                                                                                                                        <input type="number" id="guests" name="guests" v-model.number="store.guests" @input="validateGuests">
-                                                                                                                                                        <button @click="decrement" :disabled="guests <= 1">-</button> -->
+                                                                                                                                                                                                                                                                                                                                                                                                <input type="number" id="guests" name="guests" v-model.number="store.guests" @input="validateGuests">
 
                 <!-- <input type="text" v-model="store.guests" placeholder="Quanti siete?"> -->
                 <!-- </div> -->
