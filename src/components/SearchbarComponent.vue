@@ -63,14 +63,18 @@ export default {
                 const query = searchQuery ? `?q=${encodeURIComponent(searchQuery)}` : '';
                 this.$router.push({ name: 'search', path: '/search' + query, query: { q: searchQuery } });
 
-                const mapHiddenEmptyAddress = document.querySelector('.hide_map_custom #map')
+                const mapHiddenEmptyAddress = document.querySelector('.col.hide_map_custom');
+                const map = document.querySelector('.hide_map_custom #map')
                 if (store.address.length == 0 || store.address == null) {
-                    mapHiddenEmptyAddress.classList.add('map_hidden')
-                    console.log(mapHiddenEmptyAddress);
+                    console.log(store.address);
+                    mapHiddenEmptyAddress.classList.add('d-none')
+                    map.classList.add('map_hidden')
+
                 }
                 if (store.address.length > 0) {
-                    mapHiddenEmptyAddress.classList.remove('map_hidden');
-                    console.log(mapHiddenEmptyAddress);
+                    mapHiddenEmptyAddress.classList.remove('d-none')
+                    map.classList.remove('map_hidden');
+                    console.log(map);
 
                 }
 
@@ -179,17 +183,17 @@ export default {
                     <!-- <input type="text" v-model="store.address" placeholder="Dove vuoi andare?"> -->
                 </div>
                 <!-- <div class="input">
-                                                                                                                                                                                                                                                                                                                                                                            <div class="line"></div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                <div class="line"></div> -->
                 <!-- <i class="fa-regular fa-calendar"></i> -->
                 <!-- <Datepicker class="dataPicker" v-model="date" :enable-time-picker="false" :format="format" range />
-                                                                                                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                                                                                                            <div class="input">
-                                                                                                                                                                                                                                                                                                                                                                             <div class="line"></div>
-                                                                                                                                                                                                                                                                                                                                                                            <i class="fa-regular fa-user"></i> -->
+                                                                                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                                                                                                <div class="input">
+                                                                                                                                                                                                                                                                                                                                                                                                 <div class="line"></div>
+                                                                                                                                                                                                                                                                                                                                                                                                <i class="fa-regular fa-user"></i> -->
 
                 <!-- <button @click="increment" :disabled="guests >= maxGuests">+</button>
-                                                                                                                                                                                                                                                                                                                                                                            <input type="number" id="guests" name="guests" v-model.number="store.guests" @input="validateGuests">
-                                                                                                                                                                                                                                                                                                                                                                            <button @click="decrement" :disabled="guests <= 1">-</button> -->
+                                                                                                                                                                                                                                                                                                                                                                                                <input type="number" id="guests" name="guests" v-model.number="store.guests" @input="validateGuests">
+                                                                                                                                                                                                                                                                                                                                                                                                <button @click="decrement" :disabled="guests <= 1">-</button> -->
 
                 <!-- <input type="text" v-model="store.guests" placeholder="Quanti siete?"> -->
                 <!-- </div> -->
