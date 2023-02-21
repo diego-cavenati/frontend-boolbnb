@@ -86,8 +86,18 @@ export default {
         },
         goToPage(pageNumber) {
             this.currentPage = pageNumber;
-            console.log(this.currentPage);
-            this.callApi();
+
+            axios.get(`http://127.0.0.1:8000/api/search?page=${this.currentPage}`)
+                .then(response => {
+                    this.apartments = response.data.results.data;
+                    this.pages = response.data.results.last_page;
+                    this.loading = false;
+                })
+                .catch(error => {
+                    console.error(error)
+                    this.error = error.message;
+                    this.loading = false;
+                })
         },
         callAll() {
             axios.get(`http://127.0.0.1:8000/api/search`)

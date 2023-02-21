@@ -15,6 +15,7 @@ export const store = reactive({
     // posti letto per la ricerca
     beds: '',
 
+    pages: null,
     // tomtom key
     tomtom_key: 'FiLLCEGWt31cQ9ECIWAD6zYjczzeC6zn',
     //searchbar
