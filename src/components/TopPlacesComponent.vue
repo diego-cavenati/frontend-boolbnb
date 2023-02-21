@@ -50,8 +50,14 @@ export default {
         }
     },
     computed: {
-        displayedDestinations() {
+        displayedDestinationsBg() {
             return this.destinations.slice(this.startIndex, this.startIndex + 3)
+        },
+        displayedDestinationsMd() {
+            return this.destinations.slice(this.startIndex, this.startIndex + 2)
+        },
+        displayedDestinationsSm() {
+            return this.destinations.slice(this.startIndex, this.startIndex + 1)
         }
     },
     methods: {
@@ -109,8 +115,26 @@ export default {
             <div class="carousel">
                 <div class="row flex-nowrap overflow-x-auto card-container"
                     :style="{ transform: `translateX(${offset}px)` }">
-                    <div class="d-inline-block col-sm-12 col-md-6 col-lg-4 card_top"
-                        v-for="(destination, index) in displayedDestinations" :key="destination.name"
+                    <div class="col-sm-12 col-md-6 col-lg-4 card_top bg_screen"
+                        v-for="(destination, index) in displayedDestinationsBg" :key="destination.name"
+                        @click="searchApi(destination.name)">
+                        <div class="image-container"
+                            :style="{ 'background-image': `url(${destination.image})`, 'background-size': 'cover', 'background-position': 'bottom' }">
+                            <h3>{{ destination.name }} <img :src="destination.flag" :alt="`${destination.name} flag`"
+                                    class="flag"></h3>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4 card_top md_screen"
+                        v-for="(destination, index) in displayedDestinationsMd" :key="destination.name"
+                        @click="searchApi(destination.name)">
+                        <div class="image-container"
+                            :style="{ 'background-image': `url(${destination.image})`, 'background-size': 'cover', 'background-position': 'bottom' }">
+                            <h3>{{ destination.name }} <img :src="destination.flag" :alt="`${destination.name} flag`"
+                                    class="flag"></h3>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-4 card_top sm_screen"
+                        v-for="(destination, index) in displayedDestinationsSm" :key="destination.name"
                         @click="searchApi(destination.name)">
                         <div class="image-container"
                             :style="{ 'background-image': `url(${destination.image})`, 'background-size': 'cover', 'background-position': 'bottom' }">
@@ -263,9 +287,32 @@ img {
     left: 0;
 }
 
-@media screen and (min-width: 744px) {}
+.sm_screen,
+.md_screen {
+    display: none;
+
+}
+
+@media screen and (max-width: 991.5px) {
+    .bg_screen {
+        display: none;
+    }
+
+    .md_screen {
+        display: block;
+    }
+}
 
 @media screen and (max-width: 767px) {
+    .md_screen {
+        display: none;
+
+    }
+
+    .sm_screen {
+        display: block;
+    }
+
     .image-container {
         aspect-ratio: 1.8/2;
     }
