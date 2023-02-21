@@ -52,7 +52,7 @@ export default {
                 if (this.currentPage > 1) {
                     this.currentPage--;
                     console.log(this.currentPage);
-                    axios.get(`http://127.0.0.1:8000/api/search?page=${this.currentPage}`)
+                    axios.get(`http://127.0.0.1:8000/api/apartments?page=${this.currentPage}`)
                         .then(response => {
                             this.apartments = response.data.results.data;
                             this.nextPageUrl = response.data.results.next_page_url;
@@ -72,7 +72,7 @@ export default {
                 if (this.currentPage > 0 && this.currentPage < this.pages) {
                     this.currentPage++;
                     console.log(this.currentPage);
-                    axios.get(`http://127.0.0.1:8000/api/search?page=${this.currentPage}`)
+                    axios.get(`http://127.0.0.1:8000/api/apartments?page=${this.currentPage}`)
                         .then(response => {
                             this.apartments = response.data.results.data;
                             this.nextPageUrl = response.data.results.next_page_url;
@@ -87,7 +87,7 @@ export default {
         goToPage(pageNumber) {
             this.currentPage = pageNumber;
 
-            axios.get(`http://127.0.0.1:8000/api/search?page=${this.currentPage}`)
+            axios.get(`http://127.0.0.1:8000/api/apartments?page=${this.currentPage}`)
                 .then(response => {
                     this.apartments = response.data.results.data;
                     this.pages = response.data.results.last_page;
@@ -100,7 +100,7 @@ export default {
                 })
         },
         callAll() {
-            axios.get(`http://127.0.0.1:8000/api/search`)
+            axios.get(`http://127.0.0.1:8000/api/apartments`)
                 .then(response => {
                     this.apartments = response.data.results.data;
                     // this.pages = Math.ceil(this.apartments.length / this.perPage);
@@ -114,6 +114,21 @@ export default {
                     this.loading = false;
                 })
         },
+        search() {
+            axios.get(`http://127.0.0.1:8000/api/search`)
+                .then(response => {
+                    this.apartments = response.data.results;
+                    // this.pages = Math.ceil(this.apartments.length / this.perPage);
+                    // console.log(response);
+                    //this.pages = response.data.results.last_page;
+                    this.loading = false;
+                })
+                .catch(error => {
+                    console.error(error)
+                    this.error = error.message;
+                    this.loading = false;
+                })
+        }
 
     },
     created() {
@@ -138,7 +153,7 @@ export default {
                 </p>
 
                 <router-link :to="{ name: 'search' }">
-                    <button class="button" @click="callAll()">Vedi tutti</button>
+                    <button class="button" @click="search()">Vedi tutti</button>
                 </router-link>
 
             </div>

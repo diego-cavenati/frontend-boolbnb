@@ -355,74 +355,78 @@ export default {
     watch: {
         dataLoaded(newValue) {
             try {
-                console.log(store.address);
-                if (store.address.length > 0 && store.address !== null) {
-                    console.log(store.address);
-                    // Recupera la mappa
+                if (newValue) {
+                    //console.log(store.address);
+                    if (store.address.length > 0 && store.address !== null) {
+                        //console.log(store.address);
+                        // Recupera la mappa
 
-                    this.getMap();
-                    //console.log(this.map);
+                        this.getMap();
+                        //console.log(this.map);
 
 
-                    // Inizializza l'array vuoto
+                        // Inizializza l'array vuoto
 
-                    this.mapData = [];
-                    //console.log(store.results)
-                    for (let index = 0; index < store.results.length; index++) {
-                        //console.log(store.results[index]);
-                        let element = store.results[index];
-                        //console.log(element);
-                        this.mapData.push([element.longitude, element.latitude]);
-                    }
-                    //console.log(this.mapData)
-                    for (let i = 0; i < this.mapData.length; i++) {
-                        for (let j = i; j < this.mapData.length; j++) {
-                            if (this.mapData[i][0] === this.mapData[j][0] && this.mapData[i][1] === this.mapData[j][1]) {
-                                this.mapData[j][1] = Number(this.mapData[j][1]) + 0.00900;
-                                this.mapData[j][1] = this.mapData[j][1].toString();
+                        this.mapData = [];
+                        //console.log(store.results)
+                        for (let index = 0; index < store.results.length; index++) {
+                            //console.log(store.results[index]);
+                            let element = store.results[index];
+                            //console.log(element);
+                            this.mapData.push([element.longitude, element.latitude]);
+                        }
+                        //console.log(this.mapData)
+                        for (let i = 0; i < this.mapData.length; i++) {
+                            for (let j = i; j < this.mapData.length; j++) {
+                                if (this.mapData[i][0] === this.mapData[j][0] && this.mapData[i][1] === this.mapData[j][1]) {
+                                    this.mapData[j][1] = Number(this.mapData[j][1]) + 0.00900;
+                                    this.mapData[j][1] = this.mapData[j][1].toString();
+                                }
                             }
                         }
-                    }
-                    //console.log(this.mapData)
+                        //console.log(this.mapData)
 
-                    // Stampa l'array finale
-                    const result = [];
-                    const latMap = new Map();
+                        // Stampa l'array finale
+                        const result = [];
+                        const latMap = new Map();
 
-                    for (const item of this.mapData) {
-                        const lat = item[1];
-                        let latStr = lat;
-                        let latInc = 0;
+                        for (const item of this.mapData) {
+                            const lat = item[1];
+                            let latStr = lat;
+                            let latInc = 0;
 
-                        while (latMap.has(latStr)) {
-                            latInc = Math.random() * (0.00900 - 0.000100) + 0.000100;
-                            latStr = (parseFloat(lat) + latInc).toFixed(5);
+                            while (latMap.has(latStr)) {
+                                latInc = Math.random() * (0.00900 - 0.000100) + 0.000100;
+                                latStr = (parseFloat(lat) + latInc).toFixed(5);
+                            }
+
+                            latMap.set(latStr, true);
+                            const lng = item[0];
+                            let lngStr = lng;
+                            let lngInc = 0;
+
+                            while (latMap.has(lngStr)) {
+                                lngInc = Math.random() * (0.00900 - 0.000100) + 0.000100;
+                                lngStr = (parseFloat(lng) + lngInc).toFixed(5);
+                            }
+
+                            result.push([lngStr, latStr]);
+                            latMap.set(lngStr, true);
                         }
+                        // Aggiungi i marker
+                        for (const [lng, lat] of result) {
 
-                        latMap.set(latStr, true);
-                        const lng = item[0];
-                        let lngStr = lng;
-                        let lngInc = 0;
+                            this.addMarker(parseFloat(lng), parseFloat(lat));
 
-                        while (latMap.has(lngStr)) {
-                            lngInc = Math.random() * (0.00900 - 0.000100) + 0.000100;
-                            lngStr = (parseFloat(lng) + lngInc).toFixed(5);
+
                         }
-
-                        result.push([lngStr, latStr]);
-                        latMap.set(lngStr, true);
+                    } else {
+                        // Se i dati non sono caricati, rimuovi i marker dalla mappa
+                        this.clearMap();
                     }
-                    // Aggiungi i marker
-                    for (const [lng, lat] of result) {
-
-                        this.addMarker(parseFloat(lng), parseFloat(lat));
-
-
-                    }
-                } else {
-                    // Se i dati non sono caricati, rimuovi i marker dalla mappa
-                    this.clearMap();
                 }
+
+
             } catch (error) {
                 console.error(error);
                 // Expected output: ReferenceError: nonExistentFunction is not defined
@@ -523,12 +527,12 @@ export default {
             </div>
             <!--
 
-                                    <div>
-                                        <button @click=" HideShowMap()" class="btn btn-primary test_map">
-                                            MAPPA
-                                        </button>
-                                    </div>
-                                -->
+                                            <div>
+                                                <button @click=" HideShowMap()" class="btn btn-primary test_map">
+                                                    MAPPA
+                                                </button>
+                                            </div>
+                                        -->
 
 
             <div> <!--Scrivere all'interno del popup-->
@@ -631,19 +635,19 @@ export default {
                             </div>
 
                             <!-- <div class="pagination" v-if="!store.loading">
-                                    <button @click="previousPage">
-                                        <i class="fa-solid fa-chevron-left"></i>
-                                    </button>
-                                    <div class="page-numbers">
-                                        <div v-for="pageNumber in pageNumbers" :key="pageNumber"
-                                            :class="{ active: currentPage === pageNumber }" @click="goToPage(pageNumber)">
-                                            {{ pageNumber }}
-                                        </div>
-                                    </div>
-                                    <button @click="nextPage">
-                                        <i class="fa-solid fa-chevron-right"></i>
-                                    </button>
-                                </div> -->
+                                            <button @click="previousPage">
+                                                <i class="fa-solid fa-chevron-left"></i>
+                                            </button>
+                                            <div class="page-numbers">
+                                                <div v-for="pageNumber in pageNumbers" :key="pageNumber"
+                                                    :class="{ active: currentPage === pageNumber }" @click="goToPage(pageNumber)">
+                                                    {{ pageNumber }}
+                                                </div>
+                                            </div>
+                                            <button @click="nextPage">
+                                                <i class="fa-solid fa-chevron-right"></i>
+                                            </button>
+                                        </div> -->
                         </div>
                     </div>
                 </div>
