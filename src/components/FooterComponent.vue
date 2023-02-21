@@ -55,6 +55,7 @@ export default {
     padding: 3rem 0;
     color: $bb-lighter;
     text-align: center;
+    position: relative;
 
     .links {
         display: flex;
