@@ -28,7 +28,7 @@ export default {
             if (this.$route.name === 'home') {
                 return '';
             } else {
-                return 'col-6';
+                return 'col-xxl-6 col-lg-12';
             }
         },
     },
@@ -48,10 +48,10 @@ export default {
                     </div>
                     <!-- carousel -->
                     <!-- <div v-if="store.immagineAttiva > 0" @click="PrevImg()">
-                                    <i class="fa-solid fa-circle-chevron-left arrow_left"></i>
-                                    </div>
-                                    <div v-if="store.immagineAttiva != store.images.length - 1" @click="NextImg()">
-                                    <i class="fa-solid fa-circle-chevron-right arrow_right"></i> </div> -->
+                                                        <i class="fa-solid fa-circle-chevron-left arrow_left"></i>
+                                                        </div>
+                                                        <div v-if="store.immagineAttiva != store.images.length - 1" @click="NextImg()">
+                                                        <i class="fa-solid fa-circle-chevron-right arrow_right"></i> </div> -->
 
                     <!-- img thumb -->
                     <img :src="getImagePath(apartment.media) || apartment.media" alt="">
