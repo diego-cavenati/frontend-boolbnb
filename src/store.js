@@ -11,7 +11,7 @@ export const store = reactive({
     //toggle class per i servizi
     isActive: false,
     // radius range ricerca
-    radius: '',
+    radius: 20,
     // posti letto per la ricerca
     beds: '',
 

@@ -192,8 +192,8 @@ export default {
                     .then(response => {
                         //console.log(resp);
                         // convertire km to metri prima di mandarli 
-                        store.results = response.data.results.data;
-                        store.price = response.data.results.data.price;
+                        store.results = response.data.results;
+                        store.price = response.data.results.price;
                         store.lat = response.data.poi.lat;
                         store.lon = response.data.poi.lon;
                         store.loading = false;
@@ -277,7 +277,7 @@ export default {
             //console.log(store.categories_back);
             axios.get('http://127.0.0.1:8000/api/search?address=' + store.address + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius * 1000 + '&beds=' + store.beds)
                 .then(response => {
-                    store.results = response.data.results.data;
+                    store.results = response.data.results;
                     console.log(store.results);
                 })
                 .catch(error => {
@@ -523,12 +523,12 @@ export default {
             </div>
             <!--
 
-                <div>
-                    <button @click=" HideShowMap()" class="btn btn-primary test_map">
-                        MAPPA
-                    </button>
-                </div>
-            -->
+                                    <div>
+                                        <button @click=" HideShowMap()" class="btn btn-primary test_map">
+                                            MAPPA
+                                        </button>
+                                    </div>
+                                -->
 
 
             <div> <!--Scrivere all'interno del popup-->
@@ -630,20 +630,20 @@ export default {
                                 </div>
                             </div>
 
-                            <div class="pagination" v-if="store.pages > 1 && !store.loading">
-                                <button @click="previousPage">
-                                    <i class="fa-solid fa-chevron-left"></i>
-                                </button>
-                                <div class="page-numbers">
-                                    <div v-for="pageNumber in pageNumbers" :key="pageNumber"
-                                        :class="{ active: currentPage === pageNumber }" @click="goToPage(pageNumber)">
-                                        {{ pageNumber }}
+                            <!-- <div class="pagination" v-if="!store.loading">
+                                    <button @click="previousPage">
+                                        <i class="fa-solid fa-chevron-left"></i>
+                                    </button>
+                                    <div class="page-numbers">
+                                        <div v-for="pageNumber in pageNumbers" :key="pageNumber"
+                                            :class="{ active: currentPage === pageNumber }" @click="goToPage(pageNumber)">
+                                            {{ pageNumber }}
+                                        </div>
                                     </div>
-                                </div>
-                                <button @click="nextPage">
-                                    <i class="fa-solid fa-chevron-right"></i>
-                                </button>
-                            </div>
+                                    <button @click="nextPage">
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </button>
+                                </div> -->
                         </div>
                     </div>
                 </div>
