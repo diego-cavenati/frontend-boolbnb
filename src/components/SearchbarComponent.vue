@@ -115,13 +115,7 @@ export default {
         },
     },
     computed: {
-        // elementId() {
-        //     if (this.$route.name === 'home') {
-        //         return 'large_element';
-        //     } else {
-        //         return 'small_element';
-        //     }
-        // },
+
     },
     created() {
         watch(() => this.store.datePicker, this.convertDates);
@@ -165,9 +159,6 @@ export default {
         searchBoxInput.addEventListener('click', () => {
             this.clearAdress()
         });
-
-
-
     }
 }
 
@@ -183,18 +174,18 @@ export default {
                     <!-- <input type="text" v-model="store.address" placeholder="Dove vuoi andare?"> -->
                 </div>
                 <!-- <div class="input">
-                                                                                                                                                                                                                                                                                                                                                                               <div class="line"></div> -->
+                        <div class="line"></div> -->
                 <!-- <i class="fa-regular fa-calendar"></i> -->
                 <!-- <Datepicker class="dataPicker" v-model="date" :enable-time-picker="false" :format="format" range />
-                                                                                                                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                <div class="input">
-                                                                                                                                                                                                                                                                                                                                                                                                 <div class="line"></div>
-                                                                                                                                                                                                                                                                                                                                                                                                <i class="fa-regular fa-user"></i> -->
+                        </div>
+                        <div class="input">
+                        <div class="line"></div>
+                        <i class="fa-regular fa-user"></i> -->
 
                 <!-- <button @click="increment" :disabled="guests >= maxGuests">+</button>
-                                                                                                                                                                                                                                                                                                                                                                                                <input type="number" id="guests" name="guests" v-model.number="store.guests" @input="validateGuests">
+                        <input type="number" id="guests" name="guests" v-model.number="store.guests" @input="validateGuests">
 
-                <!-- <input type="text" v-model="store.guests" placeholder="Quanti siete?"> -->
+                        <input type="text" v-model="store.guests" placeholder="Quanti siete?"> -->
                 <!-- </div> -->
             </div>
 
@@ -335,9 +326,5 @@ export default {
     //
 }
 
-@media screen and (max-width: 744px) {
-    #small_element {
-        // width: 100%;
-    }
-}
+@media screen and (max-width: 744px) {}
 </style>
