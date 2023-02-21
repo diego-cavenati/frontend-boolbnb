@@ -177,15 +177,14 @@ export default {
                 const map = document.querySelector('.hide_map_custom #map')
                 if (store.address.length == 0 || store.address == null) {
                     console.log(mapHiddenEmptyAddress);
-                    mapHiddenEmptyAddress.classList.add('d-none')
-                    map.classList.add('map_hidden')
+                    mapHiddenEmptyAddress.classList.add('hide') // tolto d-none, aggiunto hide. classe custom che mette display none
+                    map.classList.add('map_hidden') // tolto map_hidden, aggiunto hide
                     console.log(map);
                 }
                 if (store.address.length > 0) {
-                    mapHiddenEmptyAddress.classList.remove('d-none')
-                    map.classList.remove('map_hidden');
+                    mapHiddenEmptyAddress.classList.remove('hide')
+                    map.classList.remove('map_hidden'); // tolto map_hidden, aggiunto hide
                     console.log(map);
-
                 }
                 console.log(store.address);
                 store.loading = true;
@@ -199,10 +198,10 @@ export default {
                         store.lon = response.data.poi.lon;
                         store.loading = false;
                         /*  console.log('funziono, nascondo');
-                         console.log(store.categories_back);
-                         console.log(store.radius, 'radius');
-                         console.log(store.beds, 'beds');
-                         console.log(store.address, 'address');
+                        console.log(store.categories_back);
+                        console.log(store.radius, 'radius');
+                        console.log(store.beds, 'beds');
+                        console.log(store.address, 'address');
                          console.log(store.results); */
                         //console.log('http://127.0.0.1:8000/api/search?address=' + store.address + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius * 1000 + '&beds=' + store.beds);
                     }).catch(err => {
@@ -297,6 +296,24 @@ export default {
             const scrollStep = this.categoriesWrapper.offsetWidth / 2;
             this.categoriesWrapper.scrollLeft += scrollStep * direction;
         },
+        /*
+        HideShowMap() {
+            const realMap = document.getElementById('map') // MAPPA
+            const rightCol = document.querySelector('.hide_map_custom'); // COLONNA DX
+            const leftCol = document.getElementById('apartments'); // COLONNA SX
+            rightCol.classList.remove('hide_map_custom')
+            leftCol.classList.add('hide')
+            realMap.classList.remove('d-none')
+            realMap.classList.remove('d-xxl-block')
+            //leftCol.classList.toggle('hide')
+            //map.classList.toggle('d-none')
+            //realMap.classList.add('d-none')
+            //map.classList.toggle('hide')
+            console.log(leftCol);
+            console.log(realMap);
+            //console.log(map);
+        },
+        */
 
         /*
         SubmitCategory(){
@@ -467,8 +484,8 @@ export default {
 
 <template>
     <div id="results">
-        <div class="container-fluid">
 
+        <div class="container-fluid">
             <div class="categories-wrapper">
                 <div class="categories d-flex justify-content-center">
                     <div class="text-center pt-1">
@@ -502,7 +519,16 @@ export default {
                         <span class="arrow">&gt;</span>
                     </div>
                 </div>
+
             </div>
+<!--
+
+    <div>
+        <button @click=" HideShowMap()" class="btn btn-primary test_map">
+            MAPPA
+        </button>
+    </div>
+-->
 
 
             <div> <!--Scrivere all'interno del popup-->
@@ -532,6 +558,7 @@ export default {
                                 <input type="range" min="20" max="100" id="range" v-model.number="store.radius" />
                                 <p>Il raggio selezionato è {{ store.radius }} km.</p>
                             </div>
+
 
                             <div class="col-6 beds-input">
                                 <h3 for="beds">Posti Letto</h3>
@@ -566,8 +593,10 @@ export default {
                     <div class="container">
                         <div class="row">
 
-                            <CardComponent class="pb-4" v-if="!store.loading" v-for="apartment in store.results"
-                                :apartment="apartment" />
+
+                            <CardComponent class="pb-4" v-if="!store.loading"
+                                v-for="apartment in store.results" :apartment="apartment" />
+
 
                             <div class="cardList row row-cols-4" v-else-if="store.loading">
                                 <div class=" col cardLoading is-loading">
@@ -617,10 +646,9 @@ export default {
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="col hide_map_custom">
-                    <div id='map' ref="mapRef"></div>
+                    <div class="d-none d-xxl-block" id='map' ref="mapRef"></div>
                 </div>
             </div>
         </div>
@@ -633,6 +661,13 @@ export default {
 
 :root {
     --computed-radius: calc(50% - (10px / 2));
+}
+
+.test_map {
+    position: fixed;
+    top: 150px;
+    left: 50%;
+    z-index: 100;
 }
 
 input[type=range] {
@@ -1011,5 +1046,25 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     .btn-right {
         display: flex;
     }
+}
+
+.hide_map_custom{
+    display: none;
+}
+
+@media screen and (min-width: 1399px) {
+    .hide_map_custom{
+        display: block;
+    }
+}
+
+.test_map{
+    display: none;
+}
+
+@media screen and (max-width: 743px) {
+    .test_map{
+    display: block;
+}
 }
 </style>

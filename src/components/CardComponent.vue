@@ -28,7 +28,7 @@ export default {
             if (this.$route.name === 'home') {
                 return '';
             } else {
-                return 'col-xxl-6 col-lg-12';
+                return 'col-12 col-md-6 ';
             }
         },
     },
