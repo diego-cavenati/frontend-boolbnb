@@ -5,7 +5,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from './views/HomeView.vue';
 import AdvancedSearchView from './views/AdvancedSearchView.vue';
 import SingleApartmentView from './views/SingleApartmentView.vue';
-
+import NotFoundView from './views/NotFoundView.vue';
 // create router and define pages
 const router = createRouter({
     history: createWebHistory(),
@@ -24,6 +24,11 @@ const router = createRouter({
             path: '/blog/:slug',
             name: 'single-apartment',
             component: SingleApartmentView
+        },
+        {
+            path: '/:pathMatch(.*)*',
+            name: 'not-found',
+            component: NotFoundView
         },
     ]
 })

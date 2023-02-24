@@ -41,19 +41,11 @@ export default {
         addMarker() {
             const tt = window.tt;
             var location = [this.longitude, this.latitude];
-            // var popupOffset = 25;
-
-            // var marker = new tt.Marker().setLngLat(location).addTo(this.map);
             var element = document.createElement("div")
             element.id = "marker"
-
             var marker = new tt.Marker({ element: element })
                 .setLngLat(location)
                 .addTo(this.map)
-
-
-            // var popup = new tt.Popup({ offset: popupOffset }).setHTML("Your address!");
-            // marker.setPopup(popup).togglePopup();
         },
         getMap() {
             const tt = window.tt;
@@ -105,8 +97,6 @@ export default {
             this.price_per_night = this.price_nights / this.nights;
 
 
-            // this.price_nights = this.store.price * this.nights;
-            // this.total_price = this.price_nights + 100;
             console.log(this.store.check_in);
             console.log(this.store.check_out);
             console.log(this.store.price);
@@ -116,9 +106,9 @@ export default {
         },
         getImagePath(path) {
             if (path.startsWith("http")) {
-                return path; // Link esterno, restituiscilo direttamente
+                return path;
             } else {
-                return this.store.url_back + '/storage/' + path; // Percorso relativo alla cartella storage
+                return this.store.url_back + '/storage/' + path;
             }
         },
 
@@ -139,14 +129,12 @@ export default {
                     this.addMarker();
                     console.log(this.apartment);
                 } else {
-                    // this.$router.push({ name: 'not-found' }); //
+                    this.$router.push({ name: 'not-found' });
                 }
             })
             .catch(err => {
                 console.log(err);
             });
-
-        //getServices('http://127.0.0.1:8000/api/services')
     },
     created() {
         watch(() => this.store.datePicker, this.calc_price);
@@ -160,56 +148,22 @@ export default {
             <h3>{{ apartment.title }}</h3>
             <div class="address">
                 {{ apartment.address }}
-                <!-- Turn on for favorites -->
-                <!-- <span>
-                                                                                                                    &hearts; Salva
-                                                                                                                    </span> -->
             </div>
         </div>
-        <!-- turn on in case off name  -->
-        <!-- <div>
-                                                                                                                                                                                                                                                                                                                <span>
-                                                                                                                                                                                                                                                                                                                    Icona
-                                                                                                                                                                                                                                                                                                                </span>
-                                                                                                                                                                                                                                                                                                                <span>
-                                                                                                                                                                                                                                                                                                                    Host: Edoardo C.
-                                                                                                                                                                                                                                                                                                                </span>
-                                                                                                                                                                                                                                                        </div> -->
     </div>
-    <div class="container" v-if="!loading"> <!--Sezione immagini-->
-        <!--TODO creare classi css apposite per ogni col per gestire e sovrascrivere il padding dato da bootstrap-->
-    <div class="row">
-        <div class="col-12 prova2">
-            <div class="cover_img">
-                <img class="main_img" :src="getImagePath(apartment.media) || apartment.media" alt="">
-                <div class="badge_promotion" v-if="apartment.subscription_id">
-                    IN EVIDENZA
+    <div class="container" v-if="!loading">
+        <div class="row">
+            <div class="col-12 prova2">
+                <div class="cover_img">
+                    <img class="main_img" :src="getImagePath(apartment.media) || apartment.media" alt="">
+                    <div class="badge_promotion" v-if="apartment.subscription_id">
+                        IN EVIDENZA
+                    </div>
                 </div>
             </div>
         </div>
-        <!-- <div class="col-5">
-                                                                                                                                                                                        <div class="row">
-                                                                                                                                                                                                                                                <div class="col-6 ">
-                                                                                                                                                                                                                                                                                                                                        <img src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
-                                                                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                                                                                                                            <div class="col-6 ">
-                                                                                                                                                                                                                                                                                                                                                                                                    <img class="border_top"
-                                                                                                                                                                                                                                                                                                                                                                                                        src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
-                                                                                                                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="col-6 pt-3 "> 
-                                                                                                                                                                                                                                                                                                                                                                                                                            <img class="test1"
-                                                                                                                                                                                                                                                                                                                                                                                                                                src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
-                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="col-6 pt-3 ">  -->
-            <!-- <img class="border_bot"
-                                                                                                                                                                                                                                                                                                                                                                                                                                src="https://a0.muscache.com/im/pictures/e5788fdd-1626-4085-877e-3f2f659db4c7.jpg" alt="">
-                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                </div> -->
-        </div>
     </div>
-    <!--ps-5, pe-5, pt-5 da togliere se si vuole modificare il padding left, right e top-->
-    <div class="container pt-5" v-if="!loading"> <!-- Sezione descrizione, servizi e check in-->
+    <div class="container pt-5" v-if="!loading">
         <div>{{ date }}</div>
         <div class="row">
             <div class="col-sm-12 col-lg-7">
@@ -259,42 +213,34 @@ export default {
                             </g>
                         </svg>
                         <span>{{ apartment.baths }}</span>
+                    </div>
                 </div>
-            </div>
 
-            <p>
-                {{ apartment.description }}
-            </p>
-            <hr>
-            <div class="Services">
-                <div class="what_find fw-semibold">Cosa troverai</div>
-                <div class="container">
-                    <div class="row">
+                <p>
+                    {{ apartment.description }}
+                </p>
+                <hr>
+                <div class="Services">
+                    <div class="what_find fw-semibold">Cosa troverai</div>
+                    <div class="container">
+                        <div class="row">
 
-                        <div v-for="service in apartment.services" class="col-6 p-0">
-                            <!--  TODO far aggiungere il path per l'svg per ogni icona di ogni s -->
-                            <!-- prendere .img-->
-                            <div v-if="apartment.services" class="py-2">
-                                <div class="card_custom d-flex gap-2 pb-1">
-                                    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
-                                        role="presentation" focusable="false"
-                                        style="display: block; height: 24px; width: 24px; fill: currentcolor;">
-                                        <path :d="service.img"></path>
-                                    </svg>
-                                    {{ service.name }}
+                            <div v-for="service in apartment.services" class="col-6 p-0">
+                                <div v-if="apartment.services" class="py-2">
+                                    <div class="card_custom d-flex gap-2 pb-1">
+                                        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+                                            role="presentation" focusable="false"
+                                            style="display: block; height: 24px; width: 24px; fill: currentcolor;">
+                                            <path :d="service.img"></path>
+                                        </svg>
+                                        {{ service.name }}
+                                    </div>
+                                </div>
+                                <div v-else>
+                                    <span>test</span>
                                 </div>
                             </div>
-                            <div v-else>
-                                <span>test</span>
-                            </div>
-                        </div>
-                        <hr class="linea">
-
-
-
-
-                            <!-- <span class="pe-1"><i :class=service.img></i></span> -->
-
+                            <hr class="linea">
                         </div>
                     </div>
                 </div>
@@ -330,22 +276,6 @@ export default {
                                 </div>
                             </div>
                         </div>
-
-                        <!-- <Datepicker v-model="date" range /> -->
-                        <!-- <div class="row"> -->
-                        <!-- <div class="col ">
-                                                                                                                                                                                                                                                                                                                                                                                                                                check-in
-                                                                                                                                                                                                                                                                                                                                                                                                                                <div>{{ store.check_in }}</div>
-                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="col">
-                                                                                                                                                                                                                                                                                                                                                                                                                                check-out
-                                                                                                                                                                                                                                                                                                                                                                                                                                <div>{{ store.check_out }}</div>
-                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="col">
-                                                                                                                                                                                                                                                                                                                                                                                                                                Ospiti
-                                                                                                                                                                                                                                                                                                                                                                                                                                <div>1 ospite</div>
-                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                        </div> -->
 
                         <form @submit.prevent="sendForm()">
 
@@ -385,7 +315,7 @@ export default {
                                 <label for="" class="form-label">Messaggio*</label>
                                 <textarea rows="3" cols="50" name="body" id="body" class="form-control" placeholder=""
                                     aria-describedby="helpId" required v-model="body">
-                                                                                                                                                                                                                                                                                                                                                                                                                                        </textarea>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </textarea>
 
                                 <div class="alert alert-danger" role="alert" v-for="error in errors.body">
                                     {{ error }}
@@ -414,38 +344,6 @@ export default {
             </div>
         </div>
     </div>
-    <!-- <div>  --><!--Host and aircover--><!-- <div class="container pt-5">
-                <div class="col">
-                    <div class="d-flex">
-                        <div class="align-self-center px-2 ">
-                            <i class="fa-solid fa-user"></i>
-                        </div>
-                        <div>
-                            <div class="host_name fw-semibold">
-                                Edoardo C
-                            </div>
-                            <div class="registration_date">
-                                Membro da : novembre 2014
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-flex">
-                        <div class="align-self-center px-2">
-                            <i class="fa-solid fa-check"></i>
-                        </div>
-                        <div>
-                            Identità verificata
-                        </div>
-                    </div>
-                    <div>
-                        Lingue: English, Italiano
-                    </div>
-                </div>
-                <div class="col">
-
-                </div>
-            </div>
-        </div> -->
 </template>
 
 <style lang="scss" scoped>
@@ -633,12 +531,8 @@ img {
     background: white;
     transition: all .3s;
 
-    /*
-box-shadow: 6px 6px 12px #c5c5c5,
-    -6px -6px 12px #ffffff;
-*/
     &:hover {
-        //box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
+
         cursor: pointer;
         // aggiungere le proprietà alla classe dinamica
 
