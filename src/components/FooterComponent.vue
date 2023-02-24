@@ -4,9 +4,24 @@ export default {
     name: 'FooterComponent',
     data() {
         return {
+            partecipanti: [
+                { nome: 'Diego Cavenati', link: 'https://www.linkedin.com/in/diego-cavenati/' },
+                { nome: 'Marco Mariosa', link: 'https://www.linkedin.com/in/marco-mariosa-0b4b34237/' },
+                { nome: 'Michele Rossetti', link: 'https://www.linkedin.com/in/michele-rossetti-298561263/' },
+                { nome: 'Sarra Karfai', link: 'https://www.linkedin.com/in/sarra-karfai/' },
+                { nome: 'Marco Arnulfo', link: 'https://www.linkedin.com/in/marcoarnulfo7/' },
+            ],
         }
     },
     components: {
+    },
+    mounted() {
+        this.shufflePartecipanti()
+    },
+    methods: {
+        shufflePartecipanti() {
+            this.partecipanti.sort(() => Math.random() - 0.5)
+        }
     }
 }
 </script>
@@ -33,12 +48,17 @@ export default {
                     </div>
 
                     <div class="description">
-                        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Culpa repellendus tempora
-                            reiciendis fugiat aperiam dolore magni earum, ut numquam expedita est, quod magnam eius
-                            officiis optio unde eum quae. Facere</p>
+                        <p>Copyright © Airbnb, Inc. I contenuti di questo sito web includono immagini, testi e icone tratte
+                            da Airbnb e sono soggetti ai termini d'uso di Airbnb disponibili al seguente link:
+                            https://www.airbnb.it/help/article/2908.</p>
                     </div>
                     <div class="credits">
-                        © 2023 BoolBnb | Powered by
+                        Developed by
+                        <ul>
+                            <li v-for="(partecipante, index) in partecipanti" :key="index">
+                                <a :href="partecipante.link" target="_blank">{{ partecipante.nome }}</a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -74,7 +94,6 @@ export default {
         }
     }
 
-
     .logo {
         padding-bottom: 1rem;
 
@@ -91,5 +110,19 @@ export default {
         }
     }
 
+    ul {
+        list-style: none;
+        display: flex;
+        color: white;
+        text-align: center;
+
+        li {
+            padding: 1rem;
+
+            a {
+                color: white;
+            }
+        }
+    }
 }
 </style>
