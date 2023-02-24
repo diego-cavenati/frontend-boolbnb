@@ -53,8 +53,8 @@ export default {
                             https://www.airbnb.it/help/article/2908.</p>
                     </div>
                     <div class="credits">
-                        Developed by
                         <ul>
+                            <li>Developed by:</li>
                             <li v-for="(partecipante, index) in partecipanti" :key="index">
                                 <a :href="partecipante.link" target="_blank">{{ partecipante.nome }}</a>
                             </li>
@@ -108,6 +108,11 @@ export default {
         p {
             text-align: center;
         }
+    }
+
+    .credits {
+        display: flex;
+        justify-content: center;
     }
 
     ul {
