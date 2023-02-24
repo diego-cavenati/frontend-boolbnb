@@ -163,6 +163,7 @@ export default {
             </div>
         </div>
     </div>
+    </div>
     <div class="container pt-5" v-if="!loading">
         <div>{{ date }}</div>
         <div class="row">
