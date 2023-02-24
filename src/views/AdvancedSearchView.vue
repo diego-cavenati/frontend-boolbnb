@@ -65,7 +65,6 @@ export default {
                         });
                 }
             }
-
         },
         goToPage(pageNumber) {
             this.currentPage = pageNumber;
@@ -252,7 +251,7 @@ export default {
                 this.activeCategoryIndex = i;
 
                 /*  console.log(store.address);
-                 console.log(store.results);
+                console.log(store.results);
                  console.log(store.categories_back); */
             } catch (error) {
                 console.error(error);
@@ -465,10 +464,8 @@ export default {
         console.log(store.services);
         console.log(store.categories)
 
-        this.categoriesWrapper = document.querySelector('.categories-wrapper');
-
-
-        this.SubmitServices();
+    
+        //this.SubmitServices(); // TODO tenere d'occhio
         //console.log('http://127.0.0.1:8000/api/search?services='+ store.services_back );
         /* // possibile funzione per far scomparire il popup 
         document.addEventListener("click", function (event) {
@@ -487,25 +484,21 @@ export default {
 
 
 <template>
-    <div id="results">
+    <div v-if="!store.results" id="results">
 
         <div class="container-fluid">
-            <div class="categories-wrapper">
-                <div class="categories d-flex justify-content-center align-items-center">
-                    <div class="text-center p-3">
-                        <div class="btn btn-left" @click="slide(-1)">
-                            <span class="arrow">&lt;</span>
-                        </div>
-                        <div @click="AllApartments()" class="all_apartments">
-                            <img src="../assets/img/tutti-gli-alloggi.png" alt="">
-                            <div>
-                                Tutti gli alloggi
-                            </div>
+            <div class="categories d-flex  align-items-center">
+                <div class="text-center">
+                    <div @click="AllApartments()" class="all_apartments">
+                        <img src="../assets/img/tutti-gli-alloggi.png" alt="">
+                        <div>
+                            Tutti gli alloggi
                         </div>
                     </div>
+                </div>
+                <div class="categories_container d-flex">
                     <div class="text-center p-3" v-for="category, i in store.categories" :key="category.id">
-                        <div class="category"
-                            :class="[i === activeCategoryIndex ? 'active_category' : '', store.loading ? 'loading' : '']"
+                        <div class="category" :class="[i === activeCategoryIndex ? 'active_category' : '', store.loading ? 'loading' : '']"
                             @click.stop="PushCategory(i)" :id="'category-' + i">
                             <img :src="getImagePath(`${category.img}.png`)" alt="">
                             <div>
@@ -513,26 +506,23 @@ export default {
                             </div>
                         </div>
                     </div>
-                    <div class="align-self-center p-3">
-                        <button @click="HideShowPopup()" class="button" id="filterBtn">
-                            <i class="fa-solid fa-sliders"></i>
-                            Filtri
-                        </button>
-                    </div>
-                    <div class="btn btn-right" @click="slide(1)">
-                        <span class="arrow">&gt;</span>
-                    </div>
                 </div>
-
+                <div class="align-self-center p-3">
+                    <button @click="HideShowPopup()" class="button" id="filterBtn">
+                        <i class="fa-solid fa-sliders"></i>
+                        Filtri
+                    </button>
+                </div>
             </div>
+
             <!--
 
-                                            <div>
-                                                <button @click=" HideShowMap()" class="btn btn-primary test_map">
-                                                    MAPPA
-                                                </button>
-                                            </div>
-                                        -->
+                                                    <div>
+                                                        <button @click=" HideShowMap()" class="btn btn-primary test_map">
+                                                            MAPPA
+                                                        </button>
+                                                    </div>
+                                                -->
 
 
             <div> <!--Scrivere all'interno del popup-->
@@ -635,25 +625,33 @@ export default {
                             </div>
 
                             <!-- <div class="pagination" v-if="!store.loading">
-                                            <button @click="previousPage">
-                                                <i class="fa-solid fa-chevron-left"></i>
-                                            </button>
-                                            <div class="page-numbers">
-                                                <div v-for="pageNumber in pageNumbers" :key="pageNumber"
-                                                    :class="{ active: currentPage === pageNumber }" @click="goToPage(pageNumber)">
-                                                    {{ pageNumber }}
-                                                </div>
-                                            </div>
-                                            <button @click="nextPage">
-                                                <i class="fa-solid fa-chevron-right"></i>
-                                            </button>
-                                        </div> -->
+                                                    <button @click="previousPage">
+                                                        <i class="fa-solid fa-chevron-left"></i>
+                                                    </button>
+                                                    <div class="page-numbers">
+                                                        <div v-for="pageNumber in pageNumbers" :key="pageNumber"
+                                                            :class="{ active: currentPage === pageNumber }" @click="goToPage(pageNumber)">
+                                                            {{ pageNumber }}
+                                                        </div>
+                                                    </div>
+                                                    <button @click="nextPage">
+                                                        <i class="fa-solid fa-chevron-right"></i>
+                                                    </button>
+                                                </div> -->
                         </div>
                     </div>
                 </div>
                 <div class="col hide_map_custom">
                     <div class="d-none d-xxl-block" id='map' ref="mapRef"></div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div v-else class=" justify-content-center not_found d-flex align-items-center">
+        <div class="text-center">
+            <img src="../assets/img/not-found.png" alt="">
+            <div class="pt-5">
+                <h1>Siamo spiacenti, la nostra piattaforma non copre ancora la tua ricerca</h1>
             </div>
         </div>
     </div>
@@ -665,6 +663,39 @@ export default {
 
 :root {
     --computed-radius: calc(50% - (10px / 2));
+}
+
+.not_found{
+    height: 95vh;
+}
+
+.not_found img{
+    width: 400px;
+}
+.all_apartments {
+    cursor: pointer;
+    //width: 125px;
+}
+
+.category {
+    white-space: nowrap;
+}
+
+.categories {
+    //overflow-x: auto;
+    white-space: nowrap;
+    display: flex;
+    justify-content: center;
+}
+
+.categories_container{
+    overflow-x: auto;
+}
+
+@media (max-width: 1739px) {
+    .categories {
+        justify-content: start;
+    }
 }
 
 .test_map {
@@ -717,6 +748,8 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     margin-bottom: 0.5rem;
 }
 
+
+
 .category:hover {
     cursor: pointer;
 }
@@ -759,9 +792,6 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     width: 30px;
 }
 */
-.all_apartments {
-    cursor: pointer;
-}
 
 .map_hidden {
     display: none;
@@ -786,6 +816,8 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 .categories img {
     width: 30px;
 }
+
+
 
 // filter
 
@@ -932,73 +964,6 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 }
 
 // Loading-map
-
-// carousel category
-.categories-wrapper {
-    overflow: hidden;
-    position: relative;
-    width: 100%;
-}
-
-.categories {
-    display: flex;
-    flex-wrap: nowrap;
-    transition: transform 0.5s;
-    white-space: nowrap;
-}
-
-/*
-.categories-wrapper .btn {
-  position: fixed;
-  top: 25%;
-  transform: translateY(-50%);
-  z-index: 1;
-  width: 20px;
-  height: 20px;
-  background-color: white;
-  border-radius: 50%;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-*/
-.btn-right,
-.btn-left {
-    display: none;
-    position: fixed;
-    top: 13%;
-    transform: translateY(-50%);
-    z-index: 1;
-    width: 20px;
-    height: 20px;
-    background-color: white;
-    border-radius: 50%;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
-    //display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-}
-
-.categories-wrapper .btn-left {
-    left: 20px;
-}
-
-.categories-wrapper .btn-right {
-    right: 20px;
-}
-
-
-.categories {
-    min-width: 100%;
-    display: flex;
-    flex-wrap: nowrap;
-    transition: transform 0.5s;
-    white-space: nowrap;
-}
-
 
 // Pagination
 .pagination {
