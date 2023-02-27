@@ -163,7 +163,7 @@ export default {
             </div>
         </div>
     </div>
-    </div>
+
     <div class="container pt-5" v-if="!loading">
         <div>{{ date }}</div>
         <div class="row">
@@ -316,7 +316,7 @@ export default {
                                 <label for="" class="form-label">Messaggio*</label>
                                 <textarea rows="3" cols="50" name="body" id="body" class="form-control" placeholder=""
                                     aria-describedby="helpId" required v-model="body">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </textarea>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </textarea>
 
                                 <div class="alert alert-danger" role="alert" v-for="error in errors.body">
                                     {{ error }}
