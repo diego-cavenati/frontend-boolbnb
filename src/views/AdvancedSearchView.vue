@@ -85,6 +85,7 @@ export default {
                     var marker = new tt.Marker({ element: element })
                         .setLngLat(location)
                         .addTo(this.map)
+
                 }
 
             } catch (error) {
@@ -114,7 +115,7 @@ export default {
                     const tt = window.tt;
 
                     this.map = tt.map({
-                        key: 'RitTw3OZunU68B1yxrwneACwmdSgnggU',
+                        key: 'efizXNdkD5DBIWSjEpxGl2mz7uAIk28P',
                         container: this.$refs.mapRef,
                         style: 'tomtom://vector/1/basic-light',
                         center: [store.lon, store.lat],
@@ -122,8 +123,16 @@ export default {
                         zoom: 12,
                     });
                     //console.log(this.map)
+
                     this.map.addControl(new tt.FullscreenControl());
                     this.map.addControl(new tt.NavigationControl());
+
+
+                    this.map.on('render', () => {
+                        this.map.resize();
+                    })
+
+
                 }
 
             } catch (error) {
@@ -172,19 +181,7 @@ export default {
         },
         SubmitServices() {
             try {
-                const mapHiddenEmptyAddress = document.querySelector('.col.hide_map_custom');
-                const map = document.querySelector('.hide_map_custom #map')
-                if (store.address.length == 0 || store.address == null) {
-                    console.log(mapHiddenEmptyAddress);
-                    mapHiddenEmptyAddress.classList.add('hide') // tolto d-none, aggiunto hide. classe custom che mette display none
-                    map.classList.add('map_hidden') // tolto map_hidden, aggiunto hide
-                    console.log(map);
-                }
-                if (store.address.length > 0) {
-                    mapHiddenEmptyAddress.classList.remove('hide')
-                    map.classList.remove('map_hidden'); // tolto map_hidden, aggiunto hide
-                    console.log(map);
-                }
+                const mapHiddenEmptyAddress = document.querySelector('.col.d-none.d-xxl-block.map');
                 console.log(store.address);
                 store.loading = true;
                 axios.get('http://127.0.0.1:8000/api/search?address=' + store.address + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius * 1000 + '&beds=' + store.beds)
@@ -196,6 +193,14 @@ export default {
                         store.lat = response.data.poi.lat;
                         store.lon = response.data.poi.lon;
                         store.loading = false;
+                        if (store.address.length < 1 || store.address == null || store.address === '' || store.results == null || store.results.length < 1) {
+                            if (!mapHiddenEmptyAddress.classList.contains('hide')) {
+                                mapHiddenEmptyAddress.classList.add('hide')
+
+                            }
+                        } else {
+                            mapHiddenEmptyAddress.classList.remove('hide')
+                        }
                         /*  console.log('funziono, nascondo');
                         console.log(store.categories_back);
                         console.log(store.radius, 'radius');
@@ -206,6 +211,8 @@ export default {
                     }).catch(err => {
                         console.log(err);
                     })
+
+
 
             } catch (error) {
                 console.error(error);
@@ -227,7 +234,7 @@ export default {
                 if (!store.categories_back.includes(store.categories[i].id)) {
                     store.categories_back.pop(); // rimuove l'elemento precedente
                     store.categories_back.push(store.categories[i].id);
-                    console.log('faccio la call api');
+                    //console.log('faccio la call api');
                     /*console.log(store.categories_back);
                     console.log(this.map);
  */
@@ -271,17 +278,11 @@ export default {
         },
         AllApartments() {
             store.categories_back = []; // Rimuovi tutti gli elementi dall'array categories_back
-            const categories = document.querySelectorAll('.active_category'); // Seleziona tutti gli elementi che hanno la classe "active_category"
-            categories.forEach(category => category.classList.remove('active_category')); // Rimuovi la classe "active_category" da tutti gli elementi
+            /* const categories = document.querySelectorAll('.active_category');
+            console.log(categories); // Seleziona tutti gli elementi che hanno la classe "active_category"
+            categories.forEach(category => category.classList.remove('active_category')); */ // Rimuovi la classe "active_category" da tutti gli elementi
             //console.log(store.categories_back);
-            axios.get('http://127.0.0.1:8000/api/search?address=' + store.address + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius * 1000 + '&beds=' + store.beds)
-                .then(response => {
-                    store.results = response.data.results;
-                    console.log(store.results);
-                })
-                .catch(error => {
-                    console.error(error.message);
-                });
+            this.SubmitServices();
         },
         HideShowPopup() {
             const element = document.getElementById("filterPopup")
@@ -354,12 +355,14 @@ export default {
     watch: {
         dataLoaded(newValue) {
             try {
-                if (newValue) {
+                if (newValue !== null && newValue.length > 0) {
                     //console.log(store.address);
                     if (store.address.length > 0 && store.address !== null) {
                         //console.log(store.address);
                         // Recupera la mappa
-
+                        if (this.map !== null) {
+                            this.clearMap();
+                        }
                         this.getMap();
                         //console.log(this.map);
 
@@ -413,15 +416,15 @@ export default {
                             latMap.set(lngStr, true);
                         }
                         // Aggiungi i marker
+
                         for (const [lng, lat] of result) {
 
                             this.addMarker(parseFloat(lng), parseFloat(lat));
 
 
                         }
-                    } else {
-                        // Se i dati non sono caricati, rimuovi i marker dalla mappa
-                        this.clearMap();
+
+
                     }
                 }
 
@@ -446,7 +449,7 @@ export default {
             .then(response => {
                 //console.log(response);
                 store.services = response.data.results
-                console.log(store.services);
+                //console.log(store.services);
             })
             .catch(err => {
                 console.log(err);
@@ -456,16 +459,17 @@ export default {
             .then(response => {
                 //console.log(response);
                 store.categories = response.data.results
-                console.log(store.categories)
+                //console.log(store.categories)
             })
             .catch(err => {
                 console.log(err);
             })
-        console.log(store.services);
-        console.log(store.categories)
+        /*  console.log(store.services);
+         console.log(store.categories); */
 
-    
-        //this.SubmitServices(); // TODO tenere d'occhio
+
+
+        this.SubmitServices();
         //console.log('http://127.0.0.1:8000/api/search?services='+ store.services_back );
         /* // possibile funzione per far scomparire il popup 
         document.addEventListener("click", function (event) {
@@ -474,6 +478,7 @@ export default {
                 elementoDaNascondere.style.display = "none";
             }
         });
+
         */
     },
     created() {
@@ -484,7 +489,7 @@ export default {
 
 
 <template>
-    <div v-if="!store.results" id="results">
+    <div id="results">
 
         <div class="container-fluid">
             <div class="categories d-flex  align-items-center">
@@ -498,7 +503,8 @@ export default {
                 </div>
                 <div class="categories_container d-flex">
                     <div class="text-center p-3" v-for="category, i in store.categories" :key="category.id">
-                        <div class="category" :class="[i === activeCategoryIndex ? 'active_category' : '', store.loading ? 'loading' : '']"
+                        <div class="category"
+                            :class="[i === activeCategoryIndex && store.categories_back.length !== 0 ? 'active_category' : '', store.loading ? 'loading' : '']"
                             @click.stop="PushCategory(i)" :id="'category-' + i">
                             <img :src="getImagePath(`${category.img}.png`)" alt="">
                             <div>
@@ -517,12 +523,12 @@ export default {
 
             <!--
 
-                                                    <div>
-                                                        <button @click=" HideShowMap()" class="btn btn-primary test_map">
-                                                            MAPPA
-                                                        </button>
-                                                    </div>
-                                                -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <button @click=" HideShowMap()" class="btn btn-primary test_map">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        MAPPA
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </button>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            -->
 
 
             <div> <!--Scrivere all'interno del popup-->
@@ -588,8 +594,9 @@ export default {
                         <div class="row">
 
 
-                            <CardComponent class="pb-4" v-if="!store.loading" v-for="apartment in store.results"
-                                :apartment="apartment" />
+                            <CardComponent class="pb-4"
+                                v-if="!store.loading && (!store.results == null || !store.results.length < 1)"
+                                v-for="apartment in store.results" :apartment="apartment" />
 
 
                             <div class="cardList row row-cols-4" v-else-if="store.loading">
@@ -623,35 +630,35 @@ export default {
                                     </div>
                                 </div>
                             </div>
-
+                            <div v-else-if="!store.loading && (store.results == null || store.results.length == 0)"
+                                class=" justify-content-center not_found d-flex align-items-center p-5">
+                                <div class="text-center">
+                                    <img src="../assets/img/not-found.png" alt="">
+                                    <div class="pt-5">
+                                        <h1>Siamo spiacenti, la nostra piattaforma non copre ancora la tua ricerca</h1>
+                                    </div>
+                                </div>
+                            </div>
                             <!-- <div class="pagination" v-if="!store.loading">
-                                                    <button @click="previousPage">
-                                                        <i class="fa-solid fa-chevron-left"></i>
-                                                    </button>
-                                                    <div class="page-numbers">
-                                                        <div v-for="pageNumber in pageNumbers" :key="pageNumber"
-                                                            :class="{ active: currentPage === pageNumber }" @click="goToPage(pageNumber)">
-                                                            {{ pageNumber }}
-                                                        </div>
-                                                    </div>
-                                                    <button @click="nextPage">
-                                                        <i class="fa-solid fa-chevron-right"></i>
-                                                    </button>
-                                                </div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <button @click="previousPage">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="fa-solid fa-chevron-left"></i>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </button>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="page-numbers">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div v-for="pageNumber in pageNumbers" :key="pageNumber"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        :class="{ active: currentPage === pageNumber }" @click="goToPage(pageNumber)">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        {{ pageNumber }}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <button @click="nextPage">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="fa-solid fa-chevron-right"></i>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </button>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div> -->
                         </div>
                     </div>
                 </div>
-                <div class="col hide_map_custom">
-                    <div class="d-none d-xxl-block" id='map' ref="mapRef"></div>
+                <div class="col d-none d-xxl-block map">
+                    <div id='map' ref="mapRef"></div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div v-else class=" justify-content-center not_found d-flex align-items-center">
-        <div class="text-center">
-            <img src="../assets/img/not-found.png" alt="">
-            <div class="pt-5">
-                <h1>Siamo spiacenti, la nostra piattaforma non copre ancora la tua ricerca</h1>
             </div>
         </div>
     </div>
@@ -665,13 +672,11 @@ export default {
     --computed-radius: calc(50% - (10px / 2));
 }
 
-.not_found{
-    height: 95vh;
-}
 
-.not_found img{
+.not_found img {
     width: 400px;
 }
+
 .all_apartments {
     cursor: pointer;
     //width: 125px;
@@ -688,7 +693,7 @@ export default {
     justify-content: center;
 }
 
-.categories_container{
+.categories_container {
     overflow-x: auto;
 }
 
@@ -798,7 +803,6 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 }
 
 #results {
-    height: 95vh;
     width: 100%;
 }
 
@@ -845,9 +849,14 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     visibility: visible;
     transition-delay: 0s;
 }
+
 */
 .hide {
     display: none;
+}
+
+.col.d-none.d-xxl-block.hide {
+    display: none !important;
 }
 
 .distance {
