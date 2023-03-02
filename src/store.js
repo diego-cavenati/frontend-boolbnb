@@ -35,9 +35,11 @@ export const store = reactive({
     // categorie che riceviamo dal back e stampiamo
     categories: [],
     // categorie da inviare al back, ne inviamo solo 1 e facciamo la call per un risultato 
+    activeCategoryIndex: null,
     categories_back: [],
     //servizi che riceviamo dal back e stampiamo
     services: [],
+    servicesIndex: [],
     // raccolta di ID di servizi da inviare al back
     services_back: [],
 

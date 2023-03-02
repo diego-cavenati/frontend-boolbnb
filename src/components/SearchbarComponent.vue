@@ -48,6 +48,7 @@ export default {
         async search() {
             try {
                 store.loading = true;
+                //console.log(store.address, store.categories_back, store.services_back);
                 //console.log('http://127.0.0.1:8000/api/search?address=' + store.address + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius * 1000 + '&beds=' + store.beds)
                 const response = await axios.get('http://127.0.0.1:8000/api/search?address=' + store.address + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius * 1000 + '&beds=' + store.beds);
                 console.log(response);
@@ -115,10 +116,11 @@ export default {
     created() {
         watch(() => this.store.datePicker, this.convertDates);
     }, mounted() {
-        const searchBoxWrapper = document.getElementById('searchBox');
+        console.log(store.address, store.categories_back, store.services_back);
+        const searchBoxWrapper = document.getElementById('searchBoxWrapper');
         const options = {
             searchOptions: {
-                key: "efizXNdkD5DBIWSjEpxGl2mz7uAIk28P",
+                key: "45POhoazK93Ibg5oAGDMtKuyqLhjzUGo",
                 language: "it-IT",
                 limit: 5,
                 typeahead: ["address"],
@@ -127,7 +129,7 @@ export default {
                 minFuzzyLevel: 1
             },
             autocompleteOptions: {
-                key: "efizXNdkD5DBIWSjEpxGl2mz7uAIk28P",
+                key: "45POhoazK93Ibg5oAGDMtKuyqLhjzUGo",
                 language: "it-IT",
                 minLength: 1,
             }
@@ -147,23 +149,9 @@ export default {
         searchBoxInput.addEventListener('change', () => {
             let address = searchBoxInput.value;
             store.address = address;
-            if (searchBoxInput.value === null && searchBoxInput.value.replace(/\s/g, '') === '') {
-
-                closeIcon.classList.add('-hidden');
-
-            }
-            //console.log(store.address);
 
         });
         searchBoxInput.value = store.address;
-        /*  searchBoxInput.addEventListener('click', () => {
-             searchBoxInput.value = store.address;
- 
-         });
-         searchBoxInput.addEventListener('blur', () => {
-             searchBoxInput.value = store.address;
- 
-         }); */
 
         searchBoxInput.addEventListener('blur', function () {
             if (this.value == '') {
@@ -171,29 +159,69 @@ export default {
 
 
             }
+            if (searchBoxInput.value !== null && searchBoxInput.value.replace(/\s/g, '') !== '') {
+
+                closeIcon.classList.remove('-hidden');
+
+            }
+            if (searchBoxInput.value === null || searchBoxInput.value.replace(/\s/g, '') === '') {
+
+                closeIcon.classList.add('-hidden');
+
+            }
         })
+        searchBoxInput.addEventListener('click', function () {
+            if (this.value == '') {
+                this.value = store.address;
+
+            }
+            if (searchBoxInput.value !== null && searchBoxInput.value.replace(/\s/g, '') !== '') {
+
+                closeIcon.classList.remove('-hidden');
+            }
+            if (searchBoxInput.value === null || searchBoxInput.value.replace(/\s/g, '') === '') {
+
+                closeIcon.classList.add('-hidden');
+            }
+        })
+
         searchBoxInput.addEventListener('focus', function () {
             if (this.value == '') {
                 this.value = store.address;
 
+            }
+            if (searchBoxInput.value !== null && searchBoxInput.value.replace(/\s/g, '') !== '') {
+
+                closeIcon.classList.remove('-hidden');
 
             }
+            if (searchBoxInput.value === null || searchBoxInput.value.replace(/\s/g, '') === '') {
+
+                closeIcon.classList.add('-hidden');
+            }
+
         })
         const closeIcon = document.querySelector('.tt-search-box-close-icon');
         closeIcon.addEventListener('click', () => {
             searchBoxInput.value = '';
             store.address = '';
-            if (searchBoxInput.value === null && searchBoxInput.value.replace(/\s/g, '') === '') {
+            if (searchBoxInput.value !== null && searchBoxInput.value.replace(/\s/g, '') !== '') {
+
+                closeIcon.classList.remove('-hidden');
+            }
+            if (searchBoxInput.value === null || searchBoxInput.value.replace(/\s/g, '') === '') {
 
                 closeIcon.classList.add('-hidden');
-
             }
 
             //console.log('clear');
         })
         if (searchBoxInput.value !== null && searchBoxInput.value.replace(/\s/g, '') !== '') {
-
             closeIcon.classList.remove('-hidden');
+
+        }
+        if (searchBoxInput.value === null || searchBoxInput.value.replace(/\s/g, '') === '') {
+            closeIcon.classList.add('-hidden');
 
         }
 
@@ -207,24 +235,25 @@ export default {
     <div :id="id">
         <form @submit.prevent="search">
             <div class="container_search">
-                <div class="input">
-                    <!-- <i class="fa-regular fa-map"></i> -->
-                    <div id="searchBox"></div>
-                    <!-- <input type="text" v-model="store.address" placeholder="Dove vuoi andare?"> -->
-                </div>
+                <div id="searchBoxWrapper"></div>
                 <!-- <div class="input">
-                                                                                                                                                                                                                                                                                                                            <div class="line"></div> -->
+                                                                                 <i class="fa-regular fa-map"></i>
+                    
+                                                                                <input type="text" v-model="store.address" placeholder="Dove vuoi andare?">
+                                                                            </div> -->
+                <!-- <div class="input">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="line"></div> -->
                 <!-- <i class="fa-regular fa-calendar"></i> -->
                 <!-- <Datepicker class="dataPicker" v-model="date" :enable-time-picker="false" :format="format" range />
-                                                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                                                            <div class="input">
-                                                                                                                                                                                                                                                                                                                            <div class="line"></div>
-                                                                                                                                                                                                                                                                                                                            <i class="fa-regular fa-user"></i> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="input">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="line"></div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="fa-regular fa-user"></i> -->
 
                 <!-- <button @click="increment" :disabled="guests >= maxGuests">+</button>
-                                                                                                                                                                                                                                                                                                                            <input type="number" id="guests" name="guests" v-model.number="store.guests" @input="validateGuests">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <input type="number" id="guests" name="guests" v-model.number="store.guests" @input="validateGuests">
 
-                                                                                                                                                                                                                                                                                                                            <input type="text" v-model="store.guests" placeholder="Quanti siete?"> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <input type="text" v-model="store.guests" placeholder="Quanti siete?"> -->
                 <!-- </div> -->
             </div>
 
@@ -259,7 +288,7 @@ export default {
         display: flex;
     }
 
-    .input {
+    #searchBoxWrapper {
         // width: calc(100%/3);
         display: flex;
         align-items: center;

@@ -124,6 +124,8 @@ h2 {
     .nav_bottom {
         visibility: hidden;
     }
+
+
 }
 
 // mobile
@@ -133,6 +135,9 @@ h2 {
         display: none !important;
     }
 
+    h1 {
+        font-size: 2.4rem;
+    }
 
     #jumbotron {
         height: 350px;

@@ -81,6 +81,7 @@ export default {
         display: flex;
         justify-content: center;
         margin: 1rem 0;
+        flex-wrap: wrap;
 
         a {
             margin: 0 1rem;
@@ -120,6 +121,7 @@ export default {
         display: flex;
         color: white;
         text-align: center;
+        flex-wrap: wrap;
 
         li {
             padding: 1rem;

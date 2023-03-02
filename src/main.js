@@ -1,4 +1,7 @@
 import { createApp } from 'vue'
+import * as bootstrap from 'bootstrap'
+
+import './assets/scss/general.scss'
 import App from './App.vue'
 
 // Import router
@@ -16,7 +19,6 @@ import { dom } from "@fortawesome/fontawesome-svg-core";
 dom.watch();
 
 // Import all of Bootstrap's JS
-import * as bootstrap from 'bootstrap'
 
 // datapicker
 import Datepicker from '@vuepic/vue-datepicker';

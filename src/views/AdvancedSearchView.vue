@@ -18,7 +18,7 @@ export default {
             apartments: [],
             mapData: [],
             categoriesWrapper: null,
-            activeCategoryIndex: null,
+            /* activeCategoryIndex: null, */
             currentPage: 1,
             perPage: 6,
             // pages: null,
@@ -115,10 +115,11 @@ export default {
                     const tt = window.tt;
 
                     this.map = tt.map({
-                        key: 'efizXNdkD5DBIWSjEpxGl2mz7uAIk28P',
+                        key: '45POhoazK93Ibg5oAGDMtKuyqLhjzUGo',
                         container: this.$refs.mapRef,
                         style: 'tomtom://vector/1/basic-light',
                         center: [store.lon, store.lat],
+                        interactive: true,
                         // center: [store.results[0].longitude, store.results[0].latitude],
                         zoom: 12,
                     });
@@ -126,11 +127,18 @@ export default {
 
                     this.map.addControl(new tt.FullscreenControl());
                     this.map.addControl(new tt.NavigationControl());
+                    this.map.dragpan.enable({
+                        linearity: 0.3,
+                        easing: bezier(0, 0, 0.3, 1),
+                        maxSpeed: 1400,
+                        deceleration: 2500,
+                    });
 
 
                     this.map.on('render', () => {
                         this.map.resize();
                     })
+
 
 
                 }
@@ -166,7 +174,9 @@ export default {
             //console.log(store.address);
             if (!store.services_back.includes(store.services[i].id)) {
                 store.services_back.push(store.services[i].id);
+                store.servicesIndex.push(i);
                 element.classList.add('active');
+                console.log(store.services_back);
                 //console.log('http://127.0.0.1:8000/api/search?address=' + '' + '&services=' + store.services_back + '&category=' + '');
             } else {
                 let elementToRemove = store.services[i].id;
@@ -174,16 +184,18 @@ export default {
                 if (index !== -1) {
                     store.services_back.splice(index, 1);
                 }
+                store.servicesIndex.splice(index, 1);
                 element.classList.remove('active');
                 //console.log('http://127.0.0.1:8000/api/search?address=' + '' + '&services=' + store.services_back + '&category=' + '');
             }
             //console.log(store.services_back);
         },
-        SubmitServices() {
+        async SubmitServices() {
             try {
                 const mapHiddenEmptyAddress = document.querySelector('.col.d-none.d-xxl-block.map');
-                console.log(store.address);
+                //console.log(store.address);
                 store.loading = true;
+                //console.log(store.radius * 1000);
                 axios.get('http://127.0.0.1:8000/api/search?address=' + store.address + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius * 1000 + '&beds=' + store.beds)
                     .then(response => {
                         //console.log(resp);
@@ -193,6 +205,7 @@ export default {
                         store.lat = response.data.poi.lat;
                         store.lon = response.data.poi.lon;
                         store.loading = false;
+
                         if (store.address.length < 1 || store.address == null || store.address === '' || store.results == null || store.results.length < 1) {
                             if (!mapHiddenEmptyAddress.classList.contains('hide')) {
                                 mapHiddenEmptyAddress.classList.add('hide')
@@ -211,6 +224,8 @@ export default {
                     }).catch(err => {
                         console.log(err);
                     })
+
+
 
 
 
@@ -235,9 +250,9 @@ export default {
                     store.categories_back.pop(); // rimuove l'elemento precedente
                     store.categories_back.push(store.categories[i].id);
                     //console.log('faccio la call api');
-                    /*console.log(store.categories_back);
-                    console.log(this.map);
- */
+                    console.log(store.categories_back);
+                    //console.log(this.map);
+
                     this.SubmitServices();
 
                     // esegue la call api in base a tutti i dati
@@ -245,6 +260,7 @@ export default {
                     // Se l'elemento è già presente, ma è l'unico elemento nell'array, non fare nulla
                     /*  console.log('non faccio nulla');
                      console.log(store.categories_back); */
+                    console.log(store.categories_back);
 
                     return;
                 } else {
@@ -252,10 +268,10 @@ export default {
                     let index = store.categories_back.indexOf(elementToRemove);
                     if (index !== -1) {
                         store.categories_back.splice(index, 1);
-                        //console.log(store.categories_back);
+                        console.log(store.categories_back);
                     }
                 }
-                this.activeCategoryIndex = i;
+                store.activeCategoryIndex = i;
 
                 /*  console.log(store.address);
                 console.log(store.results);
@@ -367,6 +383,7 @@ export default {
                         //console.log(this.map);
 
 
+
                         // Inizializza l'array vuoto
 
                         this.mapData = [];
@@ -468,8 +485,10 @@ export default {
          console.log(store.categories); */
 
 
+        if (store.results === null || store.results.length === 0) {
+            this.SubmitServices();
+        }
 
-        this.SubmitServices();
         //console.log('http://127.0.0.1:8000/api/search?services='+ store.services_back );
         /* // possibile funzione per far scomparire il popup 
         document.addEventListener("click", function (event) {
@@ -478,7 +497,7 @@ export default {
                 elementoDaNascondere.style.display = "none";
             }
         });
-
+    
         */
     },
     created() {
@@ -504,7 +523,7 @@ export default {
                 <div class="categories_container d-flex">
                     <div class="text-center p-3" v-for="category, i in store.categories" :key="category.id">
                         <div class="category"
-                            :class="[i === activeCategoryIndex && store.categories_back.length !== 0 ? 'active_category' : '', store.loading ? 'loading' : '']"
+                            :class="[i === store.activeCategoryIndex && store.categories_back.length !== 0 ? 'active_category' : '', store.loading ? 'loading' : '']"
                             @click.stop="PushCategory(i)" :id="'category-' + i">
                             <img :src="getImagePath(`${category.img}.png`)" alt="">
                             <div>
@@ -523,12 +542,12 @@ export default {
 
             <!--
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <button @click=" HideShowMap()" class="btn btn-primary test_map">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        MAPPA
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </button>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <button @click=" HideShowMap()" class="btn btn-primary test_map">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            MAPPA
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </button>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                -->
 
 
             <div> <!--Scrivere all'interno del popup-->
@@ -540,7 +559,8 @@ export default {
                         <h3>Servizi</h3>
                         <div v-for="service, i in store.services" :key="service.id"
                             class="col-xl-3 col-md-4 col-sm-6 d-flex">
-                            <div @click="PushService(i)" :id="'service-' + i" class="card p-3 my-2 card_custom">
+                            <div @click="PushService(i)" :id="'service-' + i" class="card p-3 my-2 card_custom"
+                                :class="store.servicesIndex.includes(i) ? 'active' : ''">
                                 <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
                                     role="presentation" focusable="false"
                                     style="display: block; height: 24px; width: 24px; fill: currentcolor;">
@@ -571,7 +591,7 @@ export default {
                                             </g>
                                         </g>
                                     </svg>
-                                    <input type="number" id="beds" v-model.number="store.beds">
+                                    <input type="number" id="beds" min="1" max="127" v-model.number="store.beds">
                                 </div>
                                 <p>i posti letti sono {{ store.beds }}</p>
                             </div>
@@ -640,19 +660,19 @@ export default {
                                 </div>
                             </div>
                             <!-- <div class="pagination" v-if="!store.loading">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <button @click="previousPage">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="fa-solid fa-chevron-left"></i>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </button>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="page-numbers">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div v-for="pageNumber in pageNumbers" :key="pageNumber"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        :class="{ active: currentPage === pageNumber }" @click="goToPage(pageNumber)">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        {{ pageNumber }}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <button @click="nextPage">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="fa-solid fa-chevron-right"></i>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </button>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <button @click="previousPage">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="fa-solid fa-chevron-left"></i>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </button>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="page-numbers">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div v-for="pageNumber in pageNumbers" :key="pageNumber"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            :class="{ active: currentPage === pageNumber }" @click="goToPage(pageNumber)">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {{ pageNumber }}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <button @click="nextPage">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="fa-solid fa-chevron-right"></i>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </button>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div> -->
                         </div>
                     </div>
                 </div>

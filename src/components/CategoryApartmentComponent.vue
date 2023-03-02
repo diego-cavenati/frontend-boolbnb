@@ -18,6 +18,7 @@ export default {
             maxHeight: null,
             nextPageUrl: '',
             prevPageUrl: '',
+            activeCategoryIndex: null,
         }
     },
     computed: {
@@ -103,7 +104,7 @@ export default {
                 })
         },
         callAll() {
-            store.categories_back = []; // Rimuovi tutti gli elementi dall'array categories_back
+            //store.categories_back = []; // Rimuovi tutti gli elementi dall'array categories_back
             const categories = document.querySelectorAll('.active_category'); // Seleziona tutti gli elementi che hanno la classe "active_category"
             categories.forEach(category => category.classList.remove('active_category')); // Rimuovi la classe "active_category" da tutti gli elementi
             axios.get(`http://127.0.0.1:8000/api/apartments`)
@@ -166,7 +167,7 @@ export default {
                 if (!store.categories_back.includes(store.categories[i].id)) {
                     store.categories_back.pop(); // rimuove l'elemento precedente
                     store.categories_back.push(store.categories[i].id);
-                    
+
                     /*console.log(store.categories_back);
                     console.log(this.map);
  */
@@ -185,7 +186,7 @@ export default {
                     let index = store.categories_back.indexOf(elementToRemove);
                     if (index !== -1) {
                         store.categories_back.splice(index, 1);
-                        
+
                     }
                 }
                 this.activeCategoryIndex = i;
@@ -204,7 +205,7 @@ export default {
                         store.lat = response.data.poi.lat;
                         store.lon = response.data.poi.lon;
                         console.log('faccio la call api');
-                    console.log(store.results);
+                        console.log(store.results);
                         /*  console.log('funziono, nascondo');
                         console.log(store.categories_back);
                         console.log(store.radius, 'radius');
@@ -234,7 +235,7 @@ export default {
             .then(response => {
                 //console.log(response);
                 store.categories = response.data.results
-                console.log(store.categories)
+                //console.log(store.categories)
             })
             .catch(err => {
                 console.log(err);
@@ -283,25 +284,25 @@ export default {
                     </div>
                     <div class="align-self-center p-3">
                         <!--
-                            <button @click="HideShowPopup()" class="button" id="filterBtn">
-                                <i class="fa-solid fa-sliders"></i>
-                                Filtri
-                            </button>
+                                                    <button @click="HideShowPopup()" class="button" id="filterBtn">
+                                                        <i class="fa-solid fa-sliders"></i>
+                                                        Filtri
+                                                    </button>
 
-                        -->
+                                                -->
                     </div>
                 </div>
             </div>
 
             <div class="row">
                 <!--
-                    <div class="col-lg-4 col-md-6 col-sm-12 pb-4" v-for="(apartment, index) in apartments" :key="apartment.id">
-                        <CardComponent :apartment="apartment" />
-                    </div>
+                                            <div class="col-lg-4 col-md-6 col-sm-12 pb-4" v-for="(apartment, index) in apartments" :key="apartment.id">
+                                                <CardComponent :apartment="apartment" />
+                                            </div>
 
-                -->
-                <CardComponent class="pb-4 col-4" v-for="apartment in store.results"
-                                :apartment="apartment" />
+                                        -->
+                <CardComponent class="pb-4 col-12 col-md-6 col-xl-4" v-for="apartment in store.results"
+                    :apartment="apartment" />
 
 
                 <div class="pagination">
@@ -324,9 +325,10 @@ export default {
 @use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
 
-.all_apartments{
+.all_apartments {
     cursor: pointer;
 }
+
 .category {
     white-space: nowrap;
     cursor: pointer;
@@ -339,7 +341,7 @@ export default {
 }
 
 .categories {
-    
+
     //overflow-x: auto;
     white-space: nowrap;
     display: flex;
@@ -402,6 +404,7 @@ p {
 
 .page-numbers {
     display: flex;
+    flex-wrap: wrap;
     margin: 0 1rem;
     align-items: baseline;
 }
@@ -423,4 +426,5 @@ p {
         aspect-ratio: 1/1;
         border-radius: 50%;
     }
-}</style>
+}
+</style>

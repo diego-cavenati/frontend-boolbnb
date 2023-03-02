@@ -3,6 +3,10 @@ import JumbotronComponent from '../components/JumbotronComponent.vue';
 import ShowcaseComponent from '../components/ShowcaseComponent.vue';
 import TopPlacesComponent from '../components/TopPlacesComponent.vue';
 import CategoryApartmentComponent from '../components/CategoryApartmentComponent.vue';
+import Swiper, { Navigation } from 'swiper';
+// import Swiper and modules styles
+import 'swiper/css';
+import 'swiper/css/navigation';
 
 export default {
     name: 'HomeView',
@@ -11,6 +15,35 @@ export default {
         ShowcaseComponent,
         TopPlacesComponent,
         CategoryApartmentComponent
+    }, mounted() {
+        const swiper = new Swiper('.swiper', {
+            // Optional parameters
+            modules: [Navigation],
+            speed: 500,
+            direction: 'horizontal',
+            loop: true,
+            slidesPerView: 1,
+            spaceBetween: 50,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            breakpoints: {
+                // when window width is >= 320px
+                // when window width is >= 480px
+                // when window width is >= 640px
+                992: {
+                    slidesPerView: 3,
+                    spaceBetween: 40,
+
+                },
+                1200: {
+                    slidesPerView: 3,
+                    spaceBetween: 30,
+                }
+            }
+
+        });
     }
 }
 </script>
