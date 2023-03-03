@@ -3,7 +3,7 @@ import JumbotronComponent from '../components/JumbotronComponent.vue';
 import ShowcaseComponent from '../components/ShowcaseComponent.vue';
 import TopPlacesComponent from '../components/TopPlacesComponent.vue';
 import CategoryApartmentComponent from '../components/CategoryApartmentComponent.vue';
-import Swiper, { Navigation } from 'swiper';
+import Swiper, { Navigation, Autoplay } from 'swiper';
 // import Swiper and modules styles
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -18,7 +18,7 @@ export default {
     }, mounted() {
         const swiper = new Swiper('.swiper', {
             // Optional parameters
-            modules: [Navigation],
+            modules: [Navigation, Autoplay],
             speed: 500,
             direction: 'horizontal',
             loop: true,
@@ -27,6 +27,9 @@ export default {
             navigation: {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev',
+            },
+            autoplay: {
+                delay: 5000,
             },
             breakpoints: {
                 // when window width is >= 320px

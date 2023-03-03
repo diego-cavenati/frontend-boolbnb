@@ -102,6 +102,7 @@ export default {
                 })
         },
         callAll() {
+            store.address = '';
             axios.get(`http://127.0.0.1:8000/api/search`)
                 .then(response => {
                     this.apartments = response.data.results;

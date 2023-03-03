@@ -123,6 +123,7 @@ export default {
                 })
         },
         search() {
+            store.address = '';
             axios.get(`http://127.0.0.1:8000/api/search`)
                 .then(response => {
                     this.apartments = response.data.results;
@@ -272,8 +273,8 @@ export default {
                     </div>
                     <div class="categories_container d-flex">
                         <div class="text-center " v-for="category, i in store.categories" :key="category.id">
-                            <div v-if="category.name != 'Nel deserto'" class="category p-3"
-                                :class="[i === activeCategoryIndex ? 'active_category' : '', store.loading ? 'loading' : '']"
+                            <div class="category p-3"
+                                :class="[i === store.activeCategoryIndex ? 'active_category' : '', store.loading ? 'loading' : '']"
                                 @click.stop="PushCategory(i)" :id="'category-' + i">
                                 <img :src="getImagePath(`${category.img}.png`)" alt="">
                                 <div>
@@ -284,23 +285,23 @@ export default {
                     </div>
                     <div class="align-self-center p-3">
                         <!--
-                                                    <button @click="HideShowPopup()" class="button" id="filterBtn">
-                                                        <i class="fa-solid fa-sliders"></i>
-                                                        Filtri
-                                                    </button>
+                                                                                <button @click="HideShowPopup()" class="button" id="filterBtn">
+                                                                                    <i class="fa-solid fa-sliders"></i>
+                                                                                    Filtri
+                                                                                </button>
 
-                                                -->
+                                                                            -->
                     </div>
                 </div>
             </div>
 
             <div class="row">
                 <!--
-                                            <div class="col-lg-4 col-md-6 col-sm-12 pb-4" v-for="(apartment, index) in apartments" :key="apartment.id">
-                                                <CardComponent :apartment="apartment" />
-                                            </div>
+                                                                        <div class="col-lg-4 col-md-6 col-sm-12 pb-4" v-for="(apartment, index) in apartments" :key="apartment.id">
+                                                                            <CardComponent :apartment="apartment" />
+                                                                        </div>
 
-                                        -->
+                                                                    -->
                 <CardComponent class="pb-4 col-12 col-md-6 col-xl-4" v-for="apartment in store.results"
                     :apartment="apartment" />
 

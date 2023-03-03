@@ -31,6 +31,9 @@ export const store = reactive({
     lat: '',
     lon: '',
     url_back: 'http://127.0.0.1:8000',
+    //booleano per verificare che il componente della ricerca sia stato montato correttamente
+    isAdvancedSearchViewLoaded: null,
+    isSearchbarComponentLoaded: null,
 
     // categorie che riceviamo dal back e stampiamo
     categories: [],

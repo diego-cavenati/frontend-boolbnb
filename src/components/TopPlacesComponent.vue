@@ -68,19 +68,23 @@ export default {
 
         async searchApi(destination) {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/search?address=' + destination + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius * 1000 + '&beds=' + store.beds);
-                //store.results = response.data.results.data
-                store.results = response.data.results
+                /*   const response = await axios.get('http://127.0.0.1:8000/api/search?address=' + destination + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius * 1000 + '&beds=' + store.beds);
+                  //store.results = response.data.results.data*/
+                const searchQuery = destination;
+                store.address = searchQuery;
+                const query = searchQuery ? `?q=${encodeURIComponent(searchQuery)}` : '';
+                this.$router.push({ name: 'search', path: '/search' + query, query: { q: searchQuery } })
+                /* store.results = response.data.results
                 store.loading = false;
                 console.log(store.results);
                 console.log(response.data.results);
                 console.log(response.data);
                 console.log(this.displayedDestinations);
-                console.log(destination);
+                console.log(destination); */
                 //console.log('http://127.0.0.1:8000/api/search?address=' + destination + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius * 1000 + '&beds=' + store.beds);
 
                 // Reindirizza l'utente alla pagina /search
-                this.$router.push('/search');
+
 
             } catch (error) {
                 console.log(error);
@@ -233,13 +237,41 @@ export default {
     }
 }
 
-.swiper-slide.swiper-slide-next {
+.swiper-slide.swiper-slide-active {
 
     .image-container {
         scale: 1.1;
     }
 
 }
+
+.swiper-slide.swiper-slide-next {
+
+    .image-container {
+        scale: 1;
+    }
+
+}
+
+@media screen and (min-width:992px) {
+    .swiper-slide.swiper-slide-active {
+
+        .image-container {
+            scale: 1;
+        }
+
+    }
+
+    .swiper-slide.swiper-slide-next {
+
+        .image-container {
+            scale: 1.1;
+        }
+
+    }
+}
+
+
 
 
 
