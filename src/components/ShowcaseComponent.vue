@@ -103,6 +103,11 @@ export default {
         },
         callAll() {
             store.address = '';
+            store.categories_back = [];
+            store.services_back = [];
+            store.servicesIndex = [];
+            store.radius = 20;
+            store.beds = '';
             axios.get(`http://127.0.0.1:8000/api/search`)
                 .then(response => {
                     this.apartments = response.data.results;

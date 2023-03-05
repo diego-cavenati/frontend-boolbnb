@@ -18,7 +18,9 @@ export default {
             maxHeight: null,
             nextPageUrl: '',
             prevPageUrl: '',
+            categories: [],
             activeCategoryIndex: null,
+            loading: false,
         }
     },
     computed: {
@@ -53,16 +55,30 @@ export default {
                 if (this.currentPage > 1) {
                     this.currentPage--;
                     console.log(this.currentPage);
-                    axios.get(`http://127.0.0.1:8000/api/apartments?page=${this.currentPage}`)
-                        .then(response => {
-                            store.results = response.data.results.data
-                            //this.apartments = response.data.results.data;
-                            this.nextPageUrl = response.data.results.next_page_url;
-                            this.prevPageUrl = response.data.results.prev_page_url
-                        })
-                        .catch(error => {
-                            console.error(error)
-                        });
+                    if (this.categories !== null && this.categories.length > 0) {
+                        axios.get('http://127.0.0.1:8000/api/apartments?category=' + this.categories + `&page=${this.currentPage}`)
+                            .then(response => {
+                                store.results = response.data.results.data
+                                //this.apartments = response.data.results.data;
+                                this.nextPageUrl = response.data.results.next_page_url;
+                                this.prevPageUrl = response.data.results.prev_page_url
+                            })
+                            .catch(error => {
+                                console.error(error)
+                            });
+                    } else {
+                        axios.get(`http://127.0.0.1:8000/api/apartments?page=${this.currentPage}`)
+                            .then(response => {
+                                store.results = response.data.results.data
+                                //this.apartments = response.data.results.data;
+                                this.nextPageUrl = response.data.results.next_page_url;
+                                this.prevPageUrl = response.data.results.prev_page_url
+                            })
+                            .catch(error => {
+                                console.error(error)
+                            });
+
+                    }
                 }
             }
         },
@@ -74,39 +90,73 @@ export default {
                 if (this.currentPage > 0 && this.currentPage < this.pages) {
                     this.currentPage++;
                     console.log(this.currentPage);
-                    axios.get(`http://127.0.0.1:8000/api/apartments?page=${this.currentPage}`)
-                        .then(response => {
-                            store.results = response.data.results.data
-                            //this.apartments = response.data.results.data;
-                            this.nextPageUrl = response.data.results.next_page_url;
-                            this.prevPageUrl = response.data.results.prev_page_url
-                        })
-                        .catch(error => {
-                            console.error(error)
-                        });
+                    if (this.categories !== null && this.categories.length > 0) {
+                        axios.get('http://127.0.0.1:8000/api/apartments?category=' + this.categories + `&page=${this.currentPage}`)
+                            .then(response => {
+                                store.results = response.data.results.data
+                                //this.apartments = response.data.results.data;
+                                this.nextPageUrl = response.data.results.next_page_url;
+                                this.prevPageUrl = response.data.results.prev_page_url
+                            })
+                            .catch(error => {
+                                console.error(error)
+                            });
+
+                    } else {
+                        axios.get(`http://127.0.0.1:8000/api/apartments?page=${this.currentPage}`)
+                            .then(response => {
+                                store.results = response.data.results.data
+                                //this.apartments = response.data.results.data;
+                                this.nextPageUrl = response.data.results.next_page_url;
+                                this.prevPageUrl = response.data.results.prev_page_url
+                            })
+                            .catch(error => {
+                                console.error(error)
+                            });
+                    }
+
                 }
             }
         },
         goToPage(pageNumber) {
             this.currentPage = pageNumber;
+            if (this.categories !== null && this.categories.length > 0) {
+                axios.get('http://127.0.0.1:8000/api/apartments?category=' + this.categories + `&page=${this.currentPage}`)
+                    .then(response => {
+                        //this.apartments = response.data.results.data;
+                        store.results = response.data.results.data
+                        this.pages = response.data.results.last_page;
+                        this.loading = false;
+                    })
+                    .catch(error => {
+                        console.error(error)
+                        this.error = error.message;
+                        this.loading = false;
+                    })
+            } else {
+                axios.get(`http://127.0.0.1:8000/api/apartments?page=${this.currentPage}`)
+                    .then(response => {
+                        //this.apartments = response.data.results.data;
+                        store.results = response.data.results.data
+                        this.pages = response.data.results.last_page;
+                        this.loading = false;
+                    })
+                    .catch(error => {
+                        console.error(error)
+                        this.error = error.message;
+                        this.loading = false;
+                    })
+            }
 
-            axios.get(`http://127.0.0.1:8000/api/apartments?page=${this.currentPage}`)
-                .then(response => {
-                    //this.apartments = response.data.results.data;
-                    store.results = response.data.results.data
-                    this.pages = response.data.results.last_page;
-                    this.loading = false;
-                })
-                .catch(error => {
-                    console.error(error)
-                    this.error = error.message;
-                    this.loading = false;
-                })
+
         },
         callAll() {
+            this.loading = true;
+            this.categories = [];
             //store.categories_back = []; // Rimuovi tutti gli elementi dall'array categories_back
-            const categories = document.querySelectorAll('.active_category'); // Seleziona tutti gli elementi che hanno la classe "active_category"
-            categories.forEach(category => category.classList.remove('active_category')); // Rimuovi la classe "active_category" da tutti gli elementi
+            this.activeCategoryIndex = null
+
+            // Rimuovi la classe "active_category" da tutti gli elementi
             axios.get(`http://127.0.0.1:8000/api/apartments`)
                 .then(response => {
                     store.results = response.data.results.data
@@ -114,6 +164,7 @@ export default {
                     // this.pages = Math.ceil(this.apartments.length / this.perPage);
                     // console.log(response);
                     this.pages = response.data.results.last_page;
+                    console.log(response.data.results.last_page);
                     this.loading = false;
                 })
                 .catch(error => {
@@ -124,12 +175,17 @@ export default {
         },
         search() {
             store.address = '';
+            store.categories_back = [];
+            store.services_back = [];
+            store.servicesIndex = [];
+            store.radius = 20;
+            store.beds = '';
             axios.get(`http://127.0.0.1:8000/api/search`)
                 .then(response => {
                     this.apartments = response.data.results;
                     // this.pages = Math.ceil(this.apartments.length / this.perPage);
                     // console.log(response);
-                    //this.pages = response.data.results.last_page;
+
                     this.loading = false;
                 })
                 .catch(error => {
@@ -137,20 +193,6 @@ export default {
                     this.error = error.message;
                     this.loading = false;
                 })
-        },
-        AllApartments() {
-            store.categories_back = []; // Rimuovi tutti gli elementi dall'array categories_back
-            const categories = document.querySelectorAll('.active_category'); // Seleziona tutti gli elementi che hanno la classe "active_category"
-            categories.forEach(category => category.classList.remove('active_category')); // Rimuovi la classe "active_category" da tutti gli elementi
-            //console.log(store.categories_back);
-            axios.get('http://127.0.0.1:8000/api/search?address=' + store.address + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius * 1000 + '&beds=' + store.beds)
-                .then(response => {
-                    store.results = response.data.results;
-                    console.log(store.results);
-                })
-                .catch(error => {
-                    console.error(error.message);
-                });
         },
         getImagePath: function (imgPath) {
             return new URL(`../assets/img/${imgPath}`, import.meta.url).href;
@@ -165,28 +207,28 @@ export default {
                         el.classList.remove('active_category');
                     }
                 }
-                if (!store.categories_back.includes(store.categories[i].id)) {
-                    store.categories_back.pop(); // rimuove l'elemento precedente
-                    store.categories_back.push(store.categories[i].id);
+                if (!this.categories.includes(store.categories[i].id)) {
+                    this.categories.pop(); // rimuove l'elemento precedente
+                    this.categories.push(store.categories[i].id);
 
-                    /*console.log(store.categories_back);
+                    /*console.log(this.categories);
                     console.log(this.map);
  */
                     this.SubmitServices();
-                    console.log('faccio la call api');
-                    console.log(store.results);
+                    /* console.log('faccio la call api');
+                    console.log(store.results); */
 
                     // esegue la call api in base a tutti i dati
-                } else if (store.categories_back.length > 0 && store.categories_back[0] === store.categories[i].id) {
+                } else if (this.categories.length > 0 && this.categories[0] === store.categories[i].id) {
                     // Se l'elemento è già presente, ma è l'unico elemento nell'array, non fare nulla
                     /*  console.log('non faccio nulla');
-                     console.log(store.categories_back); */
+                     console.log(this.categories); */
                     return;
                 } else {
                     let elementToRemove = store.categories[i].id;
-                    let index = store.categories_back.indexOf(elementToRemove);
+                    let index = this.categories.indexOf(elementToRemove);
                     if (index !== -1) {
-                        store.categories_back.splice(index, 1);
+                        this.categories.splice(index, 1);
 
                     }
                 }
@@ -197,16 +239,19 @@ export default {
         },
         SubmitServices() {
             try {
-                axios.get('http://127.0.0.1:8000/api/search?address=' + store.address + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius * 1000 + '&beds=' + store.beds)
+                this.loading = true;
+                //console.log(this.categories);
+                axios.get('http://127.0.0.1:8000/api/apartments?category=' + this.categories)
                     .then(response => {
                         //console.log(resp);
                         // convertire km to metri prima di mandarli 
-                        store.results = response.data.results;
-                        store.price = response.data.results.price;
-                        store.lat = response.data.poi.lat;
-                        store.lon = response.data.poi.lon;
-                        console.log('faccio la call api');
-                        console.log(store.results);
+                        store.results = response.data.results.data;
+                        console.log(response.data.results.data);
+                        //console.log('faccio la call api');
+                        //console.log(store.results);
+                        this.pages = response.data.results.last_page;
+                        console.log(response.data.results.last_page);
+                        this.loading = false;
                         /*  console.log('funziono, nascondo');
                         console.log(store.categories_back);
                         console.log(store.radius, 'radius');
@@ -246,7 +291,7 @@ export default {
 </script>
 
 <template>
-    <div id="showcase">
+    <div id="categories">
         <div class="container">
             <h2>Scopri le nostre categorie <span class="title_mark">di appartamenti</span></h2>
             <div class="description">
@@ -274,7 +319,7 @@ export default {
                     <div class="categories_container d-flex">
                         <div class="text-center " v-for="category, i in store.categories" :key="category.id">
                             <div class="category p-3"
-                                :class="[i === store.activeCategoryIndex ? 'active_category' : '', store.loading ? 'loading' : '']"
+                                :class="[i === activeCategoryIndex ? 'active_category' : '', loading ? 'loading' : '']"
                                 @click.stop="PushCategory(i)" :id="'category-' + i">
                                 <img :src="getImagePath(`${category.img}.png`)" alt="">
                                 <div>
@@ -285,23 +330,23 @@ export default {
                     </div>
                     <div class="align-self-center p-3">
                         <!--
-                                                                                <button @click="HideShowPopup()" class="button" id="filterBtn">
-                                                                                    <i class="fa-solid fa-sliders"></i>
-                                                                                    Filtri
-                                                                                </button>
+                                                                                                                                                                                                                                                                                                                        <button @click="HideShowPopup()" class="button" id="filterBtn">
+                                                                                                                                                                                                                                                                                                                            <i class="fa-solid fa-sliders"></i>
+                                                                                                                                                                                                                                                                                                                            Filtri
+                                                                                                                                                                                                                                                                                                                        </button>
 
-                                                                            -->
+                                                                                                                                                                                                                                                                                                                    -->
                     </div>
                 </div>
             </div>
 
             <div class="row">
                 <!--
-                                                                        <div class="col-lg-4 col-md-6 col-sm-12 pb-4" v-for="(apartment, index) in apartments" :key="apartment.id">
-                                                                            <CardComponent :apartment="apartment" />
-                                                                        </div>
+                                                                                                                                                                                                                                                                                                                <div class="col-lg-4 col-md-6 col-sm-12 pb-4" v-for="(apartment, index) in apartments" :key="apartment.id">
+                                                                                                                                                                                                                                                                                                                    <CardComponent :apartment="apartment" />
+                                                                                                                                                                                                                                                                                                                </div>
 
-                                                                    -->
+                                                                                                                                                                                                                                                                                                            -->
                 <CardComponent class="pb-4 col-12 col-md-6 col-xl-4" v-for="apartment in store.results"
                     :apartment="apartment" />
 
@@ -335,6 +380,10 @@ export default {
     cursor: pointer;
 }
 
+.category.loading {
+    pointer-events: none;
+}
+
 .active_category {
     border-bottom: 2px solid $bb-primary;
     color: $bb-primary;
@@ -364,7 +413,7 @@ export default {
 }
 
 
-#showcase {
+#categories {
     padding: 5rem 0;
 }
 
