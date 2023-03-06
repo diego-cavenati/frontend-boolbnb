@@ -330,23 +330,23 @@ export default {
                     </div>
                     <div class="align-self-center p-3">
                         <!--
-                                                                                                                                                                                                                                                                                                                        <button @click="HideShowPopup()" class="button" id="filterBtn">
-                                                                                                                                                                                                                                                                                                                            <i class="fa-solid fa-sliders"></i>
-                                                                                                                                                                                                                                                                                                                            Filtri
-                                                                                                                                                                                                                                                                                                                        </button>
+                                                                                                                                                                                                                                                                                                                                                            <button @click="HideShowPopup()" class="button" id="filterBtn">
+                                                                                                                                                                                                                                                                                                                                                                <i class="fa-solid fa-sliders"></i>
+                                                                                                                                                                                                                                                                                                                                                                Filtri
+                                                                                                                                                                                                                                                                                                                                                            </button>
 
-                                                                                                                                                                                                                                                                                                                    -->
+                                                                                                                                                                                                                                                                                                                                                        -->
                     </div>
                 </div>
             </div>
 
             <div class="row">
                 <!--
-                                                                                                                                                                                                                                                                                                                <div class="col-lg-4 col-md-6 col-sm-12 pb-4" v-for="(apartment, index) in apartments" :key="apartment.id">
-                                                                                                                                                                                                                                                                                                                    <CardComponent :apartment="apartment" />
-                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                                                    <div class="col-lg-4 col-md-6 col-sm-12 pb-4" v-for="(apartment, index) in apartments" :key="apartment.id">
+                                                                                                                                                                                                                                                                                                                                                        <CardComponent :apartment="apartment" />
+                                                                                                                                                                                                                                                                                                                                                    </div>
 
-                                                                                                                                                                                                                                                                                                            -->
+                                                                                                                                                                                                                                                                                                                                                -->
                 <CardComponent class="pb-4 col-12 col-md-6 col-xl-4" v-for="apartment in store.results"
                     :apartment="apartment" />
 
@@ -400,6 +400,7 @@ export default {
 
 .categories_container {
     overflow-x: auto;
+    margin-bottom: 1rem;
 }
 
 @media (max-width: 1739px) {
@@ -476,5 +477,21 @@ p {
         aspect-ratio: 1/1;
         border-radius: 50%;
     }
+}
+
+/* stile della scrollbar */
+::-webkit-scrollbar {
+    height: 10px;
+}
+
+/* stile del thumb (la parte trascinabile della scrollbar) */
+::-webkit-scrollbar-thumb {
+    background-color: #e5e5e5;
+    border-radius: 5px;
+}
+
+/* stile del track (la parte non trascinabile della scrollbar) */
+::-webkit-scrollbar-track {
+    background-color: #ffffff;
 }
 </style>
