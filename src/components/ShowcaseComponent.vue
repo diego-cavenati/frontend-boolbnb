@@ -83,7 +83,23 @@ export default {
         goToPage(pageNumber) {
             this.currentPage = pageNumber;
             console.log(this.currentPage);
-            this.callApi();
+            this.callApiPage(this.currentPage);
+        },
+        callApiPage(pageNumber) {
+            axios.get(`http://127.0.0.1:8000/api/showcase?page=` + pageNumber)
+                .then(response => {
+                    this.apartments = response.data.results.data;
+                    this.pages = response.data.results.last_page;
+                    console.log(response.data.results.next_page_url);
+                    this.nextPageUrl = response.data.results.next_page_url;
+                    this.prevPageUrl = response.data.results.prev_page_url
+                    this.loading = false;
+                })
+                .catch(error => {
+                    console.error(error)
+                    this.error = error.message;
+                    this.loading = false;
+                })
         },
         callApi() {
             axios.get(`http://127.0.0.1:8000/api/showcase`)
@@ -101,6 +117,7 @@ export default {
                     this.loading = false;
                 })
         },
+
         callAll() {
             store.address = '';
             store.categories_back = [];
