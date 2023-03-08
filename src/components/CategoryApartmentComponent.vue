@@ -152,6 +152,7 @@ export default {
         },
         callAll() {
             this.loading = true;
+            this.currentPage = 1;
             this.categories = [];
             //store.categories_back = []; // Rimuovi tutti gli elementi dall'array categories_back
             this.activeCategoryIndex = null
@@ -311,7 +312,7 @@ export default {
             <div class="container-fluid"> <!-- CAROUSEL -->
                 <div class="categories d-flex  align-items-center">
                     <div class="text-center">
-                        <div @click="callAll()" class="all_apartments">
+                        <div @click="callAll()" class="all_apartments me-4">
                             <img src="../assets/img/tutti-gli-alloggi.png" alt="">
                             <div>
                                 Tutti gli alloggi
@@ -332,23 +333,23 @@ export default {
                     </div>
                     <div class="align-self-center p-3">
                         <!--
-                                                                                                                                                                                                                                                                                                                                                                            <button @click="HideShowPopup()" class="button" id="filterBtn">
-                                                                                                                                                                                                                                                                                                                                                                                <i class="fa-solid fa-sliders"></i>
-                                                                                                                                                                                                                                                                                                                                                                                Filtri
-                                                                                                                                                                                                                                                                                                                                                                            </button>
+                                                                                                                                                                                                                                                                                                                                                                                        <button @click="HideShowPopup()" class="button" id="filterBtn">
+                                                                                                                                                                                                                                                                                                                                                                                            <i class="fa-solid fa-sliders"></i>
+                                                                                                                                                                                                                                                                                                                                                                                            Filtri
+                                                                                                                                                                                                                                                                                                                                                                                        </button>
 
-                                                                                                                                                                                                                                                                                                                                                                        -->
+                                                                                                                                                                                                                                                                                                                                                                                    -->
                     </div>
                 </div>
             </div>
 
             <div class="row">
                 <!--
-                                                                                                                                                                                                                                                                                                                                                                    <div class="col-lg-4 col-md-6 col-sm-12 pb-4" v-for="(apartment, index) in apartments" :key="apartment.id">
-                                                                                                                                                                                                                                                                                                                                                                        <CardComponent :apartment="apartment" />
-                                                                                                                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                                                                                                                                                <div class="col-lg-4 col-md-6 col-sm-12 pb-4" v-for="(apartment, index) in apartments" :key="apartment.id">
+                                                                                                                                                                                                                                                                                                                                                                                    <CardComponent :apartment="apartment" />
+                                                                                                                                                                                                                                                                                                                                                                                </div>
 
-                                                                                                                                                                                                                                                                                                                                                                -->
+                                                                                                                                                                                                                                                                                                                                                                            -->
                 <CardComponent class="pb-4 col-12 col-md-6 col-xl-4" v-for="apartment in store.results"
                     :apartment="apartment" />
 

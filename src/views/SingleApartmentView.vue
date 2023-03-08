@@ -35,6 +35,7 @@ export default {
             total_price: '',
             price_per_night: '',
             messageForm: '',
+            userIP: null,
         }
     },
     methods: {
@@ -111,18 +112,25 @@ export default {
                 return this.store.url_back + '/storage/' + path;
             }
         },
-
-    },
-    mounted() {
-        const url = 'http://127.0.0.1:8000/api/apartments/' + this.$route.params.slug;
-        console.log(url);
-        axios.get(url)
-            .then(resp => {
-                console.log(resp);
-                if (resp.data.success) {
-                    this.apartment = resp.data.results;
-                    this.latitude = resp.data.results.latitude;
-                    this.longitude = resp.data.results.longitude;
+        async getIpClient() {
+            try {
+                this.loading = true;
+                const response = await axios.get('https://api.ipify.org?format=json');
+                this.userIP = response.data.ip;
+                console.log(this.userIP);
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        async getApartment() {
+            try {
+                this.loading = true;
+                const url = 'http://127.0.0.1:8000/api/apartments/' + this.$route.params.slug;
+                const response = await axios.get(url);
+                if (response.data.success) {
+                    this.apartment = response.data.results;
+                    this.latitude = response.data.results.latitude;
+                    this.longitude = response.data.results.longitude;
                     this.loading = false;
                     this.apartment_id = this.apartment.id
                     this.getMap();
@@ -131,18 +139,63 @@ export default {
                 } else {
                     this.$router.push({ name: 'not-found' });
                 }
-            })
-            .catch(err => {
-                console.log(err);
-            });
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        async AddView() {
+            await this.getIpClient();
+            await this.getApartment();
+            try {
+                const date = new Date();
+                const todaysDate = date.toLocaleDateString();
+                //console.log(todaysDate);
+                const url = 'http://127.0.0.1:8000/api/views'
+                const data = { apartment_id: this.apartment_id, ip_address: this.userIP, date: todaysDate }
+                const response = await axios.post(url, data);
+                console.log(response);
+                if (!response.data.success) {
+                    console.error('Unable to view this apartment');
+                }
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+
+    },
+
+    mounted() {
+
+        this.AddView();
+        window.scrollTo(0, 0);
+
+
+
+
+
     },
     created() {
         watch(() => this.store.datePicker, this.calc_price);
+
+
+
     }
 }
 
 </script>
 <template>
+    <div class="min-vh-100 d-flex justify-content-center align-items-center position-relative" v-if="loading">
+        <div class="preloader">
+            <svg viewBox="0 0 102 102" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path class="big-circle" d="M101 51C101 78.6142 78.6142 101 51 101C23.3858 101 1 78.6142 1 51"
+                    stroke="#252525" stroke-width="2" />
+                <path class="small-circle" d="M91 51C91 28.9086 73.0914 11 51 11C28.9086 11 11 28.9086 11 51"
+                    stroke="#252525" stroke-width="2" />
+            </svg>
+        </div>
+    </div>
     <div class="container" v-if="!loading">
         <div>
             <h3>{{ apartment.title }}</h3>
@@ -316,7 +369,7 @@ export default {
                                 <label for="" class="form-label">Messaggio*</label>
                                 <textarea rows="3" cols="50" name="body" id="body" class="form-control" placeholder=""
                                     aria-describedby="helpId" required v-model="body">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </textarea>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </textarea>
 
                                 <div class="alert alert-danger" role="alert" v-for="error in errors.body">
                                     {{ error }}
@@ -351,12 +404,72 @@ export default {
 @use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
 
+//loader 
+
+
+.preloader {
+    position: absolute;
+    width: 102px;
+    height: 102px;
+    left: 50%;
+    top: 50%;
+    min-height: 102px;
+    transform: translateX(-50%) translateY(-50%);
+
+    svg {
+        width: 102px;
+        height: 102px;
+
+
+    }
+
+}
+
+.preloader .small-circle {
+    stroke-dasharray: 210;
+    stroke-dashoffset: 210;
+    stroke: $bb-secondary;
+    transform-origin: 50%;
+    animation: 1s draw-small infinite alternate;
+}
+
+@keyframes draw-small {
+    0% {
+        stroke-dashoffset: 0;
+        transform: rotate(0deg);
+    }
+
+    100% {
+        stroke-dashoffset: 210;
+        transform: rotate(360deg);
+    }
+}
+
+.preloader .big-circle {
+    stroke-dasharray: 240;
+    stroke-dashoffset: 240;
+    transform-origin: 50%;
+    stroke: $bb-primary;
+    animation: 1s draw-big infinite alternate 0.5s;
+}
+
+@keyframes draw-big {
+    0% {
+        stroke-dashoffset: 0;
+        transform: rotateY(180deg) rotate(360deg);
+    }
+
+    100% {
+        stroke-dashoffset: 240;
+        transform: rotateY(180deg) rotate(0deg);
+    }
+}
+
 #map {
-    height: 40vh;
+
     min-height: 400px;
     width: 100%;
-    height: 100%;
-    border-radius: 1rem;
+
 }
 
 
