@@ -117,7 +117,7 @@ export default {
                 this.loading = true;
                 const response = await axios.get('https://api.ipify.org?format=json');
                 this.userIP = response.data.ip;
-                console.log(this.userIP);
+                //console.log(this.userIP);
             } catch (error) {
                 console.error(error);
             }
@@ -135,7 +135,7 @@ export default {
                     this.apartment_id = this.apartment.id
                     this.getMap();
                     this.addMarker();
-                    console.log(this.apartment);
+                    //console.log(this.apartment);
                 } else {
                     this.$router.push({ name: 'not-found' });
                 }
@@ -155,7 +155,12 @@ export default {
                 const response = await axios.post(url, data);
                 console.log(response);
                 if (!response.data.success) {
-                    console.error('Unable to view this apartment');
+                    if (response.data.errors) {
+                        console.log(response.data.errors)
+                    } else {
+                        console.error('Unable to view this apartment');
+                    }
+
                 }
 
             } catch (error) {
@@ -369,7 +374,7 @@ export default {
                                 <label for="" class="form-label">Messaggio*</label>
                                 <textarea rows="3" cols="50" name="body" id="body" class="form-control" placeholder=""
                                     aria-describedby="helpId" required v-model="body">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </textarea>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </textarea>
 
                                 <div class="alert alert-danger" role="alert" v-for="error in errors.body">
                                     {{ error }}
