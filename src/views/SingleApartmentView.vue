@@ -122,6 +122,8 @@ export default {
                 console.error(error);
             }
         },
+
+
         async getApartment() {
             try {
                 this.loading = true;
@@ -148,12 +150,12 @@ export default {
             await this.getApartment();
             try {
                 const date = new Date();
-                const todaysDate = date.toLocaleDateString();
+                const todaysDate = date.toLocaleDateString('en-US');
                 //console.log(todaysDate);
                 const url = 'http://127.0.0.1:8000/api/views'
                 const data = { apartment_id: this.apartment_id, ip_address: this.userIP, date: todaysDate }
                 const response = await axios.post(url, data);
-                console.log(response);
+                //console.log(response);
                 if (!response.data.success) {
                     if (response.data.errors) {
                         console.log(response.data.errors)
@@ -175,6 +177,7 @@ export default {
 
         this.AddView();
         window.scrollTo(0, 0);
+
 
 
 
@@ -374,7 +377,7 @@ export default {
                                 <label for="" class="form-label">Messaggio*</label>
                                 <textarea rows="3" cols="50" name="body" id="body" class="form-control" placeholder=""
                                     aria-describedby="helpId" required v-model="body">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </textarea>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </textarea>
 
                                 <div class="alert alert-danger" role="alert" v-for="error in errors.body">
                                     {{ error }}
