@@ -16,8 +16,8 @@ export default {
             perPage: 6,
             pages: null,
             maxHeight: null,
-            nextPageUrl: '',
-            prevPageUrl: '',
+            nextPageUrl: null,
+            prevPageUrl: null,
             categories: [],
             activeCategoryIndex: null,
             loading: false,
@@ -34,37 +34,33 @@ export default {
         }
     },
     methods: {
-        setMaxHeight() {
-            const cards = document.querySelectorAll(".card");
-            let maxHeight = 0;
-
-            cards.forEach(card => {
-                const height = card.offsetHeight;
-                if (height > maxHeight) {
-                    maxHeight = height;
-                }
-            });
-
-            this.maxHeight = maxHeight;
-        },
         previousPage() {
             // if (this.currentPage > 1) {
             //     this.currentPage--;
             // }
-            if (this.prevPageUrl !== null) {
+            if (this.prevPageUrl !== null && !this.loading) {
                 if (this.currentPage > 1) {
                     this.currentPage--;
                     console.log(this.currentPage);
+                    this.loading = true;
                     if (this.categories !== null && this.categories.length > 0) {
                         axios.get('http://127.0.0.1:8000/api/apartments?category=' + this.categories + `&page=${this.currentPage}`)
                             .then(response => {
                                 store.results = response.data.results.data
                                 //this.apartments = response.data.results.data;
                                 this.nextPageUrl = response.data.results.next_page_url;
-                                this.prevPageUrl = response.data.results.prev_page_url
+                                this.prevPageUrl = response.data.results.prev_page_url;
+                                this.pages = response.data.results.last_page;
+                                this.loading = false;
+                                this.$nextTick(() => {
+                                    // Fai lo scroll dell'elemento nella finestra del browser
+                                    this.$refs.categories.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+
+                                });
                             })
                             .catch(error => {
                                 console.error(error)
+                                this.loading = false;
                             });
                     } else {
                         axios.get(`http://127.0.0.1:8000/api/apartments?page=${this.currentPage}`)
@@ -72,34 +68,52 @@ export default {
                                 store.results = response.data.results.data
                                 //this.apartments = response.data.results.data;
                                 this.nextPageUrl = response.data.results.next_page_url;
-                                this.prevPageUrl = response.data.results.prev_page_url
+                                this.prevPageUrl = response.data.results.prev_page_url;
+                                this.pages = response.data.results.last_page;
+                                this.loading = false;
+                                this.$nextTick(() => {
+                                    // Fai lo scroll dell'elemento nella finestra del browser
+                                    this.$refs.categories.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+
+                                });
                             })
                             .catch(error => {
                                 console.error(error)
+                                this.loading = false;
                             });
 
                     }
                 }
             }
+            /*  console.log(this.currentPage);
+             console.log(this.pages); */
+
+
         },
         nextPage() {
-            // if (this.currentPage < this.pages) {
-            //     this.currentPage++;
-            // }
-            if (this.nextPageUrl !== null) {
+            if (this.nextPageUrl !== null && !this.loading) {
                 if (this.currentPage > 0 && this.currentPage < this.pages) {
                     this.currentPage++;
                     console.log(this.currentPage);
+                    this.loading = true;
                     if (this.categories !== null && this.categories.length > 0) {
                         axios.get('http://127.0.0.1:8000/api/apartments?category=' + this.categories + `&page=${this.currentPage}`)
                             .then(response => {
                                 store.results = response.data.results.data
                                 //this.apartments = response.data.results.data;
                                 this.nextPageUrl = response.data.results.next_page_url;
-                                this.prevPageUrl = response.data.results.prev_page_url
+                                this.prevPageUrl = response.data.results.prev_page_url;
+                                this.pages = response.data.results.last_page;
+                                this.loading = false;
+                                this.$nextTick(() => {
+                                    // Fai lo scroll dell'elemento nella finestra del browser
+                                    this.$refs.categories.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+
+                                });
                             })
                             .catch(error => {
-                                console.error(error)
+                                console.error(error);
+                                this.loading = false;
                             });
 
                     } else {
@@ -108,45 +122,75 @@ export default {
                                 store.results = response.data.results.data
                                 //this.apartments = response.data.results.data;
                                 this.nextPageUrl = response.data.results.next_page_url;
-                                this.prevPageUrl = response.data.results.prev_page_url
+                                this.prevPageUrl = response.data.results.prev_page_url;
+                                this.pages = response.data.results.last_page;
+                                this.loading = false;
+                                this.$nextTick(() => {
+                                    // Fai lo scroll dell'elemento nella finestra del browser
+                                    this.$refs.categories.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+
+                                });
                             })
                             .catch(error => {
-                                console.error(error)
+                                console.error(error);
+                                this.loading = false;
                             });
                     }
 
                 }
             }
+            console.log(this.currentPage);
+            console.log(this.pages);
         },
         goToPage(pageNumber) {
-            this.currentPage = pageNumber;
-            if (this.categories !== null && this.categories.length > 0) {
-                axios.get('http://127.0.0.1:8000/api/apartments?category=' + this.categories + `&page=${this.currentPage}`)
-                    .then(response => {
-                        //this.apartments = response.data.results.data;
-                        store.results = response.data.results.data
-                        this.pages = response.data.results.last_page;
-                        this.loading = false;
-                    })
-                    .catch(error => {
-                        console.error(error)
-                        this.error = error.message;
-                        this.loading = false;
-                    })
-            } else {
-                axios.get(`http://127.0.0.1:8000/api/apartments?page=${this.currentPage}`)
-                    .then(response => {
-                        //this.apartments = response.data.results.data;
-                        store.results = response.data.results.data
-                        this.pages = response.data.results.last_page;
-                        this.loading = false;
-                    })
-                    .catch(error => {
-                        console.error(error)
-                        this.error = error.message;
-                        this.loading = false;
-                    })
+            if (!this.loading) {
+                this.currentPage = pageNumber;
+                this.loading = true;
+                if (this.categories !== null && this.categories.length > 0) {
+                    axios.get('http://127.0.0.1:8000/api/apartments?category=' + this.categories + `&page=${this.currentPage}`)
+                        .then(response => {
+                            //this.apartments = response.data.results.data;
+                            store.results = response.data.results.data
+                            this.nextPageUrl = response.data.results.next_page_url;
+                            this.prevPageUrl = response.data.results.prev_page_url;
+                            this.pages = response.data.results.last_page;
+                            this.loading = false;
+                            this.$nextTick(() => {
+                                // Fai lo scroll dell'elemento nella finestra del browser
+                                this.$refs.categories.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+
+                            });
+                        })
+                        .catch(error => {
+                            console.error(error)
+                            this.error = error.message;
+                            this.loading = false;
+                        })
+                } else {
+                    axios.get(`http://127.0.0.1:8000/api/apartments?page=${this.currentPage}`)
+                        .then(response => {
+                            //this.apartments = response.data.results.data;
+                            store.results = response.data.results.data
+                            this.nextPageUrl = response.data.results.next_page_url;
+                            this.prevPageUrl = response.data.results.prev_page_url;
+                            this.pages = response.data.results.last_page;
+                            this.loading = false;
+                            this.$nextTick(() => {
+                                // Fai lo scroll dell'elemento nella finestra del browser
+                                this.$refs.categories.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+
+                            });
+                        })
+                        .catch(error => {
+                            console.error(error)
+                            this.error = error.message;
+                            this.loading = false;
+                        })
+                }
+
             }
+
+
 
 
         },
@@ -163,9 +207,12 @@ export default {
                     store.results = response.data.results.data
                     //this.apartments = response.data.results.data;
                     // this.pages = Math.ceil(this.apartments.length / this.perPage);
-                    // console.log(response);
+                    this.nextPageUrl = response.data.results.next_page_url;
+                    this.prevPageUrl = response.data.results.prev_page_url;
                     this.pages = response.data.results.last_page;
-                    console.log(response.data.results.last_page);
+                    //console.log(response.data.results.last_page);
+                    console.log(this.currentPage);
+                    console.log(this.pages);
                     this.loading = false;
                 })
                 .catch(error => {
@@ -181,6 +228,7 @@ export default {
             store.servicesIndex = [];
             store.radius = 20;
             store.beds = '';
+            this.loading = true;
             axios.get(`http://127.0.0.1:8000/api/search`)
                 .then(response => {
                     this.apartments = response.data.results;
@@ -222,8 +270,6 @@ export default {
                     // esegue la call api in base a tutti i dati
                 } else if (this.categories.length > 0 && this.categories[0] === store.categories[i].id) {
                     // Se l'elemento è già presente, ma è l'unico elemento nell'array, non fare nulla
-                    /*  console.log('non faccio nulla');
-                     console.log(this.categories); */
                     return;
                 } else {
                     let elementToRemove = store.categories[i].id;
@@ -251,25 +297,24 @@ export default {
                         store.results = response.data.results.data;
                         console.log(response.data.results.data);
                         //console.log('faccio la call api');
-                        //console.log(store.results);
+                        this.nextPageUrl = response.data.results.next_page_url;
+                        this.prevPageUrl = response.data.results.prev_page_url;
                         this.pages = response.data.results.last_page;
-                        console.log(response.data.results.last_page);
+                        //console.log(response.data.results.last_page);
+                        console.log(this.currentPage);
+                        console.log(this.pages);
                         this.loading = false;
-                        /*  console.log('funziono, nascondo');
-                        console.log(store.categories_back);
-                        console.log(store.radius, 'radius');
-                        console.log(store.beds, 'beds');
-                        console.log(store.address, 'address');
-                         console.log(store.results); */
-                        //console.log('http://127.0.0.1:8000/api/search?address=' + store.address + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius * 1000 + '&beds=' + store.beds);
+
                     }).catch(err => {
                         console.log(err);
+                        this.loading = false;
                     })
 
             } catch (error) {
                 console.error(error);
-                // Expected output: ReferenceError: nonExistentFunction is not defined
-                // (Note: the exact output may be browser-dependent)
+                this.loading = false;
+
+
             }
 
         }
@@ -279,15 +324,17 @@ export default {
 
     },
     mounted() {
-        this.setMaxHeight();
+        this.loading = true;
         axios.get('http://127.0.0.1:8000/api/categories')
             .then(response => {
                 //console.log(response);
-                store.categories = response.data.results
+                store.categories = response.data.results;
+                this.loading = false;
                 //console.log(store.categories)
             })
             .catch(err => {
                 console.log(err);
+                this.loading = false;
             })
     },
 }
@@ -295,7 +342,7 @@ export default {
 
 <template>
     <div id="categories">
-        <div class="container">
+        <div class="container" ref="categories">
             <h2>Scopri le nostre categorie <span class="title_mark">di appartamenti</span></h2>
             <div class="description">
                 <p>
@@ -304,65 +351,78 @@ export default {
                     alloggi unici, dal lusso assoluto alle sistemazioni più minimaliste e funzionali.
                 </p>
 
-                <router-link :to="{ name: 'search' }">
+                <router-link class="d-none d-sm-block" :to="{ name: 'search' }">
                     <button class="button" @click="search()">Vedi tutti</button>
                 </router-link>
             </div>
 
-            <div class="container-fluid"> <!-- CAROUSEL -->
-                <div class="categories d-flex  align-items-center">
+            <div class="container-fluid">
+                <div class="categories d-flex justify-content-around align-items-center flex-wrap flex-sm-nowrap">
                     <div class="text-center">
-                        <div @click="callAll()" class="all_apartments me-4">
+                        <div @click="callAll()" class="all_apartments mx-sm-0 me-sm-4">
                             <img src="../assets/img/tutti-gli-alloggi.png" alt="">
                             <div>
                                 Tutti gli alloggi
                             </div>
                         </div>
                     </div>
-                    <div class="categories_container d-flex">
-                        <div class="text-center " v-for="category, i in store.categories" :key="category.id">
-                            <div class="category p-3"
-                                :class="[i === activeCategoryIndex ? 'active_category' : '', loading ? 'loading' : '']"
-                                @click.stop="PushCategory(i)" :id="'category-' + i">
-                                <img :src="getImagePath(`${category.img}.png`)" alt="">
-                                <div>
-                                    {{ category.name }}
+                    <router-link class="d-block d-sm-none" :to="{ name: 'search' }">
+                        <button class="button" @click="search()">Vedi tutti</button>
+                    </router-link>
+                    <div class="swiper swiper-2 px-5 mt-5 mt-sm-0">
+                        <!-- Additional required wrapper -->
+                        <div class="swiper-wrapper">
+                            <!-- Slides -->
+                            <div class="swiper-slide text-center " v-for="category, i in store.categories"
+                                :key="category.id">
+                                <div class="category"
+                                    :class="[i === activeCategoryIndex ? 'active_category' : '', loading ? 'loading' : '']"
+                                    @click.stop="PushCategory(i)" :id="'category-' + i">
+                                    <img :src="getImagePath(`${category.img}.png`)" alt="">
+                                    <div>
+                                        {{ category.name }}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="align-self-center p-3">
-                        <!--
-                                                                                                                                                                                                                                                                                                                                                                                        <button @click="HideShowPopup()" class="button" id="filterBtn">
-                                                                                                                                                                                                                                                                                                                                                                                            <i class="fa-solid fa-sliders"></i>
-                                                                                                                                                                                                                                                                                                                                                                                            Filtri
-                                                                                                                                                                                                                                                                                                                                                                                        </button>
 
-                                                                                                                                                                                                                                                                                                                                                                                    -->
+
+                        </div>
+
+
+                        <!-- If we need navigation buttons -->
+                        <div class="swiper-button-prev swiper-button-prev-2"></div>
+                        <div class="swiper-button-next swiper-button-next-2"></div>
+
+
                     </div>
                 </div>
             </div>
 
-            <div class="row">
-                <!--
-                                                                                                                                                                                                                                                                                                                                                                                <div class="col-lg-4 col-md-6 col-sm-12 pb-4" v-for="(apartment, index) in apartments" :key="apartment.id">
-                                                                                                                                                                                                                                                                                                                                                                                    <CardComponent :apartment="apartment" />
-                                                                                                                                                                                                                                                                                                                                                                                </div>
-
-                                                                                                                                                                                                                                                                                                                                                                            -->
-                <CardComponent class="pb-4 col-12 col-md-6 col-xl-4" v-for="apartment in store.results"
+            <div class="row mt-4">
+                <div class="preloader_container d-flex justify-content-center align-items-center position-relative"
+                    v-if="loading">
+                    <div class="preloader">
+                        <svg viewBox="0 0 102 102" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path class="big-circle" d="M101 51C101 78.6142 78.6142 101 51 101C23.3858 101 1 78.6142 1 51"
+                                stroke="#252525" stroke-width="2" />
+                            <path class="small-circle" d="M91 51C91 28.9086 73.0914 11 51 11C28.9086 11 11 28.9086 11 51"
+                                stroke="#252525" stroke-width="2" />
+                        </svg>
+                    </div>
+                </div>
+                <CardComponent class="pb-4 col-12 col-md-6 col-xl-4" v-if="!loading" v-for="apartment in store.results"
                     :apartment="apartment" />
 
 
-                <div class="pagination">
-                    <button @click="previousPage"><i class="fa-solid fa-chevron-left"></i></button>
-                    <div class="page-numbers">
+                <div class="ms_pagination">
+                    <div @click="previousPage" v-if="prevPageUrl !== null"><i class="fa-solid fa-chevron-left"></i></div>
+                    <div class="page-numbers" v-if="prevPageUrl !== null || nextPageUrl !== null">
                         <div v-for="pageNumber in pageNumbers" :key="pageNumber"
                             :class="{ active: currentPage === pageNumber }" @click="goToPage(pageNumber)">
                             {{ pageNumber }}
                         </div>
                     </div>
-                    <button @click="nextPage"><i class="fa-solid fa-chevron-right"></i></button>
+                    <div @click="nextPage" v-if="nextPageUrl !== null"><i class="fa-solid fa-chevron-right"></i></div>
                 </div>
 
             </div>
@@ -371,8 +431,70 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-@use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
+
+
+.preloader_container {
+    min-height: 1000px;
+}
+
+.preloader {
+    position: absolute;
+    width: 102px;
+    height: 102px;
+    left: 50%;
+    top: 50%;
+    min-height: 102px;
+    transform: translateX(-50%) translateY(-50%);
+
+    svg {
+        width: 102px;
+        height: 102px;
+
+
+    }
+
+}
+
+.preloader .small-circle {
+    stroke-dasharray: 210;
+    stroke-dashoffset: 210;
+    stroke: $bb-secondary;
+    transform-origin: 50%;
+    animation: 1s draw-small infinite alternate;
+}
+
+@keyframes draw-small {
+    0% {
+        stroke-dashoffset: 0;
+        transform: rotate(0deg);
+    }
+
+    100% {
+        stroke-dashoffset: 210;
+        transform: rotate(360deg);
+    }
+}
+
+.preloader .big-circle {
+    stroke-dasharray: 240;
+    stroke-dashoffset: 240;
+    transform-origin: 50%;
+    stroke: $bb-primary;
+    animation: 1s draw-big infinite alternate 0.5s;
+}
+
+@keyframes draw-big {
+    0% {
+        stroke-dashoffset: 0;
+        transform: rotateY(180deg) rotate(360deg);
+    }
+
+    100% {
+        stroke-dashoffset: 240;
+        transform: rotateY(180deg) rotate(0deg);
+    }
+}
 
 .all_apartments {
     cursor: pointer;
@@ -382,6 +504,7 @@ export default {
     white-space: nowrap;
     cursor: pointer;
 }
+
 
 .category.loading {
     pointer-events: none;
@@ -403,7 +526,6 @@ export default {
 
 .categories_container {
     overflow-x: auto;
-    margin-bottom: 1rem;
 }
 
 @media (max-width: 1739px) {
@@ -438,17 +560,22 @@ p {
     align-items: center;
     padding-bottom: 2rem;
     justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 // Pagination
-.pagination {
+.ms_pagination {
     padding-top: 1.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
 
-    button {
+    div {
         color: $bb-dark;
+
+        &:hover {
+            cursor: pointer;
+        }
 
         svg {
             color: $bb-text-gray;
@@ -460,6 +587,7 @@ p {
     display: flex;
     flex-wrap: wrap;
     margin: 0 1rem;
+    justify-content: center;
     align-items: baseline;
 }
 

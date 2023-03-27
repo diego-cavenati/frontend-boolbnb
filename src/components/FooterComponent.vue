@@ -67,7 +67,6 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-@use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
 
 #footer {
@@ -122,14 +121,26 @@ export default {
         color: white;
         text-align: center;
         flex-wrap: wrap;
+        padding: 0;
 
         li {
-            padding: 1rem;
+            padding: 1rem 1.5rem;
 
             a {
                 color: white;
             }
         }
     }
+}
+
+@media screen and (max-width: 744px) {
+    #footer {
+        padding-bottom: 6rem;
+
+        ul {
+            justify-content: center;
+        }
+    }
+
 }
 </style>

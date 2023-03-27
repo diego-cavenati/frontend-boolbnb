@@ -2,7 +2,10 @@
 import { store } from '../store';
 import axios from 'axios';
 import CardComponent from '../components/CardComponent.vue';
-;
+import Swiper, { Navigation, Autoplay } from 'swiper';
+// import Swiper and modules styles
+import 'swiper/css';
+import 'swiper/css/navigation';
 
 export default {
     name: 'AdvancedSearchView',
@@ -90,24 +93,8 @@ export default {
 
             } catch (error) {
                 console.error(error);
-                // Expected output: ReferenceError: nonExistentFunction is not defined
-                // (Note: the exact output may be browser-dependent)
             }
-            // var popup = new tt.Popup({ offset: popupOffset })
-            // .setHTML("Your address!");
-            // marker.setPopup(popup).togglePopup();
-            //
-            // const icon = {
-            //     iconUrl: '/img/pin_boolbnb.png',
-            //     iconSize: [40, 40],
-            //     iconAnchor: [0, 0],
-            // };
 
-            // const marker = new tt.Marker({ icon }).setLngLat([longitude, latitude]).addTo(this.map);
-
-            // const popup = new tt.Popup().setHTML('<h3>Il tuo titolo personalizzato</h3>');
-            // marker.setPopup(popup);
-            //          
         },
         getMap() {
             try {
@@ -144,8 +131,6 @@ export default {
 
             } catch (error) {
                 console.error(error);
-                // Expected output: ReferenceError: nonExistentFunction is not defined
-                // (Note: the exact output may be browser-dependent)
             }
         },
         getImagePath: function (imgPath) {
@@ -216,13 +201,6 @@ export default {
                         } else {
                             mapHiddenEmptyAddress.classList.remove('hide')
                         }
-                        /*  console.log('funziono, nascondo');
-                        console.log(store.categories_back);
-                        console.log(store.radius, 'radius');
-                        console.log(store.beds, 'beds');
-                        console.log(store.address, 'address');
-                         console.log(store.results); */
-                        //console.log('http://127.0.0.1:8000/api/search?address=' + store.address + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius * 1000 + '&beds=' + store.beds);
                     }).catch(err => {
                         console.log(err);
                     })
@@ -233,8 +211,7 @@ export default {
 
             } catch (error) {
                 console.error(error);
-                // Expected output: ReferenceError: nonExistentFunction is not defined
-                // (Note: the exact output may be browser-dependent)
+
             }
 
         },
@@ -260,8 +237,6 @@ export default {
                     // esegue la call api in base a tutti i dati
                 } else if (store.categories_back.length > 0 && store.categories_back[0] === store.categories[i].id) {
                     // Se l'elemento è già presente, ma è l'unico elemento nell'array, non fare nulla
-                    /*  console.log('non faccio nulla');
-                     console.log(store.categories_back); */
                     console.log(store.categories_back);
 
                     return;
@@ -280,12 +255,8 @@ export default {
                  console.log(store.categories_back); */
             } catch (error) {
                 console.error(error);
-                // Expected output: ReferenceError: nonExistentFunction is not defined
-                // (Note: the exact output may be browser-dependent)
             }
-            /*console.log(store.radius, 'radius');
-            console.log(store.beds, 'beds');
-            console.log(store.address, 'address'); */
+
         },
         clearMap() {
             if (this.map) {
@@ -295,11 +266,8 @@ export default {
             //document.getElementById('map').style.display = 'none';
         },
         AllApartments() {
-            store.categories_back = []; // Rimuovi tutti gli elementi dall'array categories_back
-            /* const categories = document.querySelectorAll('.active_category');
-            console.log(categories); // Seleziona tutti gli elementi che hanno la classe "active_category"
-            categories.forEach(category => category.classList.remove('active_category')); */ // Rimuovi la classe "active_category" da tutti gli elementi
-            //console.log(store.categories_back);
+            // Rimuovi tutti gli elementi dall'array categories_back
+            store.categories_back = [];
             this.SubmitServices();
         },
         HideShowPopup() {
@@ -316,50 +284,11 @@ export default {
         },
 
 
-        /*
-        HideShowMap() {
-            const realMap = document.getElementById('map') // MAPPA
-            const rightCol = document.querySelector('.hide_map_custom'); // COLONNA DX
-            const leftCol = document.getElementById('apartments'); // COLONNA SX
-            rightCol.classList.remove('hide_map_custom')
-            leftCol.classList.add('hide')
-            realMap.classList.remove('d-none')
-            realMap.classList.remove('d-xxl-block')
-            //leftCol.classList.toggle('hide')
-            //map.classList.toggle('d-none')
-            //realMap.classList.add('d-none')
-            //map.classList.toggle('hide')
-            console.log(leftCol);
-            console.log(realMap);
-            //console.log(map);
-        },
-        */
-
-        /*
-        SubmitCategory(){
-            axios.get('http://127.0.0.1:8000/api/search?services='+ {params: {services: store.services_back, category : null , address : null}} )
-            .then( resp =>{
-                console.log(resp);
-            })
-        }
-        */
     },
     computed: {
         computedRadius() {
             return console.log(`calc(${this.store.radius}% - (10px / 2))`);
         },
-        /*
-        computedRadius() {
-            return `${store.radius}km`
-        },
-        */
-        /*
-        classObject(){
-            return {
-                active : store.isActive
-            }
-        },
-        */
         pageNumbers() {
             return store.pages;
         },
@@ -446,26 +375,45 @@ export default {
                         }
 
 
-
-
-
-
-
-
-
                     }
                 }
 
 
             } catch (error) {
                 console.error(error);
-                // Expected output: ReferenceError: nonExistentFunction is not defined
-                // (Note: the exact output may be browser-dependent)
+
             }
 
         }
     },
     mounted() {
+
+        const swiper3 = new Swiper('.swiper-3', {
+            modules: [Navigation],
+            direction: 'horizontal',
+            slidesPerView: 1,
+            spaceBetween: 60,
+            navigation: {
+                nextEl: '.swiper-button-next-3',
+                prevEl: '.swiper-button-prev-3',
+            },
+            breakpoints: {
+                400: {
+                    slidesPerView: 2,
+                    spaceBetween: 80,
+                },
+
+                992: {
+                    slidesPerView: 3,
+                    spaceBetween: 60,
+                },
+                1400: {
+                    slidesPerView: 5,
+
+                }
+            }
+
+        });
         const filterBtn = document.querySelector('#filterBtn');
         const filterPopup = document.querySelector('#filterPopup');
 
@@ -492,35 +440,9 @@ export default {
             .catch(err => {
                 console.log(err);
             })
-        /*  console.log(store.services);
-         console.log(store.categories); */
-
-
-        /*  if (store.results === null || store.results.length === 0) {
-             
-         } */
         window.scrollTo(0, 0);
 
         this.SubmitServices();
-
-
-
-
-
-
-
-        //console.log('http://127.0.0.1:8000/api/search?services='+ store.services_back );
-        /* // possibile funzione per far scomparire il popup 
-        document.addEventListener("click", function (event) {
-            var elementoDaNascondere = document.getElementById("filterPopup");
-            if (event.target !== elementoDaNascondere && parseInt(window.getComputedStyle(event.target).getPropertyValue("z-index")) < 11) {
-                elementoDaNascondere.style.display = "none";
-            }
-        });
-     
-        */
-    },
-    updated() {
 
     },
 
@@ -531,53 +453,56 @@ export default {
 <template>
     <div id="results">
 
-        <div class="container-fluid">
-            <div class="categories d-flex  align-items-center">
+        <div class="container">
+            <div class="categories d-flex justify-content-around align-items-center  flex-wrap flex-md-nowrap">
                 <div class="text-center">
-                    <div @click="AllApartments()" class="all_apartments">
+                    <div @click="AllApartments()" class="all_apartments px-0 px-sm-3">
                         <img src="../assets/img/tutti-gli-alloggi.png" alt="">
                         <div>
                             Tutti gli alloggi
                         </div>
                     </div>
                 </div>
-                <div class="categories_container d-flex">
-                    <div class="text-center p-3" v-for="category, i in store.categories" :key="category.id">
-                        <div class="category"
-                            :class="[i === store.activeCategoryIndex && store.categories_back.length !== 0 ? 'active_category' : '', store.loading || store.isAdvancedSearchViewLoaded === false || store.isSearchbarComponentLoaded === false ? 'loading' : '']"
-                            @click.stop="PushCategory(i)" :id="'category-' + i">
-                            <img :src="getImagePath(`${category.img}.png`)" alt="">
-                            <div>
-                                {{ category.name }}
+                <div class="swiper swiper-3 order-3  mt-3 mt-md-0">
+                    <!-- Additional required wrapper -->
+                    <div class="swiper-wrapper">
+                        <!-- Slides -->
+                        <div class="swiper-slide text-center " v-for="category, i in store.categories" :key="category.id">
+                            <div class="category"
+                                :class="[i === store.activeCategoryIndex && store.categories_back.length !== 0 ? 'active_category' : '', store.loading || store.isAdvancedSearchViewLoaded === false || store.isSearchbarComponentLoaded === false ? 'loading' : '']"
+                                @click.stop="PushCategory(i)" :id="'category-' + i">
+                                <img :src="getImagePath(`${category.img}.png`)" alt="">
+                                <div>
+                                    {{ category.name }}
+                                </div>
                             </div>
                         </div>
+
+
                     </div>
+
+
+                    <!-- If we need navigation buttons -->
+                    <div class="swiper-button-prev swiper-button-prev-3"></div>
+                    <div class="swiper-button-next swiper-button-next-3"></div>
+
+
                 </div>
-                <div class="align-self-center p-3">
+                <div class="align-self-center p-3 order-2 order-md-3">
                     <button @click="HideShowPopup()" class="button" id="filterBtn">
                         <i class="fa-solid fa-sliders"></i>
                         Filtri
                     </button>
                 </div>
             </div>
-
-            <!--
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <button @click=" HideShowMap()" class="btn btn-primary test_map">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            MAPPA
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </button>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                -->
-
-
             <div> <!--Scrivere all'interno del popup-->
-                <div id="filterPopup" class="container rounded hide">
-                    <div class="close">
-                        <button @click="HideShowPopup()"></button>
-                    </div>
-                    <div class="row">
+                <div id="filterPopup" class="container hide">
+
+                    <div class="popup_heading">
                         <h3>Servizi</h3>
+                        <span class="close" @click="HideShowPopup()"></span>
+                    </div>
+                    <div class="row services_icons">
                         <div v-for="service, i in store.services" :key="service.id"
                             class="col-xl-3 col-md-4 col-sm-6 d-flex">
                             <div @click="PushService(i)" :id="'service-' + i" class="card p-3 my-2 card_custom"
@@ -591,33 +516,34 @@ export default {
                             </div>
                         </div>
 
-                        <div class="row">
-
-                            <div class="col-6 distance">
-                                <h3>Seleziona il raggio in km:</h3>
-                                <!--TODO bisogna pushare store.radius al back insieme ai servizi-->
-                                <input type="range" min="20" max="100" id="range" v-model.number="store.radius" />
-                                <p>Il raggio selezionato è {{ store.radius }} km.</p>
-                            </div>
 
 
-                            <div class="col-6 beds-input">
-                                <h3 for="beds">Posti Letto</h3>
-                                <div class="beds-input-container">
-                                    <svg class="beds-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
-                                        <g id="Livello_2" data-name="Livello 2">
-                                            <g id="Livello_1-2" data-name="Livello 1">
-                                                <path
-                                                    d="M21,192H0V92c2.63-4.14,5.35-8.23,7.86-12.44,1.17-2,2.74-4.13,2.76-6.23.23-17.12.16-34.25.13-51.38,0-9,4.07-15.54,11.92-19.8C24.08,1.38,25.55.71,27,0H165c12.53,4.93,17.05,14.2,16.42,27.44-.73,15.26-.21,30.58-.11,45.88a9.82,9.82,0,0,0,1.28,5c3,4.67,6.25,9.14,9.41,13.69V192H171V171.19H21ZM170.43,96.31H21.59V149H170.43ZM32.32,21.48V74.75H52.58a8.1,8.1,0,0,0,.57-1.65c.05-5.66.06-11.32.1-17,.08-9.67,3.68-13.34,13.29-13.36q29,0,58,0c10.92,0,14.23,3.38,14.25,14.41,0,5.74,0,11.49,0,17.17h20.92V21.48Z" />
-                                            </g>
-                                        </g>
-                                    </svg>
-                                    <input type="number" id="beds" min="1" max="127" v-model.number="store.beds">
-                                </div>
-                                <p>i posti letti sono {{ store.beds }}</p>
-                            </div>
+                    </div>
+                    <div class="row distance_beds">
+
+                        <div class="col-12 col-sm-6 distance">
+                            <h3>Seleziona il raggio in km:</h3>
+                            <!--TODO bisogna pushare store.radius al back insieme ai servizi-->
+                            <input type="range" min="20" max="100" id="range" v-model.number="store.radius" />
+                            <p>Il raggio selezionato è {{ store.radius }} km.</p>
                         </div>
 
+
+                        <div class="col-12 col-sm-6 beds-input">
+                            <h3 for="beds">Posti Letto</h3>
+                            <div class="beds-input-container">
+                                <svg class="beds-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+                                    <g id="Livello_2" data-name="Livello 2">
+                                        <g id="Livello_1-2" data-name="Livello 1">
+                                            <path
+                                                d="M21,192H0V92c2.63-4.14,5.35-8.23,7.86-12.44,1.17-2,2.74-4.13,2.76-6.23.23-17.12.16-34.25.13-51.38,0-9,4.07-15.54,11.92-19.8C24.08,1.38,25.55.71,27,0H165c12.53,4.93,17.05,14.2,16.42,27.44-.73,15.26-.21,30.58-.11,45.88a9.82,9.82,0,0,0,1.28,5c3,4.67,6.25,9.14,9.41,13.69V192H171V171.19H21ZM170.43,96.31H21.59V149H170.43ZM32.32,21.48V74.75H52.58a8.1,8.1,0,0,0,.57-1.65c.05-5.66.06-11.32.1-17,.08-9.67,3.68-13.34,13.29-13.36q29,0,58,0c10.92,0,14.23,3.38,14.25,14.41,0,5.74,0,11.49,0,17.17h20.92V21.48Z" />
+                                        </g>
+                                    </g>
+                                </svg>
+                                <input type="number" id="beds" min="1" max="127" v-model.number="store.beds">
+                            </div>
+                            <p>i posti letti sono {{ store.beds }}</p>
+                        </div>
                     </div>
                     <div @click="SearchHide()" class="confirm">
                         <button class="button">Applica i filtri</button>
@@ -680,20 +606,7 @@ export default {
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="pagination" v-if="!store.loading">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <button @click="previousPage">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="fa-solid fa-chevron-left"></i>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </button>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="page-numbers">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div v-for="pageNumber in pageNumbers" :key="pageNumber"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            :class="{ active: currentPage === pageNumber }" @click="goToPage(pageNumber)">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {{ pageNumber }}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <button @click="nextPage">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="fa-solid fa-chevron-right"></i>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </button>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div> -->
+
                         </div>
                     </div>
                 </div>
@@ -706,7 +619,6 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-@use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
 
 :root {
@@ -715,7 +627,14 @@ export default {
 
 
 .not_found img {
-    width: 400px;
+    width: 300px;
+}
+
+@media screen and (min-width: 586px) {
+    .not_found img {
+        width: 400px;
+    }
+
 }
 
 .all_apartments {
@@ -734,8 +653,8 @@ export default {
     justify-content: center;
 }
 
-.categories_container {
-    overflow-x: auto;
+.swiper.swiper-3 {
+    padding: 1.5rem 3.5rem;
 }
 
 @media (max-width: 1739px) {
@@ -804,6 +723,21 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     pointer-events: none;
 }
 
+#filterPopup {
+    z-index: 11;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    border-radius: 1.3rem;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.3);
+}
+
 .beds-input-container {
     display: flex;
     align-items: center;
@@ -833,11 +767,39 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     color: #666;
 }
 
-/*
-.beds_svg {
-    width: 30px;
+@media screen and (max-width: 586px) {
+    #filterPopup {
+        height: 100%;
+        border-radius: 0px;
+
+        h3 {
+            font-size: 1.4rem;
+        }
+
+        .row.services_icons {
+            overflow-y: auto;
+            height: 500px;
+        }
+
+        .row.distance_beds {
+            justify-content: center;
+        }
+
+        .beds-input,
+        .distance {
+            width: 100%;
+        }
+
+        .beds-input p,
+        .distance p {
+            font-size: 0.9rem;
+        }
+    }
+
+
+
+
 }
-*/
 
 .map_hidden {
     display: none;
@@ -867,31 +829,8 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 // filter
 
 
-#filterPopup {
-    z-index: 11;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding-left: 2.5rem;
-    padding-right: 2.5rem;
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-    border-radius: 1.3rem !important;
-    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.3);
-    //opacity: 0;
-    //transition: opacity 0.3s ease-out, visibility 0s 0.3s;
-}
 
-/*
-#filterPopup.open {
-    opacity: 1;
-    visibility: visible;
-    transition-delay: 0s;
-}
 
-*/
 .hide {
     display: none;
 }
@@ -916,14 +855,10 @@ input[type=range]:focus::-webkit-slider-runnable-track {
         margin-bottom: 0.4rem;
     }
 
-    /*
-    box-shadow: 6px 6px 12px #c5c5c5,
-        -6px -6px 12px #ffffff;
-    */
+
     &:hover {
-        //box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
         cursor: pointer;
-        // aggiungere le proprietà alla classe dinamica
+
 
     }
 }
@@ -931,10 +866,6 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 .active {
     color: white;
     background-color: $bb-primary;
-    /*
-    box-shadow: inset 4px 4px 12px #c5c5c5,
-        inset -4px -4px 12px #ffffff;
-        */
     border: none;
 }
 
@@ -950,14 +881,14 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     justify-content: flex-end;
 }
 
-.close {
+.popup_heading {
 
     cursor: pointer;
     display: flex;
-    justify-content: flex-end;
-    height: 30px;
+    justify-content: space-between;
+    align-items: center;
 
-    button:after {
+    span.close:after {
         display: inline-block;
         content: "\00d7";
         color: $bb-light;
@@ -972,7 +903,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 }
 
 .cardLoading {
-    /* width: calc((100% - 60px) / 4); */
+
 
 
     &.is-loading {

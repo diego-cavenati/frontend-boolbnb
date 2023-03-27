@@ -169,7 +169,7 @@ export default {
                     fermamente che tra questi appartamenti troverete la soluzione perfetta per la vostra prossima avventura.
                 </p>
             </div>
-            <div class="swiper p-5">
+            <div class="swiper swiper-1">
                 <!-- Additional required wrapper -->
                 <div class="swiper-wrapper">
                     <!-- Slides -->
@@ -188,8 +188,8 @@ export default {
 
 
                 <!-- If we need navigation buttons -->
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev swiper-button-prev-1"></div>
+                <div class="swiper-button-next swiper-button-next-1"></div>
 
 
             </div>
@@ -200,7 +200,6 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-@use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
 
 
@@ -237,6 +236,8 @@ export default {
     }
 }
 
+
+
 .swiper-slide.swiper-slide-active {
 
     .image-container {
@@ -253,7 +254,19 @@ export default {
 
 }
 
+@media screen and (min-width: 586px) {
+    .swiper-slide {
+        padding-inline: 6rem;
+    }
+
+
+}
+
 @media screen and (min-width:992px) {
+    .swiper-slide {
+        padding-inline: 2.5rem;
+    }
+
     .swiper-slide.swiper-slide-active {
 
         .image-container {
@@ -317,11 +330,15 @@ h3 {
     display: flex;
     z-index: 2;
     position: relative;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
 
     .flag {
         width: 50px;
         position: relative;
-        padding-left: 0.6rem;
+        margin: 0.25rem 0.5rem;
+
     }
 }
 

@@ -1,21 +1,22 @@
 <script>
-import { reactive } from 'vue'
 // axios import
 import axios from 'axios';
 // store import
 import { store } from '../store.js';
-import Datepicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
 import moment from 'moment';
 import { watch } from 'vue';
+import { Vue3Lottie } from 'vue3-lottie'
+import 'vue3-lottie/dist/style.css'
+import successJSON from '../assets/97240-success.json'
 
 export default {
     name: 'SingleApartmentView',
     components: {
-        Datepicker,
+        Vue3Lottie
     },
     data() {
         return {
+            successJSON,
             date: null,
             apartment: null,
             latitude: null,
@@ -36,6 +37,7 @@ export default {
             price_per_night: '',
             messageForm: '',
             userIP: null,
+
         }
     },
     methods: {
@@ -137,6 +139,10 @@ export default {
                     this.apartment_id = this.apartment.id
                     this.getMap();
                     this.addMarker();
+                    this.$nextTick(() => {
+                        window.scrollTo(0, 0);
+
+                    });
                     //console.log(this.apartment);
                 } else {
                     this.$router.push({ name: 'not-found' });
@@ -168,6 +174,9 @@ export default {
             } catch (error) {
                 console.log(error);
             }
+        },
+        clearMessageForm() {
+            this.messageForm = '';
         }
 
 
@@ -176,7 +185,8 @@ export default {
     mounted() {
 
         this.AddView();
-        window.scrollTo(0, 0);
+
+
 
 
 
@@ -194,6 +204,13 @@ export default {
 
 </script>
 <template>
+    <div class="message-sent" v-if="this.messageForm">
+        <h4 class="py-4 text-center">Messaggio inviato con successo!</h4>
+        <Vue3Lottie :animationData="successJSON" :loop="false" :height="200" :width="200" />
+        <span class="close" @click="clearMessageForm()"></span>
+    </div>
+    <div class="layover" v-if="this.messageForm"></div>
+
     <div class="min-vh-100 d-flex justify-content-center align-items-center position-relative" v-if="loading">
         <div class="preloader">
             <svg viewBox="0 0 102 102" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -340,10 +357,6 @@ export default {
                         </div>
 
                         <form @submit.prevent="sendForm()">
-
-                            <div class="alert alert-success my-2 " v-if="this.messageForm">
-                                {{ this.messageForm }}
-                            </div>
                             <div class="col_2">
                                 <div class="name">
                                     <label for="" class="form-label">Nome*</label>
@@ -377,7 +390,7 @@ export default {
                                 <label for="" class="form-label">Messaggio*</label>
                                 <textarea rows="3" cols="50" name="body" id="body" class="form-control" placeholder=""
                                     aria-describedby="helpId" required v-model="body">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </textarea>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </textarea>
 
                                 <div class="alert alert-danger" role="alert" v-for="error in errors.body">
                                     {{ error }}
@@ -409,7 +422,6 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-@use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
 
 //loader 
@@ -441,6 +453,18 @@ export default {
     animation: 1s draw-small infinite alternate;
 }
 
+@keyframes draw-big {
+    0% {
+        stroke-dashoffset: 0;
+        transform: rotateY(180deg) rotate(360deg);
+    }
+
+    100% {
+        stroke-dashoffset: 240;
+        transform: rotateY(180deg) rotate(0deg);
+    }
+}
+
 @keyframes draw-small {
     0% {
         stroke-dashoffset: 0;
@@ -461,17 +485,7 @@ export default {
     animation: 1s draw-big infinite alternate 0.5s;
 }
 
-@keyframes draw-big {
-    0% {
-        stroke-dashoffset: 0;
-        transform: rotateY(180deg) rotate(360deg);
-    }
 
-    100% {
-        stroke-dashoffset: 240;
-        transform: rotateY(180deg) rotate(0deg);
-    }
-}
 
 #map {
 
@@ -513,10 +527,47 @@ img {
         object-fit: cover;
         border-radius: 2rem;
         width: 100%;
-        height: 35rem;
+
 
     }
 }
+
+.layover {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 3;
+}
+
+//lottie popup when message is sent 
+.message-sent {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+    background-color: white;
+    padding: 2rem 4rem;
+    z-index: 9999;
+    border-radius: 1rem;
+
+    span.close:after {
+        cursor: pointer;
+        position: absolute;
+        right: 0;
+        top: 0;
+        display: inline;
+        content: "\00d7";
+        color: $bb-light;
+        font-size: 2rem;
+        padding-inline: 1rem;
+    }
+
+
+}
+
 
 #contact_host {
     margin-bottom: 1rem;
@@ -615,12 +666,12 @@ img {
     border-radius: 20px;
     width: 80%;
     margin: auto;
-    padding: 2.5rem;
+    padding: 1.5rem;
     color: $bb-lighter;
-    font-size: 1.2rem;
     margin-top: -7rem;
     margin-bottom: 3rem;
     position: relative;
+    flex-wrap: wrap;
 
     svg {
         color: $bb-lighter;
@@ -628,6 +679,7 @@ img {
         font-size: 1rem;
         height: 1.5rem;
         width: 1.5rem;
+        margin: 0.5rem 0;
     }
 
     div {
@@ -672,5 +724,25 @@ img {
         padding: 0.5rem 0;
         margin-top: 0.75rem;
     }
+}
+
+@media screen and (min-width: 768px) {
+    .details {
+        padding: 2rem;
+    }
+
+    .cover_img {
+        img {
+            height: 35rem;
+        }
+    }
+}
+
+@media screen and (min-width: 993px) {
+    .details {
+        padding: 2.5rem;
+    }
+
+
 }
 </style>

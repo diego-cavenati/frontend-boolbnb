@@ -16,8 +16,7 @@ export default {
         TopPlacesComponent,
         CategoryApartmentComponent
     }, mounted() {
-        const swiper = new Swiper('.swiper', {
-            // Optional parameters
+        const swiper1 = new Swiper('.swiper-1', {
             modules: [Navigation, Autoplay],
             speed: 500,
             direction: 'horizontal',
@@ -25,16 +24,13 @@ export default {
             slidesPerView: 1,
             spaceBetween: 50,
             navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
+                nextEl: '.swiper-button-next-1',
+                prevEl: '.swiper-button-prev-1',
             },
             autoplay: {
                 delay: 5000,
             },
             breakpoints: {
-                // when window width is >= 320px
-                // when window width is >= 480px
-                // when window width is >= 640px
                 992: {
                     slidesPerView: 3,
                     spaceBetween: 40,
@@ -43,6 +39,29 @@ export default {
                 1200: {
                     slidesPerView: 3,
                     spaceBetween: 30,
+                }
+            }
+
+        });
+        const swiper2 = new Swiper('.swiper-2', {
+            modules: [Navigation],
+            direction: 'horizontal',
+            slidesPerView: 1,
+            spaceBetween: 50,
+            navigation: {
+                nextEl: '.swiper-button-next-2',
+                prevEl: '.swiper-button-prev-2',
+            },
+            breakpoints: {
+                440: {
+                    slidesPerView: 2,
+                },
+                992: {
+                    slidesPerView: 4,
+                },
+                1400: {
+                    slidesPerView: 6,
+
                 }
             }
 
@@ -58,6 +77,4 @@ export default {
     <CategoryApartmentComponent />
 </template>
 
-<style lang="scss" scoped>
-@use '../assets/scss/general.scss';
-</style>
+<style lang="scss" scoped></style>

@@ -33,18 +33,6 @@ export default {
         },
     }
 
-    // created() {
-    //     window.addEventListener('resize', this.handleResize);
-    //     this.handleResize();
-    // },
-    // destroyed() {
-    //     window.removeEventListener('resize', this.handleResize);
-    // },
-    // methods: {
-    //     handleResize() {
-    //         this.isMobileView = window.innerWidth <= 744;
-    //     },
-    // },
 }
 </script>
 <template>
@@ -73,84 +61,41 @@ export default {
                     <!-- TODO add letter user -->
                     <span><i class="fa-solid fa-user"></i></span>
                 </div>
-        </button>
-        <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="http://127.0.0.1:8000/">Accedi</a></li>
-            <li><a class="dropdown-item" href="http://127.0.0.1:8000/register">Registrati</a></li>
-            <!-- <li><a class="dropdown-item" href="#">Messaggi</a></li>
-                                <li><a class="dropdown-item" href="#">Preferiti</a></li>
-                                <li>
-                                <hr class="dropdown-divider">
-                                </li>
-                                 <li><a class="dropdown-item" href="#">Gestisci gli annunci</a></li>
-                                <li>
-                                <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="#">Esci</a></li> -->
-        </ul>
-    </div>
-</nav>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="http://127.0.0.1:8000/">Accedi</a></li>
+                <li><a class="dropdown-item" href="http://127.0.0.1:8000/register">Registrati</a></li>
+            </ul>
+        </div>
+    </nav>
 
-<!-- Nav bottom -->
-<div class="nav_bottom">
-    <div class="container icons">
+    <!-- Nav bottom -->
+    <div class="nav_bottom">
+        <div class="container icons">
 
 
             <div class="nav_icon">
-                <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fa-solid fa-user"></i>
-                    <span><a href="http://127.0.0.1:8000/">Accedi</a></span>
-                </button>
+                <i class="fa-solid fa-user"></i>
+                <span><a href="http://127.0.0.1:8000/">Accedi</a></span>
             </div>
+
+
+            <router-link class="nav_icon" :to="{ name: 'search' }">
+                <i class=" fa-solid fa-magnifying-glass"></i>
+                <span>Cerca</span>
+            </router-link>
+
 
             <div class="nav_icon">
-                <router-link :to="{ name: 'search' }">
-                    <button type=" button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class=" fa-solid fa-magnifying-glass"></i>
-                        <span>Cerca</span>
-                    </button>
-                </router-link>
+                <i class="fa-solid fa-pen"></i>
+                <span><a href="http://127.0.0.1:8000/register">Registrati</a></span>
             </div>
-
-            <div class="nav_icon">
-                <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fa-solid fa-pen"></i>
-                    <span><a href="http://127.0.0.1:8000/register">Registrati</a></span>
-                </button>
-            </div>
-
-
-
-            <!--
-                                                                                                                                                                                                                                                                                                                                                                    <div>
-                                                                                                                                                                                                                                                                                                                                                                        <div class="nav_icon dropup">
-                                                                                                                                                                                                                                                                                                                                                                            <button type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                                                                                                                                                                                                                                                                                                                                <i class="fa-solid fa-user"></i>
-                                                                                                                                                                                                                                                                                                                                                                                <span>Accedi</span>
-                                                                                                                                                                                                                                                                                                                                                                            </button>
-
-                                                                                                                                                                                                                                                                                                                                                                            <ul class="dropdown-menu">
-                                                                                                                                                                                                                                                                                                                                                                                <li><a class="dropdown-item" href="#">Messaggi</a></li>
-                                                                                                                                                                                                                                                                                                                                                                                <li><a class="dropdown-item" href="#">Preferiti</a></li>
-                                                                                                                                                                                                                                                                                                                                                                                <li>
-                                                                                                                                                                                                                                                                                                                                                                                    <hr class="dropdown-divider">
-                                                                                                                                                                                                                                                                                                                                                                                </li>
-                                                                                                                                                                                                                                                                                                                                                                                <li><a class="dropdown-item" href="#">Gestisci gli annunci</a></li>
-                                                                                                                                                                                                                                                                                                                                                                                <li>
-                                                                                                                                                                                                                                                                                                                                                                                    <hr class="dropdown-divider">
-                                                                                                                                                                                                                                                                                                                                                                                </li>
-                                                                                                                                                                                                                                                                                                                                                                                <li><a class="dropdown-item" href="#">Esci</a></li>
-                                                                                                                                                                                                                                                                                                                                                                            </ul>
-                                                                                                                                                                                                                                                                                                                                                                        </div>
-
-                                                                                                                                                                                                                                                                                                                                                                    </div> -->
 
         </div>
     </div>
 </template>
 
 <style lang="scss">
-@use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
 
 // nav {
@@ -163,6 +108,7 @@ export default {
     padding-left: 0.8rem;
     border-color: $bb-light;
     border-radius: 2rem;
+    align-items: center;
 
     svg {
         font-size: 1rem;
@@ -206,13 +152,18 @@ export default {
     padding: 1rem 2rem;
     background: linear-gradient(90deg, $bb-primary 0%, $bb-secondary 100%);
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     border-radius: 1rem;
     margin-bottom: 1rem;
 }
 
+@media screen and (min-width: 400px) {
+    .icons {
+        justify-content: space-around;
+    }
+}
 
-button {
+.nav_icon {
     justify-content: center;
     display: flex;
     flex-direction: column;
@@ -220,8 +171,8 @@ button {
     color: $bb-lighter;
     background: none;
     font-size: 1.5rem;
+    padding-inline: 0.5rem;
 
-    // text-shadow: 2px 2px 3px #333;
     span {
         font-size: 1.1rem;
         font-family: $bb-secondary;
@@ -230,7 +181,19 @@ button {
 
         a {
             color: $bb-lighter;
+
+            &:hover {
+                color: $bb-lighter;
+            }
         }
+    }
+}
+
+a.nav_icon {
+    color: $bb-lighter;
+
+    &:hover {
+        color: $bb-lighter;
     }
 }
 
