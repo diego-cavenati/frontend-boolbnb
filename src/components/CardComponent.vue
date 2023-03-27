@@ -40,20 +40,12 @@ export default {
         <router-link :to="{ name: 'single-apartment', params: { slug: apartment.slug } }">
 
 
-            <div class="card h-100 border-0">
+            <div class="card h-100 border-0 apartment_card">
 
                 <div class="card_img">
                     <div class="badge_promotion" v-if="apartment.subscription">
                         IN EVIDENZA
                     </div>
-                    <!-- carousel -->
-                    <!-- <div v-if="store.immagineAttiva > 0" @click="PrevImg()">
-                                                        <i class="fa-solid fa-circle-chevron-left arrow_left"></i>
-                                                        </div>
-                                                        <div v-if="store.immagineAttiva != store.images.length - 1" @click="NextImg()">
-                                                        <i class="fa-solid fa-circle-chevron-right arrow_right"></i> </div> -->
-
-                    <!-- img thumb -->
                     <img :src="getImagePath(apartment.media) || apartment.media" alt="">
                     <!-- TODO aggiungere funzione per il path SOLO quando torna un img uploadata-->
 
@@ -76,11 +68,12 @@ export default {
             </div>
         </router-link>
     </div>
-<!-- :link="element.img[store.immagineAttiva] da tenere per il card component--></template>
+</template>
 
 <style lang="scss">
-@use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
+
+
 
 .badge_promotion {
     background: linear-gradient(89.74deg, $bb-primary 0.19%, $bb-secondary 99.78%);
@@ -108,9 +101,24 @@ export default {
     img {
         border-radius: 1.25rem 1.25rem 0 0;
         max-width: 100%;
-        height: 23.5rem;
         max-height: 100%;
         object-fit: cover;
+    }
+}
+
+@media screen and (min-width: 992px) {
+
+
+    .card_img {
+        img {
+            height: 23.5rem;
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    html {
+        font-size: 14px;
     }
 }
 
@@ -143,36 +151,6 @@ h5 {
 
 .nights {
     color: $bb-dark;
-    // position: absolute;
-    // bottom: 5%;
-    // right: 5%;
 
 }
-
-// ON IF WE HAVE AN CAROUSEL
-// .arrow_left {
-//     position: absolute;
-//     top: 33%;
-//     left: 1%;
-//     color: whitesmoke;
-//     cursor: pointer;
-//     font-size: 2rem;
-
-//     &:hover {
-//         color: gray;
-//     }
-// }
-
-// .arrow_right {
-//     position: absolute;
-//     top: 33%;
-//     right: 1%;
-//     color: whitesmoke;
-//     cursor: pointer;
-//     font-size: 2rem;
-
-//     &:hover {
-//         color: gray;
-//     }
-// }
 </style>

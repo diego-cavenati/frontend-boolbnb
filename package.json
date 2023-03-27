@@ -26,7 +26,8 @@
         "tomtom": "^0.0.0",
         "vue": "^3.2.45",
         "vue-router": "^4.1.6",
-        "vue2-autocomplete-js": "^0.2.2"
+        "vue2-autocomplete-js": "^0.2.2",
+        "vue3-lottie": "^2.5.0"
     },
     "devDependencies": {
         "@vitejs/plugin-vue": "^4.0.0",

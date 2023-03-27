@@ -1,21 +1,22 @@
 <script>
-import { reactive } from 'vue'
 // axios import
 import axios from 'axios';
 // store import
 import { store } from '../store.js';
-import Datepicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
 import moment from 'moment';
 import { watch } from 'vue';
+import { Vue3Lottie } from 'vue3-lottie'
+import 'vue3-lottie/dist/style.css'
+import successJSON from '../assets/97240-success.json'
 
 export default {
     name: 'SingleApartmentView',
     components: {
-        Datepicker,
+        Vue3Lottie
     },
     data() {
         return {
+            successJSON,
             date: null,
             apartment: null,
             latitude: null,
@@ -35,6 +36,8 @@ export default {
             total_price: '',
             price_per_night: '',
             messageForm: '',
+            userIP: null,
+
         }
     },
     methods: {
@@ -111,38 +114,113 @@ export default {
                 return this.store.url_back + '/storage/' + path;
             }
         },
+        async getIpClient() {
+            try {
+                this.loading = true;
+                const response = await axios.get('https://api.ipify.org?format=json');
+                this.userIP = response.data.ip;
+                //console.log(this.userIP);
+            } catch (error) {
+                console.error(error);
+            }
+        },
 
-    },
-    mounted() {
-        const url = 'http://127.0.0.1:8000/api/apartments/' + this.$route.params.slug;
-        console.log(url);
-        axios.get(url)
-            .then(resp => {
-                console.log(resp);
-                if (resp.data.success) {
-                    this.apartment = resp.data.results;
-                    this.latitude = resp.data.results.latitude;
-                    this.longitude = resp.data.results.longitude;
+
+        async getApartment() {
+            try {
+                this.loading = true;
+                const url = 'http://127.0.0.1:8000/api/apartments/' + this.$route.params.slug;
+                const response = await axios.get(url);
+                if (response.data.success) {
+                    this.apartment = response.data.results;
+                    this.latitude = response.data.results.latitude;
+                    this.longitude = response.data.results.longitude;
                     this.loading = false;
                     this.apartment_id = this.apartment.id
                     this.getMap();
                     this.addMarker();
-                    console.log(this.apartment);
+                    this.$nextTick(() => {
+                        window.scrollTo(0, 0);
+
+                    });
+                    //console.log(this.apartment);
                 } else {
                     this.$router.push({ name: 'not-found' });
                 }
-            })
-            .catch(err => {
-                console.log(err);
-            });
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        async AddView() {
+            await this.getIpClient();
+            await this.getApartment();
+            try {
+                const date = new Date();
+                const todaysDate = date.toLocaleDateString('en-US');
+                //console.log(todaysDate);
+                const url = 'http://127.0.0.1:8000/api/views'
+                const data = { apartment_id: this.apartment_id, ip_address: this.userIP, date: todaysDate }
+                const response = await axios.post(url, data);
+                //console.log(response);
+                if (!response.data.success) {
+                    if (response.data.errors) {
+                        console.log(response.data.errors)
+                    } else {
+                        console.error('Unable to view this apartment');
+                    }
+
+                }
+
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        clearMessageForm() {
+            this.messageForm = '';
+        }
+
+
+    },
+
+    mounted() {
+
+        this.AddView();
+
+
+
+
+
+
+
+
     },
     created() {
         watch(() => this.store.datePicker, this.calc_price);
+
+
+
     }
 }
 
 </script>
 <template>
+    <div class="message-sent" v-if="this.messageForm">
+        <h4 class="py-4 text-center">Messaggio inviato con successo!</h4>
+        <Vue3Lottie :animationData="successJSON" :loop="false" :height="200" :width="200" />
+        <span class="close" @click="clearMessageForm()"></span>
+    </div>
+    <div class="layover" v-if="this.messageForm"></div>
+
+    <div class="min-vh-100 d-flex justify-content-center align-items-center position-relative" v-if="loading">
+        <div class="preloader">
+            <svg viewBox="0 0 102 102" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path class="big-circle" d="M101 51C101 78.6142 78.6142 101 51 101C23.3858 101 1 78.6142 1 51"
+                    stroke="#252525" stroke-width="2" />
+                <path class="small-circle" d="M91 51C91 28.9086 73.0914 11 51 11C28.9086 11 11 28.9086 11 51"
+                    stroke="#252525" stroke-width="2" />
+            </svg>
+        </div>
+    </div>
     <div class="container" v-if="!loading">
         <div>
             <h3>{{ apartment.title }}</h3>
@@ -279,10 +357,6 @@ export default {
                         </div>
 
                         <form @submit.prevent="sendForm()">
-
-                            <div class="alert alert-success my-2 " v-if="this.messageForm">
-                                {{ this.messageForm }}
-                            </div>
                             <div class="col_2">
                                 <div class="name">
                                     <label for="" class="form-label">Nome*</label>
@@ -316,7 +390,7 @@ export default {
                                 <label for="" class="form-label">Messaggio*</label>
                                 <textarea rows="3" cols="50" name="body" id="body" class="form-control" placeholder=""
                                     aria-describedby="helpId" required v-model="body">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </textarea>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </textarea>
 
                                 <div class="alert alert-danger" role="alert" v-for="error in errors.body">
                                     {{ error }}
@@ -348,15 +422,76 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-@use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
 
+//loader 
+
+
+.preloader {
+    position: absolute;
+    width: 102px;
+    height: 102px;
+    left: 50%;
+    top: 50%;
+    min-height: 102px;
+    transform: translateX(-50%) translateY(-50%);
+
+    svg {
+        width: 102px;
+        height: 102px;
+
+
+    }
+
+}
+
+.preloader .small-circle {
+    stroke-dasharray: 210;
+    stroke-dashoffset: 210;
+    stroke: $bb-secondary;
+    transform-origin: 50%;
+    animation: 1s draw-small infinite alternate;
+}
+
+@keyframes draw-big {
+    0% {
+        stroke-dashoffset: 0;
+        transform: rotateY(180deg) rotate(360deg);
+    }
+
+    100% {
+        stroke-dashoffset: 240;
+        transform: rotateY(180deg) rotate(0deg);
+    }
+}
+
+@keyframes draw-small {
+    0% {
+        stroke-dashoffset: 0;
+        transform: rotate(0deg);
+    }
+
+    100% {
+        stroke-dashoffset: 210;
+        transform: rotate(360deg);
+    }
+}
+
+.preloader .big-circle {
+    stroke-dasharray: 240;
+    stroke-dashoffset: 240;
+    transform-origin: 50%;
+    stroke: $bb-primary;
+    animation: 1s draw-big infinite alternate 0.5s;
+}
+
+
+
 #map {
-    height: 40vh;
+
     min-height: 400px;
     width: 100%;
-    height: 100%;
-    border-radius: 1rem;
+
 }
 
 
@@ -392,10 +527,47 @@ img {
         object-fit: cover;
         border-radius: 2rem;
         width: 100%;
-        height: 35rem;
+
 
     }
 }
+
+.layover {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 3;
+}
+
+//lottie popup when message is sent 
+.message-sent {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+    background-color: white;
+    padding: 2rem 4rem;
+    z-index: 9999;
+    border-radius: 1rem;
+
+    span.close:after {
+        cursor: pointer;
+        position: absolute;
+        right: 0;
+        top: 0;
+        display: inline;
+        content: "\00d7";
+        color: $bb-light;
+        font-size: 2rem;
+        padding-inline: 1rem;
+    }
+
+
+}
+
 
 #contact_host {
     margin-bottom: 1rem;
@@ -494,12 +666,12 @@ img {
     border-radius: 20px;
     width: 80%;
     margin: auto;
-    padding: 2.5rem;
+    padding: 1.5rem;
     color: $bb-lighter;
-    font-size: 1.2rem;
     margin-top: -7rem;
     margin-bottom: 3rem;
     position: relative;
+    flex-wrap: wrap;
 
     svg {
         color: $bb-lighter;
@@ -507,6 +679,7 @@ img {
         font-size: 1rem;
         height: 1.5rem;
         width: 1.5rem;
+        margin: 0.5rem 0;
     }
 
     div {
@@ -551,5 +724,25 @@ img {
         padding: 0.5rem 0;
         margin-top: 0.75rem;
     }
+}
+
+@media screen and (min-width: 768px) {
+    .details {
+        padding: 2rem;
+    }
+
+    .cover_img {
+        img {
+            height: 35rem;
+        }
+    }
+}
+
+@media screen and (min-width: 993px) {
+    .details {
+        padding: 2.5rem;
+    }
+
+
 }
 </style>

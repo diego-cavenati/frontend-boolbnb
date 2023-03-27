@@ -18,6 +18,7 @@ export default {
             maxHeight: null,
             nextPageUrl: '',
             prevPageUrl: '',
+            paginationEl: document.querySelector('.ms_pagination'),
         }
     },
     computed: {
@@ -31,69 +32,81 @@ export default {
         }
     },
     methods: {
-        setMaxHeight() {
-            const cards = document.querySelectorAll(".card_component");
-            let maxHeight = 0;
-
-            cards.forEach(card => {
-                const height = card.offsetHeight;
-                if (height > maxHeight) {
-                    maxHeight = height;
-                }
-            });
-
-            this.maxHeight = maxHeight;
-        },
         previousPage() {
-            if (this.prevPageUrl !== null) {
+            if (this.prevPageUrl !== null && !this.loading) {
                 if (this.currentPage > 1) {
+                    this.loading = true;
                     this.currentPage--;
                     console.log(this.currentPage);
                     axios.get(`http://127.0.0.1:8000/api/showcase?page=${this.currentPage}`)
                         .then(response => {
                             this.apartments = response.data.results.data;
                             this.nextPageUrl = response.data.results.next_page_url;
-                            this.prevPageUrl = response.data.results.prev_page_url
+                            this.prevPageUrl = response.data.results.prev_page_url;
+                            this.loading = false;
+                            this.$nextTick(() => {
+                                // Fai lo scroll dell'elemento nella finestra del browser
+                                this.$refs.showcase.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+
+                            });
                         })
                         .catch(error => {
-                            console.error(error)
+                            console.error(error);
+                            this.loading = false;
                         });
                 }
             }
 
         },
         nextPage() {
-            if (this.nextPageUrl !== null) {
+            if (this.nextPageUrl !== null && !this.loading) {
                 if (this.currentPage > 0 && this.currentPage < this.pages) {
+                    this.loading = true;
                     this.currentPage++;
                     console.log(this.currentPage);
                     axios.get(`http://127.0.0.1:8000/api/showcase?page=${this.currentPage}`)
                         .then(response => {
                             this.apartments = response.data.results.data;
                             this.nextPageUrl = response.data.results.next_page_url;
-                            this.prevPageUrl = response.data.results.prev_page_url
+                            this.prevPageUrl = response.data.results.prev_page_url;
+                            this.loading = false;
+                            this.$nextTick(() => {
+                                // Fai lo scroll dell'elemento nella finestra del browser
+                                this.$refs.showcase.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+
+                            });
                         })
                         .catch(error => {
-                            console.error(error)
+                            console.error(error);
+                            this.loading = false;
                         });
                 }
             }
 
         },
         goToPage(pageNumber) {
-            this.currentPage = pageNumber;
-            console.log(this.currentPage);
-            this.callApiPage(this.currentPage);
+            if (!this.loading) {
+                this.currentPage = pageNumber;
+                //console.log(this.currentPage);
+                this.callApiPage(this.currentPage);
+            }
+
         },
         callApiPage(pageNumber) {
+            this.loading = true;
             axios.get(`http://127.0.0.1:8000/api/showcase?page=` + pageNumber)
                 .then(response => {
                     this.apartments = response.data.results.data;
                     this.pages = response.data.results.last_page;
-                    console.log(response.data.results.next_page_url);
+                    //console.log(response.data.results.next_page_url);
                     this.nextPageUrl = response.data.results.next_page_url;
                     this.prevPageUrl = response.data.results.prev_page_url
                     this.loading = false;
+                    this.$nextTick(() => {
+                        // Fai lo scroll dell'elemento nella finestra del browser
+                        this.$refs.showcase.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+
+                    });
                 })
                 .catch(error => {
                     console.error(error)
@@ -102,6 +115,7 @@ export default {
                 })
         },
         callApi() {
+            this.loading = true;
             axios.get(`http://127.0.0.1:8000/api/showcase`)
                 .then(response => {
                     this.apartments = response.data.results.data;
@@ -125,6 +139,7 @@ export default {
             store.servicesIndex = [];
             store.radius = 20;
             store.beds = '';
+            this.loading = true;
             axios.get(`http://127.0.0.1:8000/api/search`)
                 .then(response => {
                     this.apartments = response.data.results;
@@ -143,15 +158,12 @@ export default {
     created() {
         this.callApi()
     },
-    mounted() {
-        this.setMaxHeight();
-    },
 }
 </script>
 
 <template>
     <div id="showcase">
-        <div class="container">
+        <div class="container" ref="showcase">
             <h2>I nostri appartamenti <span class="title_mark"> in vetrina</span></h2>
             <div class="description">
                 <p>
@@ -166,7 +178,6 @@ export default {
             </div>
 
             <div class="row">
-
                 <div class="box-container col-lg-4 col-md-6 col-sm-12 pb-4" v-for="(apartment, index) in apartments"
                     :key="apartment.id">
                     <CardComponent class="box" :apartment="apartment" />
@@ -177,27 +188,25 @@ export default {
         </div>
 
 
-        <div class="pagination">
-            <button @click="previousPage">
-                <i class="fa-solid fa-chevron-left"></i>
-            </button>
-            <div class="page-numbers">
+        <div class="ms_pagination">
+            <div @click="previousPage" v-if="prevPageUrl !== null"><i class="fa-solid fa-chevron-left"></i></div>
+            <div class="page-numbers" v-if="prevPageUrl !== null || nextPageUrl !== null">
                 <div v-for="pageNumber in pageNumbers" :key="pageNumber" :class="{ active: currentPage === pageNumber }"
                     @click="goToPage(pageNumber)">
                     {{ pageNumber }}
                 </div>
             </div>
-            <button @click="nextPage">
-                <i class="fa-solid fa-chevron-right"></i>
-            </button>
+            <div @click="nextPage" v-if="nextPageUrl !== null"><i class="fa-solid fa-chevron-right"></i></div>
         </div>
 
     </div>
 </template>
 
 <style lang="scss" scoped>
-@use '../assets/scss/general.scss';
 @use '../assets/scss/partials/variables.scss' as *;
+
+
+
 
 .box-container {
     display: flex;
@@ -230,23 +239,30 @@ p {
     align-items: center;
     padding-bottom: 2rem;
     justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 // Pagination
-.pagination {
+.ms_pagination {
     padding-top: 1.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
 
-    button {
+
+    div {
         color: $bb-dark;
+
+        &:hover {
+            cursor: pointer;
+        }
 
         svg {
             color: $bb-text-gray;
         }
     }
 }
+
 
 .page-numbers {
     display: flex;

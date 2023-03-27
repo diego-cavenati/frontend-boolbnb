@@ -110,3 +110,22 @@ span {
         }
     }
 }
+
+.swiper-button-prev.swiper-button-prev-1::after,
+.swiper-button-prev.swiper-button-prev-2::after,
+.swiper-button-prev.swiper-button-prev-3::after,
+.swiper-button-next.swiper-button-next-1::after,
+.swiper-button-next.swiper-button-next-2::after,
+.swiper-button-next.swiper-button-next-3::after {
+    width: 25px;
+    height: 25px;
+    font-size: 0.8rem;
+    border-radius: 50%;
+    background-color: rgba($color: white, $alpha: 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: revert;
+    color: black;
+    border: 1px solid gray;
+}
