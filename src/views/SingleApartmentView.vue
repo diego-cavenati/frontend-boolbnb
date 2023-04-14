@@ -4,7 +4,6 @@ import axios from 'axios';
 // store import
 import { store } from '../store.js';
 import moment from 'moment';
-import { watch } from 'vue';
 import { Vue3Lottie } from 'vue3-lottie'
 import 'vue3-lottie/dist/style.css'
 import successJSON from '../assets/97240-success.json'
@@ -41,7 +40,7 @@ export default {
         }
     },
     methods: {
-        addMarker() {
+        /* addMarker() {
             const tt = window.tt;
             var location = [this.longitude, this.latitude];
             var element = document.createElement("div")
@@ -49,18 +48,51 @@ export default {
             var marker = new tt.Marker({ element: element })
                 .setLngLat(location)
                 .addTo(this.map)
-        },
+        }, */
+        /*  getMap() {
+             const tt = window.tt;
+             this.map = tt.map({
+                 key: 'FiLLCEGWt31cQ9ECIWAD6zYjczzeC6zn',
+                 container: this.$refs.mapRef,
+                 style: 'tomtom://vector/1/basic-light',
+                 center: [this.longitude, this.latitude],
+                 zoom: 7,
+             });
+             this.map.addControl(new tt.FullscreenControl());
+             this.map.addControl(new tt.NavigationControl());
+         }, */
         getMap() {
-            const tt = window.tt;
-            this.map = tt.map({
-                key: 'FiLLCEGWt31cQ9ECIWAD6zYjczzeC6zn',
-                container: this.$refs.mapRef,
-                style: 'tomtom://vector/1/basic-light',
-                center: [this.longitude, this.latitude],
-                zoom: 7,
-            });
-            this.map.addControl(new tt.FullscreenControl());
-            this.map.addControl(new tt.NavigationControl());
+            try {
+                const tt = window.tt;
+                this.map = tt.map({
+                    key: '45POhoazK93Ibg5oAGDMtKuyqLhjzUGo',
+                    container: this.$refs.singleApartmentMapRef,
+                    style: '../src/assets/style-map/map-style.json',
+                    center: [parseFloat(this.longitude), parseFloat(this.latitude)],
+                    interactive: true,
+                    zoom: 7,
+                });
+                //console.log(this.map)
+                this.map.on('load', () => {
+
+                    var location = [parseFloat(this.longitude), parseFloat(this.latitude)];
+                    var element = document.createElement("div")
+                    element.id = "marker"
+                    new tt.Marker({ element: element })
+                        .setLngLat(location)
+                        .addTo(this.map)
+                    this.map.addControl(new tt.FullscreenControl());
+                    this.map.addControl(new tt.NavigationControl());
+                    this.map.resize();
+
+                })
+
+
+
+
+            } catch (error) {
+                console.error(error.message);
+            }
         },
         sendForm() {
             this.loading_form = true
@@ -100,12 +132,6 @@ export default {
             this.price_per_night = this.price_nights / this.nights;
 
 
-            console.log(this.store.check_in);
-            console.log(this.store.check_out);
-            console.log(this.store.price);
-            console.log(this.nights);
-            console.log(this.price_nights);
-            console.log(this.total_price);
         },
         getImagePath(path) {
             if (path.startsWith("http")) {
@@ -114,65 +140,86 @@ export default {
                 return this.store.url_back + '/storage/' + path;
             }
         },
-        async getIpClient() {
+        getIpClient() {
             try {
-                this.loading = true;
-                const response = await axios.get('https://api.ipify.org?format=json');
-                this.userIP = response.data.ip;
-                //console.log(this.userIP);
+                axios.get('https://api.ipify.org?format=json')
+                    .then(resp => {
+                        this.userIP = resp.data.ip;
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    })
             } catch (error) {
-                console.error(error);
+                console.error(error.message);
             }
+
+
+
+
         },
 
 
-        async getApartment() {
+        getApartment() {
             try {
                 this.loading = true;
                 const url = 'http://127.0.0.1:8000/api/apartments/' + this.$route.params.slug;
-                const response = await axios.get(url);
-                if (response.data.success) {
-                    this.apartment = response.data.results;
-                    this.latitude = response.data.results.latitude;
-                    this.longitude = response.data.results.longitude;
-                    this.loading = false;
-                    this.apartment_id = this.apartment.id
-                    this.getMap();
-                    this.addMarker();
-                    this.$nextTick(() => {
-                        window.scrollTo(0, 0);
+                axios.get(url)
+                    .then(resp => {
+                        if (resp.data.success) {
+                            console.log(resp);
+                            this.apartment = resp.data.results;
+                            this.latitude = resp.data.results.latitude;
+                            this.longitude = resp.data.results.longitude;
+                            this.apartment_id = this.apartment.id
+                            this.getMap();
+                            this.loading = false;
+                            this.$nextTick(() => {
+                                window.scrollTo(0, 0);
 
-                    });
-                    //console.log(this.apartment);
-                } else {
-                    this.$router.push({ name: 'not-found' });
-                }
+
+                            });
+                            //console.log(this.apartment);
+                        } else {
+                            this.$router.push({ name: 'not-found' });
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    })
+
             } catch (error) {
-                console.error(error);
+                console.error(error.message);
             }
         },
-        async AddView() {
-            await this.getIpClient();
-            await this.getApartment();
+        AddView() {
+            this.getIpClient();
+            this.getApartment();
             try {
                 const date = new Date();
                 const todaysDate = date.toLocaleDateString('en-US');
                 //console.log(todaysDate);
                 const url = 'http://127.0.0.1:8000/api/views'
                 const data = { apartment_id: this.apartment_id, ip_address: this.userIP, date: todaysDate }
-                const response = await axios.post(url, data);
-                //console.log(response);
-                if (!response.data.success) {
-                    if (response.data.errors) {
-                        console.log(response.data.errors)
-                    } else {
-                        console.error('Unable to view this apartment');
-                    }
+                axios.post(url, data)
+                    .then(resp => {
+                        if (!resp.data.success) {
+                            if (resp.data.errors) {
+                                console.log(resp.data.errors)
+                            } else {
+                                console.error('Unable to view this apartment');
+                            }
 
-                }
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Unable to view this apartment');
+
+                    })
+
+
 
             } catch (error) {
-                console.log(error);
+                console.log(error.message);
             }
         },
         clearMessageForm() {
@@ -183,23 +230,14 @@ export default {
     },
 
     mounted() {
-
         this.AddView();
 
 
 
 
 
-
-
-
     },
-    created() {
-        watch(() => this.store.datePicker, this.calc_price);
 
-
-
-    }
 }
 
 </script>
@@ -390,7 +428,7 @@ export default {
                                 <label for="" class="form-label">Messaggio*</label>
                                 <textarea rows="3" cols="50" name="body" id="body" class="form-control" placeholder=""
                                     aria-describedby="helpId" required v-model="body">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </textarea>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </textarea>
 
                                 <div class="alert alert-danger" role="alert" v-for="error in errors.body">
                                     {{ error }}
@@ -415,7 +453,7 @@ export default {
                     {{ apartment.address }}
                 </div>
                 <!-- Mappa -->
-                <div id='map' ref="mapRef"></div>
+                <div id='map' ref="singleApartmentMapRef"></div>
             </div>
         </div>
     </div>

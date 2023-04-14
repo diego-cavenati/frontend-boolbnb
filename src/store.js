@@ -25,7 +25,7 @@ export const store = reactive({
     price: '',
     //le call api inseriscono i risultati dentro results
     results: [],
-    loading: true,
+    loading: false,
     datePicker: '',
     guests: 1,
     lat: '',

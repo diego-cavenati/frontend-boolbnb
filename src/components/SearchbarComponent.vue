@@ -1,11 +1,6 @@
 <script>
 import axios from 'axios';
 import { store } from '../store';
-import Datepicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
-import { ref } from 'vue';
-import { watch } from 'vue';
-import '@vuepic/vue-datepicker/src/VueDatePicker/style/main.scss';
 import AdvancedSearchView from '../views/AdvancedSearchView.vue';
 
 
@@ -20,23 +15,6 @@ export default {
     components: {
         AdvancedSearchView,
     },
-    setup() {
-        const format = (dates) => {
-            const start = dates[0];
-            const end = dates[1];
-            const startDay = start.getDate();
-            const startMonth = start.getMonth() + 1;
-            // const startYear = start.getFullYear();
-            const endDay = end.getDate();
-            const endMonth = end.getMonth() + 1;
-            // const endYear = end.getFullYear();
-            return store.datePicker = `${startDay}/${startMonth} - ${endDay}/${endMonth}`;
-        }
-
-        return {
-            format,
-        }
-    },
     data() {
         return {
             store,
@@ -45,63 +23,64 @@ export default {
             searchTerm: '',
         }
     },
-    components: {
-        Datepicker,
-    },
     methods: {
-        async search() {
-            try {
+        debounce(func, delay) {
+            let timeout;
+            return () => {
+                clearTimeout(timeout);
                 store.loading = true;
                 store.isSearchbarComponentLoaded = false;
-                //store.isAdvancedSearchViewLoaded = false;
-                //console.log(store.address, store.categories_back, store.services_back);
-                //console.log('http://127.0.0.1:8000/api/search?address=' + store.address + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius * 1000 + '&beds=' + store.beds)
-                const response = await axios.get('http://127.0.0.1:8000/api/search?address=' + store.address + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius * 1000 + '&beds=' + store.beds);
-                console.log(response);
-
-                store.results = response.data.results;
-                store.isSearchbarComponentLoaded = true;
-
-                //store.isAdvancedSearchViewLoaded = true;
-
-
-                if (response.data.poi !== null) {
-                    store.lat = response.data.poi.lat;
-                    store.lon = response.data.poi.lon;
-                }
-
-                store.loading = false;
-
-                const searchQuery = store.address;
-                const query = searchQuery ? `?q=${encodeURIComponent(searchQuery)}` : '';
-                this.$router.push({ name: 'search', path: '/search' + query, query: { q: searchQuery } });
-
-                const mapHiddenEmptyAddress = document.querySelector('.col.d-none.d-xxl-block.map');
-
-                if (store.address.length < 1 || store.address == null || store.address === '' || store.results == null || store.results.length < 1) {
-                    console.log(store.address);
-                    mapHiddenEmptyAddress.classList.add('hide')
+                timeout = setTimeout(() => {
+                    func();
+                }, delay);
+            };
+        },
+        search() {
+            try {
+                axios.get('http://127.0.0.1:8000/api/search?address=' + store.address + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius * 1000 + '&beds=' + store.beds)
+                    .then(response => {
+                        console.log(response);
+                        if (response.data.success) {
 
 
-                } else {
-                    mapHiddenEmptyAddress.classList.remove('hide')
+                            store.results = response.data.results;
+                            store.isSearchbarComponentLoaded = true;
 
 
-                }
+
+                            if (response.data.poi !== null) {
+                                store.lat = response.data.poi.lat;
+                                store.lon = response.data.poi.lon;
+                            }
+
+                            store.loading = false;
+
+                            const searchQuery = store.address;
+                            const query = searchQuery ? `?q=${encodeURIComponent(searchQuery)}` : '';
+                            this.$router.push({ name: 'search', path: '/search' + query, query: { q: searchQuery } });
+
+
+
+
+                        } else {
+                            store.results = [];
+                            store.loading = false;
+                            store.isSearchbarComponentLoaded = true;
+
+
+                        }
+                    })
+
+
+
 
             } catch (error) {
-                console.error(error);
+                console.error(error.message);
             }
 
         },
         setAddress(address) {
             console.log(address);
-        },
-        convertDates() {
-            let datesArray = this.store.datePicker.split(" - ");
-            this.store.check_in = datesArray[0];
-            this.store.check_out = datesArray[1];
-            console.log(this.store.check_in);
         },
         increment() {
             if (this.store.guests < this.maxGuests) {
@@ -120,11 +99,11 @@ export default {
         },
     },
     computed: {
-
+        debouncedSearch() {
+            return this.debounce(this.search, 1000);
+        }
     },
-    created() {
-        watch(() => this.store.datePicker, this.convertDates);
-    }, mounted() {
+    mounted() {
         console.log(store.address, store.categories_back, store.services_back);
         const searchBoxWrapper = document.getElementById('searchBoxWrapper');
         const options = {
@@ -213,20 +192,20 @@ export default {
         const closeIcon = document.querySelector('.tt-search-box-close-icon');
         closeIcon.addEventListener('click', () => {
 
-            if (store.isAdvancedSearchViewLoaded) {
-                searchBoxInput.value = '';
-                store.address = '';
-                if (searchBoxInput.value !== null && searchBoxInput.value.replace(/\s/g, '') !== '') {
 
-                    closeIcon.classList.remove('-hidden');
-                }
-                if (searchBoxInput.value === null || searchBoxInput.value.replace(/\s/g, '') === '') {
+            searchBoxInput.value = '';
+            store.address = '';
+            if (searchBoxInput.value !== null && searchBoxInput.value.replace(/\s/g, '') !== '') {
 
-                    closeIcon.classList.add('-hidden');
-                }
-
-                //console.log('clear'); 
+                closeIcon.classList.remove('-hidden');
             }
+            if (searchBoxInput.value === null || searchBoxInput.value.replace(/\s/g, '') === '') {
+
+                closeIcon.classList.add('-hidden');
+            }
+
+            //console.log('clear'); 
+
 
         })
         if (searchBoxInput.value !== null && searchBoxInput.value.replace(/\s/g, '') !== '') {
@@ -248,33 +227,14 @@ export default {
     <div :id="id">
         <form @submit.prevent="search">
             <div class="container_search"
-                :class="(store.isSearchbarComponentLoaded === false || store.isAdvancedSearchViewLoaded === false) ? 'loading' : ''">
+                :class="(store.loading || store.isSearchbarComponentLoaded === false || store.isAdvancedSearchViewLoaded === false) ? 'loading' : ''">
                 <div id="searchBoxWrapper">
                     <div class="layover"></div>
                 </div>
-                <!-- <div class="input">
-                                                                                                                                                                                                                                                                                                                                                                                     <i class="fa-regular fa-map"></i>
-                    
-                                                                                                                                                                                                                                                                                                                                                                                    <input type="text" v-model="store.address" placeholder="Dove vuoi andare?">
-                                                                                                                                                                                                                                                                                                                                                                                </div> -->
-                <!-- <div class="input">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="line"></div> -->
-                <!-- <i class="fa-regular fa-calendar"></i> -->
-                <!-- <Datepicker class="dataPicker" v-model="date" :enable-time-picker="false" :format="format" range />
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="input">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="line"></div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="fa-regular fa-user"></i> -->
-
-                <!-- <button @click="increment" :disabled="guests >= maxGuests">+</button>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <input type="number" id="guests" name="guests" v-model.number="store.guests" @input="validateGuests">
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <input type="text" v-model="store.guests" placeholder="Quanti siete?"> -->
-                <!-- </div> -->
             </div>
 
             <router-link :to="{ name: 'search' }">
-                <button type="submit" class="searchButton h-100" @click="search">
+                <button type="submit" class="searchButton h-100" @click="debouncedSearch">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
 

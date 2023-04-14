@@ -28,75 +28,30 @@ export default {
             maxHeight: null,
             nextPageUrl: '',
             prevPageUrl: '',
+            largeContainer: false,
         }
     },
     components: {
         CardComponent
     },
     methods: {
-        previousPage() {
-            if (this.prevPageUrl !== null) {
-                if (this.currentPage > 1) {
-                    this.currentPage--;
-                    console.log(this.currentPage);
-                    axios.get(`http://127.0.0.1:8000/api/search?page=${this.currentPage}`)
-                        .then(response => {
-                            store.results = response.data.results.data;
-                            this.nextPageUrl = response.data.results.next_page_url;
-                            this.prevPageUrl = response.data.results.prev_page_url
-                        })
-                        .catch(error => {
-                            console.error(error)
-                        });
-                }
-            }
-
-        },
-        nextPage() {
-            if (this.nextPageUrl !== null) {
-                if (this.currentPage > 0 && this.currentPage < store.pages) {
-                    this.currentPage++;
-
-                    axios.get(`http://127.0.0.1:8000/api/search?page=${this.currentPage}`)
-                        .then(response => {
-                            store.results = response.data.results.data;
-                            this.nextPageUrl = response.data.results.next_page_url;
-                            this.prevPageUrl = response.data.results.prev_page_url
-                        })
-                        .catch(error => {
-                            console.error(error)
-                        });
-                }
-            }
-        },
-        goToPage(pageNumber) {
-            this.currentPage = pageNumber;
-            console.log(this.currentPage);
-            this.callApi();
-        },
-        addMarker(longitude, latitude) {
+        debounce(func, delay) {
             try {
-                if (this.map) {
-                    const tt = window.tt;
-                    var location = [longitude, latitude];
-                    // var popupOffset = 25;
-                    // var marker = new tt.Marker().setLngLat(location).addTo(this.map);
-
-                    var element = document.createElement("div")
-                    element.id = "marker"
-
-                    var marker = new tt.Marker({ element: element })
-                        .setLngLat(location)
-                        .addTo(this.map)
-
-                }
+                let timeout;
+                return () => {
+                    clearTimeout(timeout);
+                    store.loading = true;
+                    store.isAdvancedSearchViewLoaded = false;
+                    timeout = setTimeout(() => {
+                        func();
+                    }, delay);
+                };
 
             } catch (error) {
-                console.error(error);
+                console.log(error.message);
             }
-
         },
-        getMap() {
+        getMap(result) {
             try {
                 if (store.address.length > 0 && store.address !== null) {
                     const tt = window.tt;
@@ -105,22 +60,29 @@ export default {
                     this.map = tt.map({
                         key: '45POhoazK93Ibg5oAGDMtKuyqLhjzUGo',
                         container: this.$refs.mapRef,
-                        style: 'tomtom://vector/1/basic-light',
+                        style: '../src/assets/style-map/map-style.json',
                         center: [store.lon, store.lat],
                         interactive: true,
-                        // center: [store.results[0].longitude, store.results[0].latitude],
                         zoom: 12,
                     });
                     //console.log(this.map)
+                    this.map.on('load', () => {
 
-                    this.map.addControl(new tt.FullscreenControl());
-                    this.map.addControl(new tt.NavigationControl());
-                    this.map.dragpan.enable({
-                        linearity: 0.3,
-                        easing: bezier(0, 0, 0.3, 1),
-                        maxSpeed: 1400,
-                        deceleration: 2500,
-                    });
+                        for (const [lng, lat] of result) {
+
+                            var location = [parseFloat(lng), parseFloat(lat)];
+                            var element = document.createElement("div")
+                            element.id = "marker"
+                            new tt.Marker({ element: element })
+                                .setLngLat(location)
+                                .addTo(this.map)
+                        }
+                        this.map.addControl(new tt.FullscreenControl());
+                        this.map.addControl(new tt.NavigationControl());
+                        this.map.resize();
+                    })
+
+
 
 
 
@@ -130,7 +92,7 @@ export default {
                 }
 
             } catch (error) {
-                console.error(error);
+                console.error(error.message);
             }
         },
         getImagePath: function (imgPath) {
@@ -174,33 +136,32 @@ export default {
             }
             //console.log(store.services_back);
         },
-        async SubmitServices() {
+        SubmitServices() {
             try {
-                const mapHiddenEmptyAddress = document.querySelector('.col.d-none.d-xxl-block.map');
-                //console.log(store.address);
-                store.loading = true;
-                store.isAdvancedSearchViewLoaded = false;
-                //console.log(store.radius * 1000);
+
+
                 axios.get('http://127.0.0.1:8000/api/search?address=' + store.address + '&services=' + store.services_back + '&category=' + store.categories_back + '&radius=' + store.radius * 1000 + '&beds=' + store.beds)
                     .then(response => {
-                        //console.log(resp);
-                        // convertire km to metri prima di mandarli 
-                        store.results = response.data.results;
-                        store.price = response.data.results.price;
-                        store.lat = response.data.poi.lat;
-                        store.lon = response.data.poi.lon;
+                        console.log(response);
+                        if (response.data.success) {
+
+                            // convertire km to metri prima di mandarli 
+                            store.results = response.data.results;
+                            store.price = response.data.results.price;
+                            store.lat = response.data.poi.lat;
+                            store.lon = response.data.poi.lon;
+
+
+
+
+                        } else {
+                            store.results = [];
+
+
+                        }
                         store.loading = false;
                         store.isAdvancedSearchViewLoaded = true;
 
-
-                        if (store.address.length < 1 || store.address == null || store.address === '' || store.results == null || store.results.length < 1) {
-                            if (!mapHiddenEmptyAddress.classList.contains('hide')) {
-                                mapHiddenEmptyAddress.classList.add('hide')
-
-                            }
-                        } else {
-                            mapHiddenEmptyAddress.classList.remove('hide')
-                        }
                     }).catch(err => {
                         console.log(err);
                     })
@@ -210,14 +171,14 @@ export default {
 
 
             } catch (error) {
-                console.error(error);
+                console.error(error.message);
 
             }
 
         },
         PushCategory(i) {
             try {
-                const element = document.getElementById('category-' + i);
+
                 // Rimuovi la classe "active" da tutti gli elementi tranne quello selezionato
                 for (let j = 0; j < store.categories.length; j++) {
                     if (j !== i) {
@@ -231,15 +192,16 @@ export default {
                     //console.log('faccio la call api');
                     console.log(store.categories_back);
                     //console.log(this.map);
-
-                    this.SubmitServices();
+                    console.log('chiamata categories')
+                    this.debounceCall();
 
                     // esegue la call api in base a tutti i dati
                 } else if (store.categories_back.length > 0 && store.categories_back[0] === store.categories[i].id) {
                     // Se l'elemento è già presente, ma è l'unico elemento nell'array, non fare nulla
-                    console.log(store.categories_back);
+                    if (store.results.length === 0) {
+                        this.debounceCall();
+                    }
 
-                    return;
                 } else {
                     let elementToRemove = store.categories[i].id;
                     let index = store.categories_back.indexOf(elementToRemove);
@@ -250,9 +212,7 @@ export default {
                 }
                 store.activeCategoryIndex = i;
 
-                /*  console.log(store.address);
-                console.log(store.results);
-                 console.log(store.categories_back); */
+
             } catch (error) {
                 console.error(error);
             }
@@ -267,15 +227,17 @@ export default {
         },
         AllApartments() {
             // Rimuovi tutti gli elementi dall'array categories_back
+            console.log('chiamata tutti appartamenti')
             store.categories_back = [];
-            this.SubmitServices();
+            this.debounceCall();
         },
         HideShowPopup() {
             const element = document.getElementById("filterPopup")
             element.classList.toggle("hide")
         },
         SearchHide() {
-            this.SubmitServices();
+            console.log('chiamata services')
+            this.debounceCall();
             this.HideShowPopup();
         },
         slide(direction) {
@@ -286,8 +248,11 @@ export default {
 
     },
     computed: {
+        debounceCall() {
+            return this.debounce(this.SubmitServices, 1000);
+        },
         computedRadius() {
-            return console.log(`calc(${this.store.radius}% - (10px / 2))`);
+            return console.log(`calc(${this.store.radius} % - (10px / 2))`);
         },
         pageNumbers() {
             return store.pages;
@@ -304,17 +269,18 @@ export default {
     watch: {
         dataLoaded(newValue) {
             try {
+                const mapHiddenEmptyAddress = document.querySelector('.col.d-none.d-xxl-block.map');
+                if (this.map !== null) {
+                    this.clearMap();
+                }
                 if (newValue !== null && newValue.length > 0) {
+
                     //console.log(store.address);
                     if (store.address.length > 0 && store.address !== null) {
                         //console.log(store.address);
                         // Recupera la mappa
-                        if (this.map !== null) {
-                            this.clearMap();
-                        }
-                        this.getMap();
-                        //console.log(this.map);
 
+                        //console.log(this.map);
 
 
                         // Inizializza l'array vuoto
@@ -365,17 +331,37 @@ export default {
                             result.push([lngStr, latStr]);
                             latMap.set(lngStr, true);
                         }
-                        // Aggiungi i marker
 
-                        for (const [lng, lat] of result) {
 
-                            this.addMarker(parseFloat(lng), parseFloat(lat));
+                        this.getMap(result);
 
+
+
+
+                        if (mapHiddenEmptyAddress.classList.contains('hide')) {
+                            mapHiddenEmptyAddress.classList.remove('hide')
 
                         }
+                        this.store.largeContainer = true;
 
+                    } else {
+                        if (!mapHiddenEmptyAddress.classList.contains('hide')) {
+                            mapHiddenEmptyAddress.classList.add('hide')
+
+                        }
+                        this.store.largeContainer = false;
 
                     }
+
+                } else {
+                    if (this.map !== null) {
+                        this.clearMap();
+                    }
+                    if (!mapHiddenEmptyAddress.classList.contains('hide')) {
+                        mapHiddenEmptyAddress.classList.add('hide')
+
+                    }
+                    this.store.largeContainer = true;
                 }
 
 
@@ -386,6 +372,7 @@ export default {
 
         }
     },
+
     mounted() {
 
         const swiper3 = new Swiper('.swiper-3', {
@@ -440,9 +427,10 @@ export default {
             .catch(err => {
                 console.log(err);
             })
-        window.scrollTo(0, 0);
+        //TODO with next tick
+        /* window.scrollTo(0, 0); */
 
-        this.SubmitServices();
+        this.debounceCall()
 
     },
 
@@ -469,7 +457,7 @@ export default {
                         <!-- Slides -->
                         <div class="swiper-slide text-center " v-for="category, i in store.categories" :key="category.id">
                             <div class="category"
-                                :class="[i === store.activeCategoryIndex && store.categories_back.length !== 0 ? 'active_category' : '', store.loading || store.isAdvancedSearchViewLoaded === false || store.isSearchbarComponentLoaded === false ? 'loading' : '']"
+                                :class="i === store.activeCategoryIndex && store.categories_back.length !== 0 ? 'active_category' : ''"
                                 @click.stop="PushCategory(i)" :id="'category-' + i">
                                 <img :src="getImagePath(`${category.img}.png`)" alt="">
                                 <div>
@@ -557,16 +545,17 @@ export default {
         <div class="container-fluid">
             <div class="row">
                 <div id="apartments" class="col">
-                    <div class="container pb-5">
-                        <div class="row">
+                    <div class="container pb-5 results_container">
+                        <div class="row flex-grow-1">
 
 
                             <CardComponent class="pb-4"
-                                v-if="!store.loading && (!store.results == null || !store.results.length < 1)"
+                                v-if="!store.loading && store.isAdvancedSearchViewLoaded && (!store.results == null || !store.results.length < 1)"
                                 v-for="apartment in store.results" :apartment="apartment" />
 
 
-                            <div class="cardList row row-cols-1 row-cols-md-4 gx-0 gx-md-2 gy-2" v-else-if="store.loading">
+                            <div class="cardList row row-cols-1 row-cols-md-4 gx-0 gx-md-2 gy-2"
+                                v-else-if="store.loading || store.isSearchbarComponentLoaded === false || store.isAdvancedSearchViewLoaded === false">
                                 <div class=" col cardLoading is-loading">
                                     <div class="image"></div>
                                     <div class="content">
@@ -611,7 +600,7 @@ export default {
                     </div>
                 </div>
                 <div class="col d-none d-xxl-block map">
-                    <div id='map' ref="mapRef"></div>
+                    <div id='map' ref="mapRef" style='width: 100%; height:100%;'></div>
                 </div>
             </div>
         </div>
@@ -621,10 +610,18 @@ export default {
 <style lang="scss" scoped>
 @use '../assets/scss/partials/variables.scss' as *;
 
+
+
+
 :root {
     --computed-radius: calc(50% - (10px / 2));
 }
 
+.results_container {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+}
 
 .not_found img {
     width: 300px;
@@ -719,9 +716,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     cursor: pointer;
 }
 
-.category.loading {
-    pointer-events: none;
-}
+
 
 #filterPopup {
     z-index: 11;
@@ -815,10 +810,8 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     //overflow: hidden;
 }
 
-#map {
-    height: 88vh;
-    width: 100%;
-}
+
+
 
 .categories img {
     width: 30px;
